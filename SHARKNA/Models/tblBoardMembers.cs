@@ -11,7 +11,7 @@
 
         public string FullNameAr { get; set; }
         public string FullNameEn { get; set; }
-
+        public string Username { get; set}
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 
