@@ -9,7 +9,7 @@
 
         public string DescriptionAr { get; set; }
         public string DescriptionEn { get; set; }
-
+        
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 
