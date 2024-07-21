@@ -1,5 +1,5 @@
 ﻿namespace SHARKNA.Models
-{
+{ //ClubMember
     public class tblBoardMembers
     {
         public Guid Id { get; set; }
