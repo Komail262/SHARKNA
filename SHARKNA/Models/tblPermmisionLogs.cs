@@ -16,6 +16,6 @@
 
         public string AdditionalInfo { get; set; }
 
-        public int PermId { get; set; }
+        public int PermId { get; set; }//see the change
     }
 }
