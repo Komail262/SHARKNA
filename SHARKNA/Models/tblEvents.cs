@@ -22,7 +22,7 @@
         public bool IsActive { get; set; }
         ICollection<tblEventRegistrations> EventReg { get; set; }
         ICollection<tblEventRequests> EventReq { get; set; }
-        ICollection<tblEventAttendence> EventAttend { get; set; }
+        ICollection<tblEventAttendence> EventAttend { get; set; }//TEST
 
     }
 }
