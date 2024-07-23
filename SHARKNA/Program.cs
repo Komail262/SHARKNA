@@ -38,6 +38,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.HttpOnly = HttpOnlyPolicy.Always;
     options.Secure = CookieSecurePolicy.None;
 });
+
 builder.Services.AddDbContext<SHARKNAContext>(options =>
                  options.UseSqlServer(builder.Configuration.GetConnectionString("DBCS")));
 var app = builder.Build();
@@ -76,3 +77,5 @@ app.MapControllerRoute(
 //});
 
 app.Run();
+
+//test
