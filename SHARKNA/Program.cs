@@ -7,8 +7,7 @@ using Microsoft.Extensions.Options;
 using SHARKNA;
 using SHARKNA.Models;
 using System.Configuration;
-using SHARKNA.Models;
-
+using SHARKNA.Domain;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -38,7 +37,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.HttpOnly = HttpOnlyPolicy.Always;
     options.Secure = CookieSecurePolicy.None;
 });
-
+builder.Services.AddScoped<UserDomain>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.  
 if (!app.Environment.IsDevelopment())
