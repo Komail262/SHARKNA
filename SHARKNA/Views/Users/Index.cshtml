@@ -1,6 +1,14 @@
 ﻿@model IEnumerable<SHARKNA.Models.tblUsers>
 
+@{
+    ViewData["Title"] = "Users List";
+}
+
 <h2>Users List</h2>
+
+<div>
+    <a asp-action="Create" class="btn btn-primary">Add User</a>
+</div>
 
 @if (Model == null || !Model.Any())
 {
@@ -16,6 +24,7 @@ else
                 <th>Mobile Number</th>
                 <th>Full Name (AR)</th>
                 <th>Full Name (EN)</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +36,9 @@ else
                     <td>@user.MobileNumber</td>
                     <td>@user.FullNameAr</td>
                     <td>@user.FullNameEn</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
+                    </td>
                 </tr>
             }
         </tbody>

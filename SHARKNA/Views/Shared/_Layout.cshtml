@@ -4,43 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم  بالنظام</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - لوحة التحكم بالنظام</title>
 
     <!-- Favico -->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/imgs/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/imgs/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/imgs/favicon/favicon-16x16.png">
-    <link rel="manifest" href="assets/imgs/favicon/site.webmanifest">
-    <link rel="mask-icon" href="assets/imgs/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/assets/imgs/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/imgs/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/imgs/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/assets/imgs/favicon/site.webmanifest">
+    <link rel="mask-icon" href="~/assets/imgs/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
-    <link rel="stylesheet" href="Assets/css/bootstrap.rtl.min.css">
-    <link rel="stylesheet" href="Assets/css/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="Assets/css/root.css">
+    <link rel="stylesheet" href="~/Assets/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="~/Assets/css/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/Assets/css/root.css">
 
     <!--------- CSS Liberaries ---------->
     <!-- Data Table -->
-    <!-- <link rel="stylesheet" href="Assets/lib/DataTable/css/select.dataTables.min.css" /> -->
-    <!-- <link rel="stylesheet" href="Assets/lib/DataTable/css/datatables_customization.css" /> -->
-    <!-- customization -->
-    <link rel="stylesheet" href="Assets/css/app_rtl.css">
+    <link rel="stylesheet" href="~/Assets/lib/DataTable/css/select.dataTables.min.css" />
+    <link rel="stylesheet" href="~/Assets/lib/DataTable/css/datatables_customization.css" />
 
+    <!-- customization -->
+    <link rel="stylesheet" href="~/Assets/css/app_rtl.css">
 </head>
 
 <body>
-
     <main class="app_wrap">
         <!-- Start Side Menu -->
         <nav class="side_menu">
             <div class="logo_wrap">
-                <img src="assets/imgs/KFU_Logo_Dark.png" alt="Logo">
+                <img src="~/assets/imgs/KFU_Logo_Dark.png" alt="Logo">
             </div>
             <div class="menu_links">
                 <ul>
                     <li>
-                        <a href="index.html">
+                        <a href="/">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"></rect>
@@ -53,7 +52,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="orders.html" class="active">
+                        <a href="/Orders" class="active">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 10H13V11C13 11.6 12.6 12 12 12C11.4 12 11 11.6 11 11V10H3C2.4 10 2 10.4 2 11V13H22V11C22 10.4 21.6 10 21 10Z"
@@ -82,8 +81,8 @@
                             <span>إدارة</span>
                         </a>
                         <ul>
-                            <li><a href="users.html"><span>المستخدمين</span></a></li>
-                            <li><a href="rules.html"><span>الأدوار</span></a></li>
+                            <li><a href="/Users"><span>المستخدمين</span></a></li>
+                            <li><a href="/Rules"><span>الأدوار</span></a></li>
                         </ul>
                     </li>
                 </ul>
@@ -147,7 +146,8 @@
                                 <path d="M6 20.05v-.05a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v.05" />
                             </svg>
                         </a>
-                        <ul class="dropdown-menu account_dd br-stand border-1 border-gray-300 p-4 shadow" aria-labelledby="account">
+                        <ul class="dropdown-menu account_dd br-stand border-1 border-gray-300 p-4 shadow"
+                            aria-labelledby="account">
                             <li>
                                 <div class="d-flex flex-column">
                                     <h6 class="mb-0">عبد الرحمن ال عبد اللطيف</h6>
@@ -184,16 +184,50 @@
     </main>
 
     <!-- main JS Scripts -->
-    <script src="Assets/js/jquery-3.4.1.min.js"></script>
-    <script src="Assets/js/popper.min.js"></script>
-    <script src="Assets/js/bootstrap.min.js"></script>
+    <script src="~/Assets/js/jquery-3.4.1.min.js"></script>
+    <script src="~/Assets/js/popper.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
 
     <!--------- JS Liberaries ---------->
-    <script src="Assets/lib/DataTable/js/dataTables.min.js"></script>
+    <script src="~/Assets/lib/DataTable/js/dataTables.min.js"></script>
+    <script src="~/Assets/lib/quickSearch/jquery.quicksearch.js"></script>
 
     <!-- customization -->
-    <script src="Assets/js/app.js"></script>
+    <script src="~/Assets/js/app.js"></script>
+    <script>
+        $("#addSectionBtn").on('click', function () {
+            let sections_item_length = $('.sub_sections_wrap').find('.sub_sections_item').length
+            $('.sub_sections_wrap').append(`
+                        <div class="sub_sections_item">
+                            <i class="bi bi-trash3 delete_sub_sec"></i>
+                            <div class="form-group">
+                                <label for="ss_name_${sections_item_length}">اسم الحقل</label>
+                                <input type="text" name="ss_name_${sections_item_length}" id="ss_name_${sections_item_length}" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="ss_type_${sections_item_length}">نوع الحقل</label>
+                                <select name="ss_type_${sections_item_length}" id="ss_type_${sections_item_length}" class="form-select">
+                                    <option value="checkbox">checkbox</option>
+                                    <option value="radiobox">radioBox</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="ss_req_${sections_item_length}">
+                                    <label class="form-check-label" for="ss_req_${sections_item_length}">
+                                        مطلوب اجباري
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `)
+        })
 
+
+        $(".sub_sections_wrap").on('click', '.delete_sub_sec', function (e) {
+            $(this).parent('.sub_sections_item').remove()
+        })
+    </script>
 </body>
 
 </html>
