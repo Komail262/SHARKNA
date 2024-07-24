@@ -33,5 +33,18 @@ namespace SHARKNA.Domain
             _context.tblUsers.Update(user);
             _context.SaveChanges();
         }
+
+        public bool IsEmailDuplicate(String email, Guid? userId = null)
+        {
+            if (userId == null)
+            { 
+                return _context.tblUsers.Any(u => u.Email == email);
+            
+            }
+            else
+            {
+                return _context.tblUsers.Any(u => u.Email == email && u.Id != userId);
+            }
+        }
     }
 }
