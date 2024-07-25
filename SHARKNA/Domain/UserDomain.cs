@@ -27,20 +27,51 @@ namespace SHARKNA.Domain
             }).ToList();
         }
 
-        public tblUsers GetTblUserById(Guid id)
+        public UserViewModel GetTblUserById(Guid id)
         {
-            return _context.tblUsers.FirstOrDefault(u => u.Id == id);
+        var Tuser = _context.tblUsers.FirstOrDefault(u => u.Id == id);
+            UserViewModel uu = new UserViewModel();
+            uu.Id = id;
+            uu.UserName = Tuser.UserName;
+            uu.Password = Tuser.Password;
+            uu.Email = Tuser.Email;
+            uu.FullNameAr = Tuser.FullNameAr;   
+            uu.MobileNumber = Tuser.MobileNumber;
+            uu.FullNameEn = Tuser.FullNameEn;   
+            return uu;
+
+
+
         }
 
-        public void AddUser(tblUsers user)
+        public void AddUser(UserViewModel user)
         {
-            _context.tblUsers.Add(user);
+            tblUsers Vuser = new tblUsers();
+            Vuser.Id = user.Id;
+            Vuser.UserName = user.UserName;
+            Vuser.Password = user.Password; 
+            Vuser.Email = user.Email;
+            Vuser.FullNameAr = user.FullNameAr;
+            Vuser.FullNameEn = user.FullNameEn;
+            Vuser.MobileNumber = user.MobileNumber;
+
+            _context.tblUsers.Add(Vuser);
             _context.SaveChanges();
         }
 
-        public void UpdateUser(tblUsers user)
+        public void UpdateUser(UserViewModel user)
+
         {
-            _context.tblUsers.Update(user);
+            tblUsers Vuser = new tblUsers();
+            Vuser.Id = user.Id;
+            Vuser.UserName = user.UserName;
+            Vuser.Password = user.Password;
+            Vuser.Email = user.Email;
+            Vuser.FullNameAr = user.FullNameAr;
+            Vuser.FullNameEn = user.FullNameEn;
+            Vuser.MobileNumber = user.MobileNumber;
+
+            _context.tblUsers.Update(Vuser);
             _context.SaveChanges();
         }
 

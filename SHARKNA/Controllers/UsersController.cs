@@ -4,6 +4,7 @@ using SHARKNA.Domain;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using SHARKNA.ViewModels;
 
 namespace SHARKNA.Controllers
 {
@@ -31,7 +32,7 @@ namespace SHARKNA.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(tblUsers user)
+        public IActionResult Create(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
@@ -62,7 +63,7 @@ namespace SHARKNA.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(tblUsers user)
+        public IActionResult Edit(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
