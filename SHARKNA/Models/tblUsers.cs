@@ -6,7 +6,7 @@ namespace SHARKNA.Models
     public class tblUsers
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         [StringLength(100)]

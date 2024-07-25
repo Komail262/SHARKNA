@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SHARKNA.Models;
+using SHARKNA.ViewModels;
 
 namespace SHARKNA.Domain
 {
@@ -12,9 +13,18 @@ namespace SHARKNA.Domain
             _context = context;
         }
 
-        public IEnumerable<tblUsers> GetTblUsers()
+        public IEnumerable<UserViewModel> GetTblUsers()
         {
-            return _context.tblUsers.ToList();
+            return _context.tblUsers.Select( x => new UserViewModel
+            {
+                Id = x.Id,
+                UserName = x.UserName,
+                Password = x.Password,
+                Email = x.Email,
+                FullNameAr = x.FullNameAr,
+                FullNameEn = x.FullNameEn,
+                MobileNumber = x.MobileNumber
+            }).ToList();
         }
 
         public tblUsers GetTblUserById(Guid id)

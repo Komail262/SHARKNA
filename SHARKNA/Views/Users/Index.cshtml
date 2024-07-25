@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SHARKNA.Models.tblUsers>
+﻿@model IEnumerable<UserViewModel>
 
 @{
     ViewData["Title"] = "Users List";
@@ -26,11 +26,11 @@
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                                <th>اسم المستخدم</th>
-                                <th>البريد الالكتروني</th>
-                                <th>رقم الجوال</th>
-                                <th>الاسم</th>
-                                <th>Full Name</th>
+                                <th>@Html.DisplayNameFor(m => m.UserName)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
+                                <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
