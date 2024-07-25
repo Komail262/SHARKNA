@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SHARKNA.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel //
     {
         public Guid Id { get; set; }
         [Required(ErrorMessage ="هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("اسم المستخدم1")]
+        [DisplayName("اسم المستخدم")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
