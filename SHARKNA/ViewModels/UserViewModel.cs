@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SHARKNA.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel //
     {
         public Guid Id { get; set; }
         [Required(ErrorMessage ="هذا الحقل اجباري")]
