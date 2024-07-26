@@ -1,6 +1,6 @@
 ﻿namespace SHARKNA.Models
 {
-    public class tblBoards
+    public class tblBoards //ahmed alrubayyi
     {
         public Guid Id { get; set; }
         //first

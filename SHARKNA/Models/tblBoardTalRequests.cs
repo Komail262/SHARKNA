@@ -14,7 +14,7 @@
         public string Skills { get; set; }
         public string Experiences { get; set; }
 
-        public string RejectionReasons { get; set; }
+        public string? RejectionReasons { get; set; }
 
         public tblBoards Board { get; set; }
         public Guid BoardId { get; set; }

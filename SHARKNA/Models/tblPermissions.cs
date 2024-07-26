@@ -1,4 +1,4 @@
-﻿namespace SHARKNA.Models
+﻿namespace SHARKNA.Models //ziyad
 {
     public class tblPermissions
     {
