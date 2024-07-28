@@ -2,7 +2,7 @@
 {
     public class tblBoards //ahmed alrubayyi
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         //first
         public string NameAr { get; set; }
         public string NameEn { get; set; }

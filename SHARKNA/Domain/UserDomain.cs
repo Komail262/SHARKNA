@@ -15,7 +15,7 @@ namespace SHARKNA.Domain
 
         public IEnumerable<UserViewModel> GetTblUsers()
         {
-            return _context.tblUsers.Select( x => new UserViewModel
+            return _context.tblUsers.Select(x => new UserViewModel
             {
                 Id = x.Id,
                 UserName = x.UserName,
@@ -29,15 +29,15 @@ namespace SHARKNA.Domain
 
         public UserViewModel GetTblUserById(Guid id)
         {
-        var Tuser = _context.tblUsers.FirstOrDefault(u => u.Id == id);
+            var Tuser = _context.tblUsers.FirstOrDefault(u => u.Id == id);
             UserViewModel uu = new UserViewModel();
             uu.Id = id;
             uu.UserName = Tuser.UserName;
             uu.Password = Tuser.Password;
             uu.Email = Tuser.Email;
-            uu.FullNameAr = Tuser.FullNameAr;   
+            uu.FullNameAr = Tuser.FullNameAr;
             uu.MobileNumber = Tuser.MobileNumber;
-            uu.FullNameEn = Tuser.FullNameEn;   
+            uu.FullNameEn = Tuser.FullNameEn;
             return uu;
 
         }
@@ -47,7 +47,7 @@ namespace SHARKNA.Domain
             tblUsers Vuser = new tblUsers();
             Vuser.Id = user.Id;
             Vuser.UserName = user.UserName;
-            Vuser.Password = user.Password; 
+            Vuser.Password = user.Password;
             Vuser.Email = user.Email;
             Vuser.FullNameAr = user.FullNameAr;
             Vuser.FullNameEn = user.FullNameEn;
@@ -76,9 +76,9 @@ namespace SHARKNA.Domain
         public bool IsEmailDuplicate(string email, Guid? userId = null)
         {
             if (userId == null)
-            { 
+            {
                 return _context.tblUsers.Any(u => u.Email == email);
-            
+
             }
             else
             {
