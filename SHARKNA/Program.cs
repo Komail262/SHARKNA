@@ -39,6 +39,9 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 });
 builder.Services.AddScoped<UserDomain>();
 
+builder.Services.AddScoped<BoardDomain>();
+
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.  
 if (!app.Environment.IsDevelopment())
