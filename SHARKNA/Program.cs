@@ -42,6 +42,7 @@ builder.Services.AddScoped<UserDomain>();
 builder.Services.AddScoped<BoardDomain>();
 
 
+builder.Services.AddScoped<PermissionDomain>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.  
 if (!app.Environment.IsDevelopment())
