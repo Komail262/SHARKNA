@@ -30,7 +30,7 @@
                                         <label asp-for="BoardId" class="mb-1">اسم النادي </label>
                                         <select asp-for="BoardId" 
                                                 class="form-control"
-                                                asp-items="">
+                                                asp-items="@ViewBag.BoardsOfList">
                                         </select>
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
 

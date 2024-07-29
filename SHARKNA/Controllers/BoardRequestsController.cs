@@ -10,11 +10,12 @@ namespace SHARKNA.Controllers
     public class BoardRequestsController : Controller
     {
         private readonly BoardRequestsDomain _boardRequestsDomain;
-        private readonly SHARKNAContext _context;
-        public BoardRequestsController (BoardRequestsDomain boardRequestsDomain, SHARKNAContext context)
+        private readonly BoardDomain _BoardDomain;
+
+        public BoardRequestsController (BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain)
         {
             _boardRequestsDomain = boardRequestsDomain;
-            _context = context;
+            _BoardDomain = BoardDomain;
         }
         public IActionResult Index()
         {
@@ -25,7 +26,7 @@ namespace SHARKNA.Controllers
         public IActionResult Create()
         {
            
-            ViewBag.BoardsOfList= new SelectList(ViewBag.BoardsOfList, "Value", "Text");
+            ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
 
             return View();
         }
@@ -33,10 +34,22 @@ namespace SHARKNA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //public IActionResult Create(BoardRequestsViewModel boardRequestsViewModel)
+        //{
+        //    var selectedValue = boardRequestsViewModel.BoardId;
+
+        //    return View(boardRequestsViewModel);
+        //}
+
         public IActionResult Create(BoardRequestsViewModel boardRequestsViewModel)
         {
-            var selectedValue = boardRequestsViewModel.BoardId;
+            if (ModelState.IsValid)
+            {
+                boardRequestsViewModel.Id = Guid.NewGuid();
+                _boardRequestsDomain.AddBoardReq(boardRequestsViewModel);
+                return RedirectToAction(nameof(Index));
 
+            }
             return View(boardRequestsViewModel);
         }
 

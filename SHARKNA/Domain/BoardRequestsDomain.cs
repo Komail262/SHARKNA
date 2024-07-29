@@ -45,7 +45,7 @@ namespace SHARKNA.Domain
 
         }
 
-        public void AddUser(BoardRequestsViewModel user)
+        public void AddBoardReq(BoardRequestsViewModel user)
         {
             tblBoardRequests Vuser = new tblBoardRequests();
             Vuser.Id = user.Id;
