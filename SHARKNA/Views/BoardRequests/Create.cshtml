@@ -1,7 +1,5 @@
 ﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
-@{
-    ViewData["Title"] = "Create Board Request";
-}
+
 
 <h2>اضافة طلب</h2>
 
@@ -32,8 +30,8 @@
                                         <label asp-for="BoardId" class="mb-1">اسم النادي </label>
                                         <select asp-for="BoardId" 
                                                 class="form-control"
-                                                asp-items="@(new SelectList(ViewBag.BoardsOfList, "Value","Text"))">
-                                            </select>
+                                                asp-items="">
+                                        </select>
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
 
                                     </div>

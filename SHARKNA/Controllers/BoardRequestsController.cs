@@ -24,18 +24,8 @@ namespace SHARKNA.Controllers
 
         public IActionResult Create()
         {
-            var BoardList = (from tblBoards in _context.tblBoards
-                             select new SelectListItem()
-                             {
-                                 Text = tblBoards.NameEn,
-                                 Value = tblBoards.Id.ToString()
-                             }).ToList();
-            BoardList.Insert(0, new SelectListItem()
-            {
-                Text = "--Select--",
-                Value = string.Empty
-            });
-            ViewBag.BoardsOfList=BoardList;
+           
+            ViewBag.BoardsOfList= new SelectList(ViewBag.BoardsOfList, "Value", "Text");
 
             return View();
         }

@@ -20,6 +20,7 @@ namespace SHARKNA.Domain
                 Id = x.Id,
                 UserName = x.UserName,
                 BoardId = x.BoardId,
+                
                 Email = x.Email,
                 FullNameAr = x.FullNameAr,
                 FullNameEn = x.FullNameEn,

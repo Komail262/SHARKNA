@@ -41,6 +41,6 @@ namespace SHARKNA.Models
         [StringLength(100)]
         public Guid RequestStatusId { get; set; }
         public string? RejectionReasons { get; set; }
-
+        
     }
 }

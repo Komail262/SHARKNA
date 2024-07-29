@@ -19,6 +19,11 @@ namespace SHARKNA.ViewModels
         [DisplayName("النادي")]
         public Guid BoardId { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("حالة الطلب")]
+        public Guid RequestStatusId { get; set; }
+
+
         public List<SelectListItem> BoardsOfList { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
