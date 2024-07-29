@@ -38,6 +38,11 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.None;
 });
 builder.Services.AddScoped<UserDomain>();
+
+builder.Services.AddScoped<BoardDomain>();
+
+
+//.Services.AddScoped<PermissionDomain>();
 builder.Services.AddScoped<BoardRequestsDomain>();
 var app = builder.Build();
 
