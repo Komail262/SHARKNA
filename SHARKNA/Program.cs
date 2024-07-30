@@ -41,6 +41,8 @@ builder.Services.AddScoped<UserDomain>();
 
 builder.Services.AddScoped<BoardDomain>();
 
+builder.Services.AddScoped<RequestStatusDomain>();
+
 
 //.Services.AddScoped<PermissionDomain>();
 builder.Services.AddScoped<BoardRequestsDomain>();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SHARKNA.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,12 +20,13 @@ namespace SHARKNA.ViewModels
         [DisplayName("النادي")]
         public Guid BoardId { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        
         [DisplayName("حالة الطلب")]
         public Guid RequestStatusId { get; set; }
 
 
-        public List<SelectListItem> BoardsOfList { get; set; }
+        public ICollection<tblBoards> BoardsOfList { get; set; }
+        public ICollection<tblRequestStatus> ReqStatusOfList { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
@@ -45,5 +47,10 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("الاسم بالانجليزي")]
         public string FullNameEn { get; set; }
+
+        [StringLength(100)]
+        [DisplayName(" سبب الرفض")]
+        public string? RejectionReasons { get; set; }
+
     }
 }

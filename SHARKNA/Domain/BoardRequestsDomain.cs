@@ -20,7 +20,8 @@ namespace SHARKNA.Domain
                 Id = x.Id,
                 UserName = x.UserName,
                 BoardId = x.BoardId,
-                
+                RejectionReasons = x.RejectionReasons,
+    
                 Email = x.Email,
                 FullNameAr = x.FullNameAr,
                 FullNameEn = x.FullNameEn,
@@ -30,63 +31,71 @@ namespace SHARKNA.Domain
 
         public BoardRequestsViewModel GetTblBoardRequestsById(Guid id)
         {
-            var Req = _context.tblBoardRequests.FirstOrDefault(u => u.Id == id);
+            var BoardReq = _context.tblBoardRequests.FirstOrDefault(u => u.Id == id);
             BoardRequestsViewModel uu = new BoardRequestsViewModel();
             uu.Id = id;
-            uu.UserName = Req.UserName;
-            uu.BoardId = Req.BoardId;
-            uu.Email = Req.Email;
-            uu.FullNameAr = Req.FullNameAr;
-            uu.MobileNumber = Req.MobileNumber;
-            uu.FullNameEn = Req.FullNameEn;
+            uu.UserName = BoardReq.UserName;
+            uu.BoardId = BoardReq.BoardId;
+            uu.RejectionReasons = BoardReq.RejectionReasons;
+            uu.Email = BoardReq.Email;
+            uu.FullNameAr = BoardReq.FullNameAr;
+            uu.MobileNumber = BoardReq.MobileNumber;
+            uu.FullNameEn = BoardReq.FullNameEn;
             return uu;
 
 
 
         }
 
-        public void AddBoardReq(BoardRequestsViewModel user)
+        public void AddBoardReq(BoardRequestsViewModel BoardReq)
         {
-            tblBoardRequests Vuser = new tblBoardRequests();
-            Vuser.Id = user.Id;
-            Vuser.UserName = user.UserName;
-            Vuser.BoardId = user.BoardId;
-            Vuser.Email = user.Email;
-            Vuser.FullNameAr = user.FullNameAr;
-            Vuser.FullNameEn = user.FullNameEn;
-            Vuser.MobileNumber = user.MobileNumber;
+            tblBoardRequests VBoardReq = new tblBoardRequests();
+            VBoardReq.Id = BoardReq.Id;
+            VBoardReq.UserName = BoardReq.UserName;
+            VBoardReq.BoardId = BoardReq.BoardId;
+            VBoardReq.RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
+            VBoardReq.Email = BoardReq.Email;
+            VBoardReq.FullNameAr = BoardReq.FullNameAr;
+            VBoardReq.FullNameEn = BoardReq.FullNameEn;
+            VBoardReq.MobileNumber = BoardReq.MobileNumber;
 
-            _context.tblBoardRequests.Add(Vuser);
+            _context.Add(VBoardReq);
             _context.SaveChanges();
         }
 
-        public void UpdateUser(BoardRequestsViewModel user)
+        public void UpdateBoardReq(BoardRequestsViewModel BoardReq)
 
         {
-            tblBoardRequests Vuser = new tblBoardRequests();
-            Vuser.Id = user.Id;
-            Vuser.UserName = user.UserName;
-            Vuser.BoardId = user.BoardId;
-            Vuser.Email = user.Email;
-            Vuser.FullNameAr = user.FullNameAr;
-            Vuser.FullNameEn = user.FullNameEn;
-            Vuser.MobileNumber = user.MobileNumber;
+            tblBoardRequests VBoardReq = new tblBoardRequests();
+            VBoardReq.Id = BoardReq.Id;
+            VBoardReq.UserName = BoardReq.UserName;
+            VBoardReq.BoardId = BoardReq.BoardId;
+            VBoardReq.RejectionReasons = BoardReq.RejectionReasons;
+            VBoardReq.Email = BoardReq.Email;
+            VBoardReq.FullNameAr = BoardReq.FullNameAr;
+            VBoardReq.FullNameEn = BoardReq.FullNameEn;
+            VBoardReq.MobileNumber = BoardReq.MobileNumber;
 
-            _context.tblBoardRequests.Update(Vuser);
+            _context.tblBoardRequests.Update(VBoardReq);
             _context.SaveChanges();
         }
 
-        public bool IsEmailDuplicate(String email, Guid? userId = null)
+        public bool IsEmailDuplicate(string email, Guid? BoardReqId = null)
         {
-            if (userId == null)
+            if (BoardReqId == null)
             {
                 return _context.tblBoardRequests.Any(u => u.Email == email);
 
             }
             else
             {
-                return _context.tblBoardRequests.Any(u => u.Email == email && u.Id != userId);
+                return _context.tblBoardRequests.Any(u => u.Email == email && u.Id != BoardReqId);
             }
+        }
+
+        public List<tblBoards> GettblBoard()
+        {
+            return _context.tblBoards.Where(e => !e.IsDeleted && e.IsActive).ToList();
         }
     }
 }
