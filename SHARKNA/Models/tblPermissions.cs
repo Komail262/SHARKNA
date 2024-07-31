@@ -1,11 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace SHARKNA.Models //ziyad
+﻿namespace SHARKNA.Models
 {
     public class tblPermissions
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; }
         public string UserName { get; set; }
         public string FullNameAr { get; set; }
         public string FullNameEn { get; set; }

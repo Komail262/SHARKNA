@@ -1,6 +1,6 @@
 ﻿namespace SHARKNA.Models
 {
-    public class tblEventRegistrations // komail
+    public class tblEventRegistrations
     {
         public Guid Id { get; set; }
         public DateTime RegDate { get; set; }

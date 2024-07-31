@@ -1,9 +1,7 @@
-﻿@model SHARKNA.ViewModels.PermissionsViewModel
-@{
-    ViewData["Title"] = "Create Permission";
-}
+﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
 
-<h2>اضافة مستخدم</h2>
+
+<h2>اضافة طلب</h2>
 
 <section class="page_wrap">
     <div class="page_content">
@@ -26,10 +24,37 @@
 
                                     </div>
                                 </div><!-- END ITEM -->
-                                
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="BoardId" class="mb-1">اسم النادي </label>
+                                        <select asp-for="BoardId" 
+                                                class="form-control"
+                                                asp-items="@ViewBag.BoardsOfList">
+                                        </select>
+                                        <span asp-validation-for="BoardId" class="text-danger"></span>
+
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
                                
-                               
-                              
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">البريد الإلكتروني</label>
+                                        <input asp-for="Email" type="email" placeholder="name@email.com"
+                                               class="form-control text-start">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">رقم الجوال</label>
+                                        <input asp-for="MobileNumber" type="tel" placeholder=" " class="form-control">
+                                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">الاسم كامل</label>

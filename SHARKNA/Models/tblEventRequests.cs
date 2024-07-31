@@ -1,4 +1,4 @@
-﻿namespace SHARKNA.Models // ahmed albahrani
+﻿namespace SHARKNA.Models
 {
     public class tblEventRequests
     {

@@ -1,7 +1,7 @@
-﻿@model IEnumerable<PermissionsViewModel>
+﻿@model IEnumerable<BoardRequestsViewModel>
 
 @{
-    ViewData["Title"] = "Users List";
+    ViewData["Title"] = "Board Requests List";
 }
 
 <!DOCTYPE html>
@@ -12,13 +12,13 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">ادارة المستخدمين</h5>
+                    <h5 class="m-0">ادارة طلبات الاندية</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
                         <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة مستخدم</a>
+                            <a asp-action="Create" class="btn btn-primary">التسجيل في نادي </a>
                         </div>
                     </div>
                 </div>
@@ -27,6 +27,9 @@
                         <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(m => m.UserName)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                                <th>@Html.DisplayNameFor(m => m.BoardId)</th> 
+                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
                                 <th>الإجراءات</th>
@@ -37,6 +40,9 @@
                             {
                                 <tr>
                                     <td>@user.UserName</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.BoardId</td> 
+                                    <td>@user.MobileNumber</td>
                                     <td>@user.FullNameAr</td>
                                     <td>@user.FullNameEn</td>
                                     <td class="action_td text-end">
