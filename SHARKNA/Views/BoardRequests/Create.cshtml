@@ -1,6 +1,35 @@
 ﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
 
-
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "BoardRequests")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
 <h2>اضافة طلب</h2>
 
 <section class="page_wrap">

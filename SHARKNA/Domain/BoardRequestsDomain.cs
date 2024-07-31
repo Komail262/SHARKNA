@@ -47,21 +47,29 @@ namespace SHARKNA.Domain
 
         }
 
-        public void AddBoardReq(BoardRequestsViewModel BoardReq)
+        public int AddBoardReq(BoardRequestsViewModel BoardReq)
         {
-            tblBoardRequests VBoardReq = new tblBoardRequests();
-            VBoardReq.Id = BoardReq.Id;
-            VBoardReq.UserName = BoardReq.UserName;
-            VBoardReq.BoardId = BoardReq.BoardId;
-            VBoardReq.RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
-            VBoardReq.Email = BoardReq.Email;
-            VBoardReq.FullNameAr = BoardReq.FullNameAr;
-            VBoardReq.FullNameEn = BoardReq.FullNameEn;
-            VBoardReq.MobileNumber = BoardReq.MobileNumber;
+            try
+            {
+                tblBoardRequests VBoardReq = new tblBoardRequests();
+                VBoardReq.Id = BoardReq.Id;
+                VBoardReq.UserName = BoardReq.UserName;
+                VBoardReq.BoardId = BoardReq.BoardId;
+                VBoardReq.RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
+                VBoardReq.Email = BoardReq.Email;
+                VBoardReq.FullNameAr = BoardReq.FullNameAr;
+                VBoardReq.FullNameEn = BoardReq.FullNameEn;
+                VBoardReq.MobileNumber = BoardReq.MobileNumber;
 
-            _context.Add(VBoardReq);
-            _context.SaveChanges();
-        }
+                _context.Add(VBoardReq);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex) {
+                return 0;
+            }
+
+            }
 
         public void UpdateBoardReq(BoardRequestsViewModel BoardReq)
 

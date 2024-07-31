@@ -30,7 +30,8 @@ namespace SHARKNA.Controllers
         {
            
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-            //ViewBag.ReqStatusOfList = new SelectList(_RequestStatusDomain., "Id", "NameAr");
+           \
+
 
             return View();
         }
@@ -41,19 +42,32 @@ namespace SHARKNA.Controllers
 
         public IActionResult Create(BoardRequestsViewModel BoardReq)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (_boardRequestsDomain.IsEmailDuplicate(BoardReq.Email))
+                ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+                if (ModelState.IsValid)
                 {
-                    ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
-                    return View(BoardReq);
-                }
+                    if (_boardRequestsDomain.IsEmailDuplicate(BoardReq.Email))
+                    {
+                        ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
+                        return View(BoardReq);
+                    }
 
-                BoardReq.Id = Guid.NewGuid();
-                //BoardReq.RegDate = DateTime.Now;
-                _boardRequestsDomain.AddBoardReq(BoardReq);
-                return RedirectToAction(nameof(Index));
+                    BoardReq.Id = Guid.NewGuid();
+                    //BoardReq.RegDate = DateTime.Now;
+                   int check =  _boardRequestsDomain.AddBoardReq(BoardReq);
+                    if (check == 1)
+                        ViewData["Successful"] = "Registeration succ";
+                    else
+                        ViewData["Falied"] = "Falied";
+                    return View(BoardReq);
+                    
+                }
             }
+            catch (Exception ex) {
+                ViewData["Falied"] = "Falied";
+            }
+
             return View(BoardReq);
         }
 
