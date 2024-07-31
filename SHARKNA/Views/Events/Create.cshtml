@@ -1,0 +1,144 @@
+﻿@model SHARKNA.ViewModels.EventViewModel
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<h2>اضافة حدث</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">إضافة الحدث</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="EventTitleAr" class="mb-1">اسم الحدث</label>
+                                        <input asp-for="EventTitleAr" type="text" placeholder="اسم الحدث" class="form-control">
+                                        <span asp-validation-for="EventTitleAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="EventTitleEn" class="mb-1">اسم الحدث بالاتجليزي</label>
+                                        <input asp-for="EventTitleEn" type="text" placeholder="اسم الحدث بالانجليزي" class="form-control">
+                                        <span asp-validation-for="EventTitleEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="EventStartDate" class="mb-1">تاريخ بداية الحدث</label>
+                                        <input asp-for="EventStartDate" type="datetime-local" class="form-control text-start">
+                                        <span asp-validation-for="EventStartDate" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventEndtDate" class="mb-1"></label>
+                                        <input asp-for="EventEndtDate" type="datetime-local" class="form-control text-start">
+                                        <span asp-validation-for="EventEndtDate" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="Time" class="mb-1">بداية الساعة الحدث</label>
+                                        <input asp-for="Time" type="time" placeholder="الساعة " class="form-control">
+                                        <span asp-validation-for="Time" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="EndRegTime" class="mb-1">نهاية الساعة الحدث</label>
+                                        <input asp-for="EndRegTime" type="time" placeholder="الساعة " class="form-control">
+                                        <span asp-validation-for="EndRegTime" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="SpeakersAr" class="mb-1">المتحدث بي الحدث</label>
+                                        <input asp-for="SpeakersAr" type="text" placeholder="المتحدث بي الحدث" class="form-control">
+                                        <span asp-validation-for="SpeakersAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="SpeakersEn" class="mb-1">المتحدث بي الحدث بالانجليزي</label>
+                                        <input asp-for="SpeakersEn" type="text" placeholder="المتحدث بالانجليزي" class="form-control">
+                                        <span asp-validation-for="SpeakersEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="TopicAr" class="mb-1">موضوع الحدث بالعربي</label>
+                                        <input asp-for="TopicAr" type="text" placeholder="موضوع الحدث" class="form-control">
+                                        <span asp-validation-for="TopicAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="TopicEn" class="mb-1">الموضوع بالانجليزي</label>
+                                        <input asp-for="TopicEn" type="text" placeholder="الموضوع بالانجليزي" class="form-control">
+                                        <span asp-validation-for="TopicEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="DescriptionAr" class="mb-1">وصف الحدث بالعربي</label>
+                                        <input asp-for="DescriptionAr" type="text" placeholder="وصف الحدث بالعربي" class="form-control">
+                                        <span asp-validation-for="DescriptionAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="DescriptionEn" class="mb-1">وصف الحدث بالانجليزي</label>
+                                        <input asp-for="DescriptionEn" type="text" placeholder="وصف الحدث بالانجليزي" class="form-control">
+                                        <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="LocationAr" class="mb-1">مواقع الحدث بالعربي</label>
+                                        <input asp-for="LocationAr" type="text" placeholder="مواقع الحدث بالعربي" class="form-control">
+                                        <span asp-validation-for="LocationAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="LocationEn" class="mb-1">مواقع الحدث بالانجليزي</label>
+                                        <input asp-for="LocationEn" type="text" placeholder="مواقع الحدث بالانجليزي" class="form-control">
+                                        <span asp-validation-for="LocationEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" value="Create" class="btn btn-primary px-5" title="save">حفظ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Page Wrap -->
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

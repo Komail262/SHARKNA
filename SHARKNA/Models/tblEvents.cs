@@ -2,7 +2,7 @@
 {
     public class tblEvents
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string EventTitleAr { get; set; }
         public string EventTitleEn { get; set; }
         public DateTime EventStartDate { get; set; }

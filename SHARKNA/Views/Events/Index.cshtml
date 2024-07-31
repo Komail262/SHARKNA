@@ -1,0 +1,86 @@
+﻿@model IEnumerable<EventViewModel>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <!-- Start Page Wrap -->
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">ادارة الفعاليات</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                        <div>
+                            <a asp-action="Create" class="btn btn-primary">إضافة الحدث</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.Time)</th>
+                                <th>@Html.DisplayNameFor(m => m.EndRegTime)</th>
+                                <th>@Html.DisplayNameFor(m => m.SpeakersAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.SpeakersEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.TopicAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.TopicEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.LocationAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.LocationEn)</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Event in Model)
+                            {
+                                <tr>
+                                    <td>@Event.EventTitleAr</td>
+                                    <td>@Event.EventTitleEn</td>
+                                    <td>@Event.EventStartDate</td>
+                                    <td>@Event.EventEndtDate</td>
+                                    <td>@Event.Time</td>
+                                    <td>@Event.EndRegTime</td>
+                                    <td>@Event.SpeakersAr</td>
+                                    <td>@Event.SpeakersEn</td>
+                                    <td>@Event.TopicAr</td>
+                                    <td>@Event.TopicEn</td>
+                                    <td>@Event.DescriptionAr</td>
+                                    <td>@Event.DescriptionEn</td>
+                                    <td>@Event.LocationAr</td>
+                                    <td>@Event.LocationEn</td>
+                                    <td class="action_td text-end">
+                                        <div class="d-flex gap-2">
+                                            <a asp-action="Edit" asp-route-id="@Event.Id" class="btn btn-sm btn-success">تعديل</a>
+                                            <a asp-action="Delete" asp-route-id="@Event.Id" class="btn btn-sm btn-danger">حذف</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Page Wrap -->
+    <!-- Start Footer -->
+    <footer class="d-flex justify-content-center align-items-center">
+        <p class="m-0 d-flex justify-content-center">
+            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
+        </p>
+    </footer><!-- End Footer -->
+
+</body>
+</html>
