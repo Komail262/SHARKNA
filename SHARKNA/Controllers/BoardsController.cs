@@ -41,6 +41,10 @@ namespace SHARKNA.Controllers
             return View(board);
         }
 
+
+
+        //update and delete 
+
         public IActionResult Update(Guid id)
         {
             var board = _boardDomain.GetTblBoardById(id);
@@ -64,15 +68,17 @@ namespace SHARKNA.Controllers
         }
 
 
-        public IActionResult Privacy()
+        //delete
+       
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Guid id)
         {
-            return View();
+            _boardDomain.DeleteBoard(id);
+            return RedirectToAction(nameof(Index));
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //end delete
+      
     }
 }

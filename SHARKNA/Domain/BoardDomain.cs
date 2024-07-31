@@ -59,7 +59,9 @@ namespace SHARKNA.Domain
             _context.tblBoards.Add(Aboard);
             _context.SaveChanges();
         }
-        
+
+        //changeing here for Update
+
         public void UpdateBoard(BoardViewModel board)
         {
             tblBoards Aboard = new tblBoards();
@@ -74,6 +76,52 @@ namespace SHARKNA.Domain
 
             _context.tblBoards.Update(Aboard);
             _context.SaveChanges();
+        }
+
+
+        //public void UpdateBoard(BoardViewModel board) // will update board if not null 
+        //{
+        //    var Aboard = _context.tblBoards.FirstOrDefault(b => b.Id == board.Id);
+        //    if (Aboard != null)
+        //    {
+        //        Aboard.NameAr = board.NameAr;
+        //        Aboard.NameEn = board.NameEn;
+        //        Aboard.DescriptionAr = board.DescriptionAr;
+        //        Aboard.DescriptionEn = board.DescriptionEn;
+        //        Aboard.IsActive = board.IsActive;
+        //        Aboard.IsDeleted = board.IsDeleted;
+
+        //        _context.tblBoards.Update(Aboard);
+        //        _context.SaveChanges();
+        //    }
+        //}
+
+        //End Update
+
+
+        //delete
+
+        //public void DeleteBoard(Guid id) // here will delete in view but will save in databse and change status of isdelete and isactive
+        //{
+        //    var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
+        //    if (board != null)
+        //    {
+        //        board.IsDeleted = true;
+        //        board.IsActive = false;
+        //        _context.Update(board);
+        //        _context.SaveChanges();
+        //    }
+        //}
+
+        public void DeleteBoard(Guid id)
+        {
+            var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
+            if (board != null)
+            {
+                board.IsDeleted = true;
+                _context.Update(board);
+                _context.SaveChanges();
+            }
         }
 
 
