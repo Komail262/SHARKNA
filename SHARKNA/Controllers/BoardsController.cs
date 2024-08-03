@@ -1,10 +1,9 @@
-﻿using SHARKNA.Models;
-using System.Diagnostics;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
+using SHARKNA.Models;
 using SHARKNA.ViewModels;
-using System;
+using System.Diagnostics;
 
 namespace SHARKNA.Controllers
 {
@@ -31,19 +30,34 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(BoardViewModel board)
         {
-            if (ModelState.IsValid)
+            try
             {
-                board.Id = Guid.NewGuid();
-                _boardDomain.AddBoard(board);
-                return RedirectToAction(nameof(Index));
-                            
+                if (ModelState.IsValid)
+                {
+                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    {
+                        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
+                        return View(board);
+                    }
+                    board.Id = Guid.NewGuid();
+
+                    int check = _boardDomain.AddBoard(board);
+                    // return RedirectToAction(nameof(Index));
+                    if (check == 1)
+                        ViewData["Successful"] = "Registeration succ";
+                    else
+                        ViewData["Falied"] = "Falied";
+                    return View(board);
+
+                }
             }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "Falied";
+            }
+
             return View(board);
         }
-
-
-
-        //update and delete 
 
         public IActionResult Update(Guid id)
         {
@@ -59,26 +73,57 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(BoardViewModel board)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _boardDomain.UpdateBoard(board);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+
+                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    {
+                        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
+                        return View(board);
+                    }
+                    int check = _boardDomain.UpdateBoard(board);
+                    if (check == 1)
+                        ViewData["Successful"] = "Registeration succ";
+                    else
+                        ViewData["Falied"] = "Falied";
+                    return View(board);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "Falied";
             }
             return View(board);
         }
 
+        
 
-        //delete
-       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
-            _boardDomain.DeleteBoard(id);
+            try
+            {
+                int check = _boardDomain.DeleteBoard(id);
+                if (check == 1)
+                    ViewData["Successful"] = "deletion succ";
+                else
+                    ViewData["Falied"] = "Falied";
+                //return View(id);
+
+            }
+            catch (Exception ex) {
+                ViewData["Falied"] = "Falied";
+
+            }
+            //_boardDomain.DeleteBoard(id);
             return RedirectToAction(nameof(Index));
         }
 
         //end delete
-      
+
     }
 }
