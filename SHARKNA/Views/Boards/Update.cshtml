@@ -2,15 +2,44 @@
 @{
     ViewData["Title"] = "Update Board";
 }
-
-<h2>اضافة لجنة</h2>
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Boards")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+<h2>تعديل اللجنة</h2>
 
 <section class="page_wrap">
     <div class="page_content">
 
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">إضافة طلب</h5>
+                <h5 class="m-0">تعديل اللجنة</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
