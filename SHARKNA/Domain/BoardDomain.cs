@@ -118,7 +118,8 @@ namespace SHARKNA.Domain
 
                     return 1;
                 }
-                return 0;
+                else
+                    return 0;
             }
             catch (Exception ex)
             {

@@ -15,8 +15,15 @@ namespace SHARKNA.Controllers
         {
             _boardDomain = boardDomain;
         }
-        public IActionResult Index()
+        public IActionResult Index(string Successful = "",string Falied = "")
         {
+            if (Successful != "")
+                ViewData["Successful"] = Successful;
+            else if (Falied != "")
+                ViewData["Falied"] = Falied;
+
+
+
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
@@ -44,16 +51,16 @@ namespace SHARKNA.Controllers
                     int check = _boardDomain.AddBoard(board);
                     // return RedirectToAction(nameof(Index));
                     if (check == 1)
-                        ViewData["Successful"] = "Registeration succ";
+                        ViewData["Successful"] = "تم إضافة اللجنة بنجاح";
                     else
-                        ViewData["Falied"] = "Falied";
+                        ViewData["Falied"] = "حدث خطأ بالإضافة";
                     return View(board);
 
                 }
             }
             catch (Exception ex)
             {
-                ViewData["Falied"] = "Falied";
+                ViewData["Falied"] = "حدث خطأ أثناء إضافة لجنة";
             }
 
             return View(board);
@@ -85,16 +92,16 @@ namespace SHARKNA.Controllers
                     }
                     int check = _boardDomain.UpdateBoard(board);
                     if (check == 1)
-                        ViewData["Successful"] = "Registeration succ";
+                        ViewData["Successful"] = "تم التعديل بنجاح";
                     else
-                        ViewData["Falied"] = "Falied";
+                        ViewData["Falied"] = "خطأ بالتعديل";
                     return View(board);
 
                 }
             }
             catch (Exception ex)
             {
-                ViewData["Falied"] = "Falied";
+                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
             }
             return View(board);
         }
@@ -105,22 +112,33 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
+            string Successful = "";
+            string Falied = "";
             try
             {
+               
+
                 int check = _boardDomain.DeleteBoard(id);
                 if (check == 1)
-                    ViewData["Successful"] = "deletion succ";
+                {
+                     Successful = "تم حذف اللجنة بنجاح";
+                }
+
                 else
-                    ViewData["Falied"] = "Falied";
+                {
+                     Falied = "حدث خطأ";
+
+
+                }
                 //return View(id);
 
             }
             catch (Exception ex) {
-                ViewData["Falied"] = "Falied";
+                 Falied = "حدث خطأ";
 
             }
             //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index),new {Successful = Successful,  Falied = Falied});
         }
 
         //end delete
