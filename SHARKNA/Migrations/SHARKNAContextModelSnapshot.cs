@@ -35,15 +35,12 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -53,11 +50,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -76,30 +71,24 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BoMeId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OpDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -114,18 +103,15 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OpDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReqId")
@@ -146,19 +132,15 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RejectionReasons")
@@ -168,7 +150,6 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -193,11 +174,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -212,11 +191,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DescriptionAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -226,11 +203,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -245,18 +220,15 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OpDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReqId")
@@ -277,38 +249,30 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Experiences")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RejectionReasons")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RequestStatusId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Skills")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -335,10 +299,10 @@ namespace SHARKNA.Migrations
                     b.Property<Guid>("EventMemId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EventMemberId")
+                    b.Property<Guid?>("EventMemberId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EventsId")
+                    b.Property<Guid?>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("EventstId")
@@ -363,15 +327,12 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EvId")
@@ -381,7 +342,6 @@ namespace SHARKNA.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -396,11 +356,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -410,7 +368,6 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -425,42 +382,36 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EvenetStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EventStatusId")
+                    b.Property<Guid?>("EventStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EventsId")
+                    b.Property<Guid?>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("EventstId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RegDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("RejectionReasons")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -479,25 +430,21 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EvId")
                         .HasColumnType("int");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OpDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -512,18 +459,15 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OpDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ReqId")
@@ -547,13 +491,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RejectionReasons")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("RequestStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RequestStatustId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -574,11 +514,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DescriptionAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DescriptionEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndRegTime")
@@ -591,11 +529,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EventTitleAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EventTitleEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -605,33 +541,27 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LocationAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LocationEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxAttendence")
                         .HasColumnType("int");
 
                     b.Property<string>("SpeakersAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpeakersEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeSpan>("Time")
                         .HasColumnType("time");
 
                     b.Property<string>("TopicAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TopicEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -646,11 +576,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullNameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -660,7 +588,6 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -677,26 +604,21 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalInfo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedTo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ModifiedBy")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OpType")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PermId")
@@ -720,11 +642,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RequestStatusAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestStatusEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -739,11 +659,9 @@ namespace SHARKNA.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NameAr")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NameEn")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -759,27 +677,33 @@ namespace SHARKNA.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FullNameAr")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FullNameEn")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MobileNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -847,15 +771,11 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblEventMembers", "EventMember")
                         .WithMany("EventAttend")
-                        .HasForeignKey("EventMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventMemberId");
 
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventsId");
 
                     b.Navigation("EventMember");
 
@@ -866,15 +786,11 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "EventStatus")
                         .WithMany("EventReg")
-                        .HasForeignKey("EventStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventStatusId");
 
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EventsId");
 
                     b.Navigation("EventStatus");
 

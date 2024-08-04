@@ -1,0 +1,101 @@
+﻿@model SHARKNA.ViewModels.EventRequestViewModel
+@{
+    ViewData["Title"] = "Create Event Request";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "EventRequests")';
+                    }
+                );
+            </text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+    }
+</script>
+
+<h2>إضافة طلب فعالية</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">إضافة طلب</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="RejectionReasons" class="mb-1">أسباب الرفض</label>
+                                        <input asp-for="RejectionReasons" class="form-control">
+                                        <span asp-validation-for="RejectionReasons" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventId" class="mb-1">الفعالية</label>
+                                        <select asp-for="EventId" class="form-control" asp-items="ViewBag.EventsList">
+                                            <option value="">اختر الفعالية</option>
+                                        </select>
+                                        <span asp-validation-for="EventId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="RequestStatusId" class="mb-1">حالة الطلب</label>
+                                        <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList">
+                                            <option value="">اختر حالة الطلب</option>
+                                        </select>
+                                        <span asp-validation-for="RequestStatusId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="BoardId" class="mb-1">اللجنة</label>
+                                        <select asp-for="BoardId" class="form-control" asp-items="ViewBag.BoardsList">
+                                            <option value="">اختر اللجنة</option>
+                                        </select>
+                                        <span asp-validation-for="BoardId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
