@@ -1,9 +1,8 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@model IEnumerable<EventRegistrationsViewModel>
 
 @{
     ViewData["Title"] = "Users List";
 }
-
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
@@ -13,14 +12,14 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">ادارة المستخدمين</h5>
+                    <h5 class="m-0">طلبات الحضور </h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة مستخدم</a>
-                        </div>
+                        @* <div>
+                            <a asp-action="Create" class="btn btn-primary">إضافة طلب</a>
+                        </div> *@
                     </div>
                 </div>
                 <div class="block-body">
@@ -32,23 +31,27 @@
                                 <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
-                                <th>الإجراءات</th>
+                                <th>@Html.DisplayNameFor(m => m.RegDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
+                               @* <th>الإجراءات</th> *@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var user in Model)
+                            @foreach (var EventReg in Model)
                             {
                                 <tr>
-                                    <td>@user.UserName</td>
-                                    <td>@user.Email</td>
-                                    <td>@user.MobileNumber</td>
-                                    <td>@user.FullNameAr</td>
-                                    <td>@user.FullNameEn</td>
+                                    <td>@EventReg.UserName</td>
+                                    <td>@EventReg.Email</td>
+                                    <td>@EventReg.MobileNumber</td>
+                                    <td>@EventReg.FullNameAr</td>
+                                    <td>@EventReg.FullNameEn</td>
+                                    <td>@EventReg.RegDate</td>
+                                    <td>@EventReg.RejectionReasons</td>
                                     <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
-                                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">حذف</a>
-                                        </div>
+                                       @*  <div class="d-flex gap-2">
+                                            <a asp-action="Edit" asp-route-id="@EventReg.Id" class="btn btn-sm btn-success">تعديل</a>
+                                            <a asp-action="Delete" asp-route-id="@EventReg.Id" class="btn btn-sm btn-danger">حذف</a>
+                                        </div> *@
                                     </td>
                                 </tr>
                             }
@@ -58,6 +61,10 @@
             </div>
         </div>
     </section><!-- End Page Wrap -->
+    <div>
+        <a href="javascript:window.history.back();">Back</a>
+
+    </div>
     <!-- Start Footer -->
     <footer class="d-flex justify-content-center align-items-center">
         <p class="m-0 d-flex justify-content-center">
