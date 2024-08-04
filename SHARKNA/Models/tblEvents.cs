@@ -1,14 +1,16 @@
-﻿namespace SHARKNA.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SHARKNA.Models
 {
     public class tblEvents
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string EventTitleAr { get; set; }
         public string EventTitleEn { get; set; }
         public DateTime EventStartDate { get; set; }
         public DateTime EventEndtDate { get; set; }
-        public TimeSpan Time { get; set; }
-        public DateTime EndRegTime { get; set; }
+        public TimeSpan Time { get; set; } 
+        public DateTime EndRegTime { get; set; } 
         public string SpeakersAr { get; set; }
         public string SpeakersEn { get; set; }
         public string TopicAr { get; set; }

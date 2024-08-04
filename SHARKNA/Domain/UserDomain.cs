@@ -40,6 +40,8 @@ namespace SHARKNA.Domain
             uu.FullNameEn = Tuser.FullNameEn;
             return uu;
 
+
+
         }
 
         public void AddUser(UserViewModel user)
@@ -73,7 +75,7 @@ namespace SHARKNA.Domain
             _context.SaveChanges();
         }
 
-        public bool IsEmailDuplicate(string email, Guid? userId = null)
+        public bool IsEmailDuplicate(String email, Guid? userId = null)
         {
             if (userId == null)
             {
