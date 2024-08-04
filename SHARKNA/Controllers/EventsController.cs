@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace SHARKNA.Controllers
 {
@@ -18,8 +19,13 @@ namespace SHARKNA.Controllers
             _EventDomain = EventDomain;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string Successful = "", string Falied = "")
         {
+            if (Successful != "")
+                ViewData["Successful"] = Successful;
+            else if (Falied != "")
+                ViewData["Falied"] = Falied;
+
             var Events = _EventDomain.GettblEvents();
             return View(Events);
         }
@@ -47,12 +53,14 @@ namespace SHARKNA.Controllers
 
         public IActionResult Edit(Guid id)
         {
+
             var Event = _EventDomain.GetTblEventsById(id);
             if (Event == null)
             {
                 return NotFound();
             }
             return View(Event);
+
         }
 
 
@@ -62,8 +70,8 @@ namespace SHARKNA.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 _EventDomain.UpdateEvent(Event);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(Event);
@@ -74,8 +82,36 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
-            _EventDomain.DeleteEvent(id);
-            return RedirectToAction(nameof(Index));
+            string Successful = "";
+            string Falied = "";
+            try
+            {
+
+
+                int check = _EventDomain.DeleteEvent(id);
+                if (check == 1)
+                {
+                    Successful = "تم حذف  بنجاح";
+                }
+
+                else
+                {
+                    Falied = "حدث خطأ";
+
+
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+                Falied = "حدث خطأ";
+
+            }
+            //_boardDomain.DeleteBoard(id);
+            return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
+        
+        
         }
 
 
