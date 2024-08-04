@@ -2,7 +2,36 @@
 @{
     ViewData["Title"] = "Create Board";
 }
-
+<script>
+@{
+    if (@ViewData["Successful"] != null)
+    {
+        <Text>
+            var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+            .then(
+            function () {
+            window.location.href = '@Url.Action("Index", "Boards")';
+            }
+            );
+        </Text>
+    }
+    else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+    {
+        <Text>
+            var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+        </Text>
+    }
+    else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+    {
+        <Text>
+            var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+        </Text>
+    }
+}
+</script>
 <h2>اضافة لجنة</h2>
 
 <section class="page_wrap">
@@ -10,7 +39,7 @@
 
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">إضافة طلب</h5>
+                <h5 class="m-0">إضافة لجنة</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
@@ -51,6 +80,7 @@
                                         <label for="" class="mb-1"> الوصف بالإنجليزي </label>
                                         <input asp-for="DescriptionEn" type="text"  class="form-control">
                                         <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+
                                     </div>
                                 </div><!-- END ITEM -->
                              @*    <!-- START ITEM -->
