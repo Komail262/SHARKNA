@@ -17,7 +17,7 @@ namespace SHARKNA.ViewModels
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [DisplayName("النادي")]
+        [DisplayName("اسم النادي")]
         public Guid BoardId { get; set; }
 
         
@@ -26,7 +26,7 @@ namespace SHARKNA.ViewModels
 
 
         public ICollection<tblBoards> BoardsOfList { get; set; }
-        public ICollection<tblRequestStatus> ReqStatusOfList { get; set; }
+        //public ICollection<tblRequestStatus> ReqStatusOfList { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
@@ -34,7 +34,7 @@ namespace SHARKNA.ViewModels
         public string Email { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(100)]
+        [StringLength(15)]
         [DisplayName("رقم الجوال")]
         public string MobileNumber { get; set; }
 

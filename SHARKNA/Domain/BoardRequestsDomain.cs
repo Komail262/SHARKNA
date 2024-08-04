@@ -36,6 +36,7 @@ namespace SHARKNA.Domain
             uu.Id = id;
             uu.UserName = BoardReq.UserName;
             uu.BoardId = BoardReq.BoardId;
+            uu.RequestStatusId = BoardReq.RequestStatusId;
             uu.RejectionReasons = BoardReq.RejectionReasons;
             uu.Email = BoardReq.Email;
             uu.FullNameAr = BoardReq.FullNameAr;
@@ -69,24 +70,8 @@ namespace SHARKNA.Domain
                 return 0;
             }
 
-            }
-
-        public void UpdateBoardReq(BoardRequestsViewModel BoardReq)
-
-        {
-            tblBoardRequests VBoardReq = new tblBoardRequests();
-            VBoardReq.Id = BoardReq.Id;
-            VBoardReq.UserName = BoardReq.UserName;
-            VBoardReq.BoardId = BoardReq.BoardId;
-            VBoardReq.RejectionReasons = BoardReq.RejectionReasons;
-            VBoardReq.Email = BoardReq.Email;
-            VBoardReq.FullNameAr = BoardReq.FullNameAr;
-            VBoardReq.FullNameEn = BoardReq.FullNameEn;
-            VBoardReq.MobileNumber = BoardReq.MobileNumber;
-
-            _context.tblBoardRequests.Update(VBoardReq);
-            _context.SaveChanges();
         }
+
 
         public bool IsEmailDuplicate(string email, Guid? BoardReqId = null)
         {
@@ -101,9 +86,6 @@ namespace SHARKNA.Domain
             }
         }
 
-        public List<tblBoards> GettblBoard()
-        {
-            return _context.tblBoards.Where(e => !e.IsDeleted && e.IsActive).ToList();
-        }
+       
     }
 }

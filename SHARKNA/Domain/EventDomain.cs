@@ -15,25 +15,25 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventViewModel> GettblEvents()
         {
-            return _context.tblEvents.Select(e => new EventViewModel
+            return _context.tblEvents.Where(i => i.IsActive == true).Select(E => new EventViewModel
             {
-               
-                Id = e.Id,
-                EventTitleAr = e.EventTitleAr,
-                EventTitleEn = e.EventTitleEn,
-                EventStartDate = e.EventStartDate,
-                EventEndtDate = e.EventEndtDate,
-                Time = e.Time,
-                EndRegTime = e.EndRegTime,
-                SpeakersAr = e.SpeakersAr,
-                SpeakersEn = e.SpeakersEn,
-                TopicAr = e.TopicAr,
-                TopicEn = e.TopicEn,
-                DescriptionAr = e.DescriptionAr,
-                DescriptionEn = e.DescriptionEn,
-                LocationAr = e.LocationAr,
-                LocationEn = e.LocationEn,
-               IsActive = e.IsActive,
+
+                Id = E.Id,
+                EventTitleAr = E.EventTitleAr,
+                EventTitleEn = E.EventTitleEn,
+                EventStartDate = E.EventStartDate,
+                EventEndtDate = E.EventEndtDate,
+                Time = E.Time,
+                EndRegTime = E.EndRegTime,
+                SpeakersAr = E.SpeakersAr,
+                SpeakersEn = E.SpeakersEn,
+                TopicAr = E.TopicAr,
+                TopicEn = E.TopicEn,
+                DescriptionAr = E.DescriptionAr,
+                DescriptionEn = E.DescriptionEn,
+                LocationAr = E.LocationAr,
+                LocationEn = E.LocationEn,
+                IsActive = E.IsActive,
             }).ToList();
         }
 
@@ -81,6 +81,7 @@ namespace SHARKNA.Domain
             VEvent.LocationAr = Event.LocationAr;
             VEvent.LocationEn = Event.LocationEn;
             VEvent.IsActive = Event.IsActive;
+            
 
             _context.tblEvents.Add(VEvent);
             _context.SaveChanges();
@@ -90,7 +91,7 @@ namespace SHARKNA.Domain
 
         {
             tblEvents VEvent = new tblEvents();
-            VEvent.Id = Event.Id;
+            
             VEvent.EventTitleAr = Event.EventTitleAr;
             VEvent.EventTitleEn = Event.EventTitleEn;
             VEvent.EventStartDate = Event.EventStartDate;
@@ -105,13 +106,21 @@ namespace SHARKNA.Domain
             VEvent.DescriptionEn = Event.DescriptionEn;
             VEvent.LocationAr = Event.LocationAr;
             VEvent.LocationEn = Event.LocationEn;
-            VEvent.IsActive = Event.IsActive;
+           
 
             _context.tblEvents.Update(VEvent);
             _context.SaveChanges();
         }
+        public void DeleteEvent(Guid id)
+        {
+            var Event = _context.tblEvents.FirstOrDefault(b => b.Id == id);
+            if (Event != null)
+            {
+                Event.IsActive = false;
+                _context.Update(Event);
+                _context.SaveChanges();
+            }
+        }
 
-       
-       
     }
 }

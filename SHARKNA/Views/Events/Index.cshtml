@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<EventViewModel>
 
 @{
-    ViewData["Title"] = "Users List";
+    ViewData["Title"] = "Events List";
 }
 
 <!DOCTYPE html>
@@ -49,10 +49,10 @@
                                 <tr>
                                     <td>@Event.EventTitleAr</td>
                                     <td>@Event.EventTitleEn</td>
-                                    <td>@Event.EventStartDate</td>
-                                    <td>@Event.EventEndtDate</td>
+                                    <td>@Event.EventStartDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@Event.EventEndtDate.ToString("MM/dd/yyyy")</td>
                                     <td>@Event.Time</td>
-                                    <td>@Event.EndRegTime</td>
+                                    <td>@Event.EndRegTime.ToString("hh:mm:ss")</td>
                                     <td>@Event.SpeakersAr</td>
                                     <td>@Event.SpeakersEn</td>
                                     <td>@Event.TopicAr</td>

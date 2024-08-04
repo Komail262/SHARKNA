@@ -37,6 +37,9 @@ namespace SHARKNA.Controllers
         {
             if (ModelState.IsValid)
             {
+                Event.Id =Guid.NewGuid();
+                _EventDomain.AddEvent(Event);
+                return RedirectToAction(nameof(Index));
             }
             return View();
         }
@@ -65,6 +68,18 @@ namespace SHARKNA.Controllers
             }
             return View(Event);
         }
+        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Guid id)
+        {
+            _EventDomain.DeleteEvent(id);
+            return RedirectToAction(nameof(Index));
+        }
+
 
     }
 }
+
+    
