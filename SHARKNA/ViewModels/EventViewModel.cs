@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace SHARKNA.ViewModels
 {
     public class EventViewModel
@@ -14,20 +15,22 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("اسم الحدث بالانجليزي")]
         public string EventTitleEn { get; set; }
-
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [Required]
+        [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("تاريخ بداية الحدث")]
-        public DateTime EventStartDate { get; set; } 
+        public DateTime EventStartDate { get; set; }
 
         [Required]
         [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
-        [DisplayName("تاريخ نهابة الحدث")]
-        public DateTime EventEndtDate { get; set; } 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("تاريخ نهاية الحدث")]
+        public DateTime EventEndtDate { get; set; }
+        [Required]
+        [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName(" بداية الساعة الحدث")]
         public TimeSpan Time { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [Required]
+        [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("نهاية الساعة الحدث")]
         public DateTime EndRegTime { get; set; }
 
