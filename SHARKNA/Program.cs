@@ -43,6 +43,7 @@ builder.Services.AddScoped<BoardDomain>();
 
 builder.Services.AddScoped<RequestStatusDomain>();
 builder.Services.AddScoped<EventDomain>();
+builder.Services.AddScoped<BoardTalRequestsDomain>();
 
 
 //.Services.AddScoped<PermissionDomain>();
