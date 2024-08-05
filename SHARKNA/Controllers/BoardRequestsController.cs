@@ -30,7 +30,7 @@ namespace SHARKNA.Controllers
         {
            
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-           \
+           
 
 
             return View();
@@ -54,18 +54,18 @@ namespace SHARKNA.Controllers
                     }
                      //m
                     BoardReq.Id = Guid.NewGuid();
-                    //BoardReq.RegDate = DateTime.Now;
+                    
                    int check =  _boardRequestsDomain.AddBoardReq(BoardReq);
                     if (check == 1)
-                        ViewData["Successful"] = "Registeration succ";
+                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
                     else
-                        ViewData["Falied"] = "Falied";
+                        ViewData["Falied"] = "حدث خطأ";
                     return View(BoardReq);
                     
                 }
             }
             catch (Exception ex) {
-                ViewData["Falied"] = "Falied";
+                ViewData["Falied"] = "حدث خطأ";
             }
 
             return View(BoardReq);
@@ -73,18 +73,8 @@ namespace SHARKNA.Controllers
 
 
 
-        public IActionResult Edit(Guid id)
-        {
-            var BoardReq = _boardRequestsDomain.GetTblBoardRequestsById(id);
-            if (BoardReq == null)
-            {
-                return NotFound();
-            }
-            return View(BoardReq);
-        }
-
-
-        }
 
     }
+
+}
 

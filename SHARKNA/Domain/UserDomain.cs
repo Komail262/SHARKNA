@@ -87,5 +87,28 @@ namespace SHARKNA.Domain
                 return _context.tblUsers.Any(u => u.Email == email && u.Id != userId);
             }
         }
+
+        public int Login(UserLoginViewModel Tuser)
+        {
+            try
+            {
+                if (_context.tblUsers.Any(u => u.Email == Tuser.Email && u.Password == Tuser.Password))
+                {
+                    return 1; // Login successful
+                }
+                else
+                {
+                    return 0; // Invalid username or password
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex) here using your logging framework
+            }
+            return 0;// Error occurred
+
+        }
+
     }
+
 }

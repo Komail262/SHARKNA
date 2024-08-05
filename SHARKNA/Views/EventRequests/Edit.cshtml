@@ -1,0 +1,73 @@
+﻿@model SHARKNA.ViewModels.EventRequestViewModel
+
+@{
+    ViewData["Title"] = "Edit Event Request";
+}
+
+<h2>تعديل طلب فعالية</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">تعديل طلب</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="Edit" method="post">
+                            <input hidden asp-for="Id" />
+                            <div class="row">
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="RejectionReasons" class="mb-1">أسباب الرفض</label>
+                                        <input asp-for="RejectionReasons" class="form-control">
+                                        <span asp-validation-for="RejectionReasons" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventId" class="mb-1">الفعالية</label>
+                                        <select asp-for="EventId" class="form-control" asp-items="ViewBag.EventsList">
+                                            <option value="">اختر الفعالية</option> <!-- new: إضافة خيار افتراضي -->
+                                        </select>
+                                        <span asp-validation-for="EventId" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="RequestStatusId" class="mb-1">حالة الطلب</label>
+                                        <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList">
+                                            <option value="">اختر حالة الطلب</option> <!-- new: إضافة خيار افتراضي -->
+                                        </select>
+                                        <span asp-validation-for="RequestStatusId" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="BoardId" class="mb-1">اللجنة</label>
+                                        <select asp-for="BoardId" class="form-control" asp-items="ViewBag.BoardsList">
+                                            <option value="">اختر اللجنة</option> <!-- new: إضافة خيار افتراضي -->
+                                        </select>
+                                        <span asp-validation-for="BoardId" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- End Page Wrap -->
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

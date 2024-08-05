@@ -35,5 +35,6 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("الاسم بالانجليزي")]
         public string FullNameEn { get; set; }
+
     }
 }

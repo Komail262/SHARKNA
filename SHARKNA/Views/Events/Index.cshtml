@@ -1,8 +1,38 @@
 ﻿@model IEnumerable<EventViewModel>
 
 @{
-    ViewData["Title"] = "Users List";
+    ViewData["Title"] = "Events List";
 }
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Events")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
@@ -49,10 +79,10 @@
                                 <tr>
                                     <td>@Event.EventTitleAr</td>
                                     <td>@Event.EventTitleEn</td>
-                                    <td>@Event.EventStartDate</td>
-                                    <td>@Event.EventEndtDate</td>
+                                    <td>@Event.EventStartDate.ToString("MM/dd/yyyy")</td>
+                                    <td>@Event.EventEndtDate.ToString("MM/dd/yyyy")</td>
                                     <td>@Event.Time</td>
-                                    <td>@Event.EndRegTime</td>
+                                    <td>@Event.EndRegTime.ToString("HH:mm:ss")</td>
                                     <td>@Event.SpeakersAr</td>
                                     <td>@Event.SpeakersEn</td>
                                     <td>@Event.TopicAr</td>
@@ -64,7 +94,9 @@
                                     <td class="action_td text-end">
                                         <div class="d-flex gap-2">
                                             <a asp-action="Edit" asp-route-id="@Event.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@Event.Id" class="btn btn-sm btn-danger">حذف</a>
+                                            <form asp-action="Delete" asp-route-id="@Event.Id" method="post" style="display:inline;">
+                                                <button type="submit" class="btn btn-danger" onclick="return functionConfirm(this)">حذف</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

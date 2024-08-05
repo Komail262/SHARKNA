@@ -32,95 +32,115 @@ namespace SHARKNA.Domain
             var Fboard = _context.tblBoards.FirstOrDefault(b => b.Id == id);
             if (Fboard == null) return null;
             BoardViewModel bb = new BoardViewModel();
-                bb.Id = Fboard.Id;
-                bb.NameAr = Fboard.NameAr;
-                bb.NameEn = Fboard.NameEn;
-                bb.DescriptionAr = Fboard.DescriptionAr;
-                bb.DescriptionEn = Fboard.DescriptionEn;
-                bb.IsDeleted = Fboard.IsDeleted;
-                bb.IsActive = Fboard.IsActive;
+            bb.Id = Fboard.Id;
+            bb.NameAr = Fboard.NameAr;
+            bb.NameEn = Fboard.NameEn;
+            bb.DescriptionAr = Fboard.DescriptionAr;
+            bb.DescriptionEn = Fboard.DescriptionEn;
+            bb.IsDeleted = Fboard.IsDeleted;
+            bb.IsActive = Fboard.IsActive;
             return bb;
             //};
             //BoardViewModel IBoard = new BoardViewModel();
         }
 
-        public void AddBoard(BoardViewModel board)
+        public int AddBoard(BoardViewModel board)
         {
-            tblBoards Aboard = new tblBoards();
+            try
+            {
+                tblBoards Aboard = new tblBoards();
 
-            Aboard.Id = board.Id;
-            Aboard.NameAr = board.NameAr;
-            Aboard.NameEn = board.NameEn;
-            Aboard.DescriptionAr = board.DescriptionAr;
-            Aboard.DescriptionEn = board.DescriptionEn;
-            Aboard.IsDeleted = false;
-            Aboard.IsActive = true;
+                Aboard.Id = board.Id;
+                Aboard.NameAr = board.NameAr;
+                Aboard.NameEn = board.NameEn;
+                Aboard.DescriptionAr = board.DescriptionAr;
+                Aboard.DescriptionEn = board.DescriptionEn;
+                Aboard.IsDeleted = false;
+                Aboard.IsActive = true;
 
-            _context.tblBoards.Add(Aboard);
-            _context.SaveChanges();
+                _context.tblBoards.Add(Aboard);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+
+            }
         }
-
         //changeing here for Update
 
-        public void UpdateBoard(BoardViewModel board)
+        public int UpdateBoard(BoardViewModel board)
         {
-            tblBoards Aboard = new tblBoards();
+            try
+            {
+                tblBoards Aboard = new tblBoards();
 
-            Aboard.Id = board.Id;
-            Aboard.NameAr = board.NameAr;
-            Aboard.NameEn = board.NameEn;
-            Aboard.DescriptionAr = board.DescriptionAr;
-            Aboard.DescriptionEn = board.DescriptionEn;
-            Aboard.IsDeleted = false;
-            Aboard.IsActive = true;
+                Aboard.Id = board.Id;
+                Aboard.NameAr = board.NameAr;
+                Aboard.NameEn = board.NameEn;
+                Aboard.DescriptionAr = board.DescriptionAr;
+                Aboard.DescriptionEn = board.DescriptionEn;
+                Aboard.IsDeleted = false;
+                Aboard.IsActive = true;
 
-            _context.tblBoards.Update(Aboard);
-            _context.SaveChanges();
+                _context.tblBoards.Update(Aboard);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+
+            }
         }
 
 
-        //public void UpdateBoard(BoardViewModel board) // will update board if not null 
-        //{
-        //    var Aboard = _context.tblBoards.FirstOrDefault(b => b.Id == board.Id);
-        //    if (Aboard != null)
-        //    {
-        //        Aboard.NameAr = board.NameAr;
-        //        Aboard.NameEn = board.NameEn;
-        //        Aboard.DescriptionAr = board.DescriptionAr;
-        //        Aboard.DescriptionEn = board.DescriptionEn;
-        //        Aboard.IsActive = board.IsActive;
-        //        Aboard.IsDeleted = board.IsDeleted;
-
-        //        _context.tblBoards.Update(Aboard);
-        //        _context.SaveChanges();
-        //    }
-        //}
 
         //End Update
 
 
         //delete
 
-        //public void DeleteBoard(Guid id) // here will delete in view but will save in databse and change status of isdelete and isactive
-        //{
-        //    var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
-        //    if (board != null)
-        //    {
-        //        board.IsDeleted = true;
-        //        board.IsActive = false;
-        //        _context.Update(board);
-        //        _context.SaveChanges();
-        //    }
-        //}
 
-        public void DeleteBoard(Guid id)
+
+        public int DeleteBoard(Guid id)
         {
-            var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
-            if (board != null)
+            try
             {
-                board.IsDeleted = true;
-                _context.Update(board);
-                _context.SaveChanges();
+                var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
+                if (board != null)
+                {
+                    board.IsDeleted = true;
+                    board.IsActive = false;
+                    _context.Update(board);
+                    _context.SaveChanges();
+
+                    return 1;
+                }
+                else
+                    return 0;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+            
+        }
+
+
+        //if nameAr duplicated
+
+        public bool IsBoardNameDuplicate(string name, Guid? Boardn = null)
+        {
+            if (Boardn == null)
+            {
+                return _context.tblBoards.Any(u => u.NameEn == name);
+
+            }
+            else
+            {
+                return _context.tblBoards.Any(u => u.NameEn == name && u.Id != Boardn);
             }
         }
 

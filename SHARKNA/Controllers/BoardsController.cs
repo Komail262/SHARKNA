@@ -1,10 +1,9 @@
-﻿using SHARKNA.Models;
-using System.Diagnostics;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
+using SHARKNA.Models;
 using SHARKNA.ViewModels;
-using System;
+using System.Diagnostics;
 
 namespace SHARKNA.Controllers
 {
@@ -16,8 +15,15 @@ namespace SHARKNA.Controllers
         {
             _boardDomain = boardDomain;
         }
-        public IActionResult Index()
+        public IActionResult Index(string Successful = "",string Falied = "")
         {
+            if (Successful != "")
+                ViewData["Successful"] = Successful;
+            else if (Falied != "")
+                ViewData["Falied"] = Falied;
+
+
+
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
@@ -31,19 +37,34 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(BoardViewModel board)
         {
-            if (ModelState.IsValid)
+            try
             {
-                board.Id = Guid.NewGuid();
-                _boardDomain.AddBoard(board);
-                return RedirectToAction(nameof(Index));
-                            
+                if (ModelState.IsValid)
+                {
+                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    {
+                        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
+                        return View(board);
+                    }
+                    board.Id = Guid.NewGuid();
+
+                    int check = _boardDomain.AddBoard(board);
+                    // return RedirectToAction(nameof(Index));
+                    if (check == 1)
+                        ViewData["Successful"] = "تم إضافة اللجنة بنجاح";
+                    else
+                        ViewData["Falied"] = "حدث خطأ بالإضافة";
+                    return View(board);
+
+                }
             }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء إضافة لجنة";
+            }
+
             return View(board);
         }
-
-
-
-        //update and delete 
 
         public IActionResult Update(Guid id)
         {
@@ -59,26 +80,68 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Update(BoardViewModel board)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _boardDomain.UpdateBoard(board);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+
+                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    {
+                        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
+                        return View(board);
+                    }
+                    int check = _boardDomain.UpdateBoard(board);
+                    if (check == 1)
+                        ViewData["Successful"] = "تم التعديل بنجاح";
+                    else
+                        ViewData["Falied"] = "خطأ بالتعديل";
+                    return View(board);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
             }
             return View(board);
         }
 
+        
 
-        //delete
-       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
-            _boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index));
+            string Successful = "";
+            string Falied = "";
+            try
+            {
+               
+
+                int check = _boardDomain.DeleteBoard(id);
+                if (check == 1)
+                {
+                     Successful = "تم حذف اللجنة بنجاح";
+                }
+
+                else
+                {
+                     Falied = "حدث خطأ";
+
+
+                }
+                //return View(id);
+
+            }
+            catch (Exception ex) {
+                 Falied = "حدث خطأ";
+
+            }
+            //_boardDomain.DeleteBoard(id);
+            return RedirectToAction(nameof(Index),new {Successful = Successful,  Falied = Falied});
         }
 
         //end delete
-      
+
     }
 }
