@@ -52,7 +52,7 @@ namespace SHARKNA.Controllers
                         ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
                         return View(BoardReq);
                     }
-                     
+                     //m
                     BoardReq.Id = Guid.NewGuid();
                     //BoardReq.RegDate = DateTime.Now;
                    int check =  _boardRequestsDomain.AddBoardReq(BoardReq);
