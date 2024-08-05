@@ -15,7 +15,7 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventViewModel> GettblEvents()
         {
-            return _context.tblEvents.Where(i => i.IsActive == true).Select(E => new EventViewModel
+            return _context.tblEvents.Where(i => i.IsDeleted == false).Select(E => new EventViewModel
             {
 
                 Id = E.Id,
@@ -34,6 +34,9 @@ namespace SHARKNA.Domain
                 LocationAr = E.LocationAr,
                 LocationEn = E.LocationEn,
                 IsActive = E.IsActive,
+                IsDeleted = E.IsDeleted,
+
+
             }).ToList();
         }
 
@@ -58,6 +61,7 @@ namespace SHARKNA.Domain
             uu.LocationEn = Tuser.LocationEn;
             uu.LocationEn = Tuser.LocationEn;
             uu.IsActive = Tuser.IsActive;
+            uu.IsDeleted = Tuser.IsDeleted;
             return uu;
 
         }
@@ -81,45 +85,72 @@ namespace SHARKNA.Domain
             VEvent.LocationAr = Event.LocationAr;
             VEvent.LocationEn = Event.LocationEn;
             VEvent.IsActive = Event.IsActive;
-            
+            VEvent.IsDeleted = Event.IsDeleted;
+
 
             _context.tblEvents.Add(VEvent);
             _context.SaveChanges();
         }
 
-        public void UpdateEvent(EventViewModel Event)
-
+        public int UpdateEvent(EventViewModel Event)
         {
-            tblEvents VEvent = new tblEvents();
-            
-            VEvent.EventTitleAr = Event.EventTitleAr;
-            VEvent.EventTitleEn = Event.EventTitleEn;
-            VEvent.EventStartDate = Event.EventStartDate;
-            VEvent.EventEndtDate = Event.EventEndtDate;
-            VEvent.Time = Event.Time;
-            VEvent.EndRegTime = Event.EndRegTime;
-            VEvent.SpeakersAr = Event.SpeakersAr;
-            VEvent.SpeakersEn = Event.SpeakersEn;
-            VEvent.TopicAr = Event.TopicAr;
-            VEvent.TopicEn = Event.TopicEn;
-            VEvent.DescriptionAr = Event.DescriptionAr;
-            VEvent.DescriptionEn = Event.DescriptionEn;
-            VEvent.LocationAr = Event.LocationAr;
-            VEvent.LocationEn = Event.LocationEn;
-           
-
-            _context.tblEvents.Update(VEvent);
-            _context.SaveChanges();
-        }
-        public void DeleteEvent(Guid id)
-        {
-            var Event = _context.tblEvents.FirstOrDefault(b => b.Id == id);
-            if (Event != null)
+            try
             {
-                Event.IsActive = false;
-                _context.Update(Event);
+                var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == Event.Id);
+                if (existingEvent == null)
+                {
+                    return 0;
+                }
+
+                existingEvent.EventTitleAr = Event.EventTitleAr;
+                existingEvent.EventTitleEn = Event.EventTitleEn;
+                existingEvent.EventStartDate = Event.EventStartDate;
+                existingEvent.EventEndtDate = Event.EventEndtDate;
+                existingEvent.Time = Event.Time;
+                existingEvent.EndRegTime = Event.EndRegTime;
+                existingEvent.SpeakersAr = Event.SpeakersAr;
+                existingEvent.SpeakersEn = Event.SpeakersEn;
+                existingEvent.TopicAr = Event.TopicAr;
+                existingEvent.TopicEn = Event.TopicEn;
+                existingEvent.DescriptionAr = Event.DescriptionAr;
+                existingEvent.DescriptionEn = Event.DescriptionEn;
+                existingEvent.LocationAr = Event.LocationAr;
+                existingEvent.LocationEn = Event.LocationEn;
+                existingEvent.IsDeleted = false;
+                existingEvent.IsActive = true;
+
                 _context.SaveChanges();
+                return 1;
             }
+            catch (Exception ex)
+            {
+                 
+                return 0;
+            }
+        }
+
+        public int DeleteEvent(Guid id)
+        {
+            try
+            {
+                var DEvent = _context.tblEvents.FirstOrDefault(b => b.Id == id);
+                if (DEvent != null)
+                {
+                    DEvent.IsDeleted = true;
+                    DEvent.IsActive = false;
+                    _context.Update(DEvent);
+                    _context.SaveChanges();
+
+                    return 1;
+                }
+                else
+                    return 0;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+            
         }
 
     }
