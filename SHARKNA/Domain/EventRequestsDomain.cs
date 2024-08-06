@@ -21,11 +21,11 @@ namespace SHARKNA.Domain
                 Id = view.Id,
                 RejectionReasons = view.RejectionReasons,
                 EventId = view.EventId,
-                EventName = view.Event.EventTitleAr, // new
+                EventName = view.Event.EventTitleAr,
                 RequestStatusId = view.RequestStatusId,
-                RequestStatusName = view.RequestStatus.RequestStatusAr, // new
+                RequestStatusName = view.RequestStatus.RequestStatusAr,
                 BoardId = view.BoardId,
-                BoardName = view.Board.NameAr // new
+                BoardName = view.Board.NameAr
             }).ToList();
         }
 
@@ -42,6 +42,17 @@ namespace SHARKNA.Domain
 
             _context.tblEventRequests.Add(TableForEventRequest);
             _context.SaveChanges();
+        }
+
+        // الدالة الجديدة لإلغاء الطلب
+        public void CancelRequest(Guid id)
+        {
+            var eventRequest = _context.tblEventRequests.FirstOrDefault(r => r.Id == id);
+            if (eventRequest != null)
+            {
+                eventRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
+                _context.SaveChanges();
+            }
         }
 
         public List<tblBoards> GetTblBoards()
