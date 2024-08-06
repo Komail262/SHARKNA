@@ -1,40 +1,8 @@
-﻿@model IEnumerable<PermissionsViewModel>
+﻿@model IEnumerable<BoardTalRequestsViewModel>
 
 @{
-    ViewData["Title"] = "Permission List";
+    ViewData["Title"] = "Users List";
 }
-
-<script>
-    @{
-        if (@ViewData["Successful"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Permissions")';
-                    }
-                );
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-    }
-</script>
-
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
@@ -50,7 +18,7 @@
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
                         <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة مستخدم</a>
+                            <a asp-action="Create" class="btn btn-primary"> التسجيل في النادي </a>
                         </div>
                     </div>
                 </div>
@@ -59,26 +27,33 @@
                         <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(m => m.UserName)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsDeleted)</th>
-                                <th>@Html.DisplayNameFor(m => m.RoleId)</th>
+                                <th>@Html.DisplayNameFor(m => m.Skills)</th>
+                                <th>@Html.DisplayNameFor(m => m.Experiences)</th>
+                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var Permission in Model)
+                            @foreach (var user in Model)
                             {
                                 <tr>
-                                    <td>@Permission.UserName</td>
-                                    <td>@Permission.FullNameAr</td>
-                                    <td>@Permission.FullNameEn</td>
-                                    <td>@Permission.IsDeleted</td>
-                                    <td>@Permission.RoleName</td>
+                                    <td>@user.UserName</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.MobileNumber</td>
+                                    <td>@user.FullNameAr</td>
+                                    <td>@user.FullNameEn</td>
+                                    <td>@user.Skills</td>
+                                    <td>@user.Experiences</td>
+                                    <td>@user.RejectionReasons</td>
                                     <td class="action_td text-end">
-                                        <td>
-                                            <a asp-action="Edit" asp-route-id="@Permission.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@Permission.Id" class="btn btn-sm btn-success">حذف</a>
+                                        <div class="d-flex gap-2">
+                                            <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-success">تعديل</a>
+                                            <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">حذف</a>
+                                        </div>
                                     </td>
                                 </tr>
                             }
