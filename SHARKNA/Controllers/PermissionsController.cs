@@ -131,7 +131,7 @@ namespace SHARKNA.Controllers
                 int check = _PermissionDomain.DeletePermission(id);
                 if (check == 1)
                 {
-                    Successful = "تم حذف اللجنة بنجاح";
+                    Successful = "تم حذف الصلاحية";
                 }
 
                 else
