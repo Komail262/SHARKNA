@@ -20,8 +20,13 @@ namespace SHARKNA.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string Successful = "", string Falied = "")
         {
+            if (Successful != "")
+                ViewData["Successful"] = Successful;
+            else if (Falied != "")
+                ViewData["Falied"] = Falied;
+
             var Permission = _PermissionDomain.GetTblPermissions();
             return View(Permission);
         }
@@ -29,6 +34,7 @@ namespace SHARKNA.Controllers
 
         public IActionResult Create()
         {
+
             ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
             return View();
         }
@@ -38,28 +44,53 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(PermissionsViewModel Permission)
         {
-            if (ModelState.IsValid)
-            {
-                Permission.Id = Guid.NewGuid();
-                _PermissionDomain.AddPermission(Permission);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        Permission.Id = Guid.NewGuid();
+                        _PermissionDomain.AddPermission(Permission);
+                    ViewData["Successful"] = "Successful";
+                //    return RedirectToAction(nameof(Index));
+                    }
+                    catch (Exception ex)
+                    {
+                    // Log the exception (ex)
+                    // Consider using a logging framework like NLog, Serilog, or log4net
+                    ViewData["Falied"] = "Falied";
+                }
             }
-            return View(Permission);
+                return View(Permission);
+            
+
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
 
-            //return View();
+            //return View()
+                try
+                {
+                    var Permission = await _PermissionDomain.GetTblPermissionsById(id);
+                    if (Permission == null)
+                    {
 
-            var Permission = await _PermissionDomain.GetTblPermissionsById(id);
-            if (Permission == null)
-            {
-                return NotFound();
-            }
-            ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
-            return View(Permission);
+                        return NotFound();
+                    }
+
+                    ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
+                    return View(Permission);
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (ex)
+                    // Consider using a logging framework like NLog, Serilog, or log4net
+                    ModelState.AddModelError("", "An error occurred while retrieving the permission. Please try again.");
+                    return View(); // or you might want to redirect to an error page
+                }
+            
+
         }
 
 
@@ -68,23 +99,69 @@ namespace SHARKNA.Controllers
         public IActionResult Edit(PermissionsViewModel Permission)
         {
             ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
+
             if (ModelState.IsValid)
             {
-                _PermissionDomain.UpdatePermission(Permission);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _PermissionDomain.UpdatePermission(Permission);
+                   // return RedirectToAction(nameof(Index));
+                    ViewData["Successful"] = "Successful";
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception (ex)
+                    // Consider using a logging framework like NLog, Serilog, or log4net
+                    ViewData["Falied"] = "Falied";
+                }
             }
+
             return View(Permission);
         }
 
-        //public IActionResult Privacy()
-        //{
-        //    return View();
-        //}
+        [HttpGet]
+        public IActionResult Delete(Guid id)
+        {
+            string Successful = "";
+            string Falied = "";
+            try
+            {
 
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
+
+                int check = _PermissionDomain.DeletePermission(id);
+                if (check == 1)
+                {
+                    Successful = "تم حذف اللجنة بنجاح";
+                }
+
+                else
+                {
+                    Falied = "حدث خطأ";
+
+
+                }
+                //return View(id);
+
+            }
+            catch (Exception ex)
+            {
+                Falied = "حدث خطأ";
+
+            }
+            //_boardDomain.DeleteBoard(id);
+            return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
+        }
+
+       
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
     }
 }

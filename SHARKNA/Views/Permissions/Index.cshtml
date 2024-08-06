@@ -4,6 +4,38 @@
     ViewData["Title"] = "Permission List";
 }
 
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Permissions")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
@@ -44,10 +76,9 @@
                                     <td>@Permission.IsDeleted</td>
                                     <td>@Permission.RoleName</td>
                                     <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
+                                        <td>
                                             <a asp-action="Edit" asp-route-id="@Permission.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@Permission.Id" class="btn btn-sm btn-danger">حذف</a>
-                                        </div>
+                                            <a asp-action="Delete" asp-route-id="@Permission.Id" class="btn btn-sm btn-success">حذف</a>
                                     </td>
                                 </tr>
                             }
