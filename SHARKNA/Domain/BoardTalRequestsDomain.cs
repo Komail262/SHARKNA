@@ -22,7 +22,9 @@ namespace SHARKNA.Domain
                 UserName = x.UserName,
                 Email = x.Email,
                 BoardId = x.BoardId,
+                BoardName = x.Board.NameAr,
                 RejectionReasons = x.RejectionReasons,
+                RequestStatusName = x.RequestStatus.RequestStatusAr,
                 FullNameAr = x.FullNameAr,
                 FullNameEn = x.FullNameEn,
                 MobileNumber = x.MobileNumber,
@@ -77,39 +79,39 @@ namespace SHARKNA.Domain
                 return 0;
             }
 
-        } 
+        }
 
         public void UpdateUser(BoardTalRequestsViewModel user)
 
+        {
+            tblBoardTalRequests Vtal = new tblBoardTalRequests();
+            Vtal.Id = user.Id;
+            Vtal.UserName = user.UserName;
+            Vtal.Email = user.Email;
+            Vtal.BoardId = user.BoardId;
+            Vtal.FullNameAr = user.FullNameAr;
+            Vtal.FullNameEn = user.FullNameEn;
+            Vtal.MobileNumber = user.MobileNumber;
+            Vtal.Skills = user.Skills;
+            Vtal.Experiences = user.Experiences;
+            Vtal.RejectionReasons = user.RejectionReasons;
+
+            _context.tblBoardTalRequests.Update(Vtal);
+            _context.SaveChanges();
+        }
+
+        public bool IsEmailDuplicate(string email, Guid? userId = null)
+        {
+            if (userId == null)
             {
-                tblBoardTalRequests Vtal = new tblBoardTalRequests();
-                Vtal.Id = user.Id;
-                Vtal.UserName = user.UserName;
-                Vtal.Email = user.Email;
-                Vtal.BoardId = user.BoardId;
-                Vtal.FullNameAr = user.FullNameAr;
-                Vtal.FullNameEn = user.FullNameEn;
-                Vtal.MobileNumber = user.MobileNumber;
-                Vtal.Skills = user.Skills;
-                Vtal.Experiences = user.Experiences;
-                Vtal.RejectionReasons = user.RejectionReasons;
+                return _context.tblBoardTalRequests.Any(u => u.Email == email);
 
-                _context.tblBoardTalRequests.Update(Vtal);
-                _context.SaveChanges();
             }
-
-            public bool IsEmailDuplicate(string email, Guid? userId = null)
+            else
             {
-                if (userId == null)
-                {
-                    return _context.tblBoardTalRequests.Any(u => u.Email == email);
-
-                }
-                else
-                {
-                    return _context.tblBoardTalRequests.Any(u => u.Email == email && u.Id != userId);
-                }
+                return _context.tblBoardTalRequests.Any(u => u.Email == email && u.Id != userId);
             }
+        }
 
         public List<tblBoards> GettblBoard()
         {
@@ -117,4 +119,4 @@ namespace SHARKNA.Domain
         }
 
     }
-    }
+}

@@ -14,10 +14,15 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("النادي")]
+
         public Guid BoardId { get; set; }
+
+        public string BoardName { get; set; }
 
         [DisplayName("حالة الطلب")]
         public Guid RequestStatusId { get; set; }
+
+        public string RequestStatusName { get; set; }
 
         public ICollection<tblBoards> BoardsOfList { get; set; }
         public ICollection<tblRequestStatus> ReqStatusOfList { get; set; }
@@ -54,7 +59,7 @@ namespace SHARKNA.ViewModels
 
         public string Experiences { get; set; }
 
-        
+
         [StringLength(100)]
         [DisplayName(" سبب الرفض  ")]
 
