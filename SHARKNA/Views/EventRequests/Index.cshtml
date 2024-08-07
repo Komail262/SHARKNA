@@ -28,6 +28,7 @@
                             <th>الفعالية</th>
                             <th>حالة الطلب</th>
                             <th>اللجنة</th>
+                            <th>الإجراءات</th> <!-- new -->
                         </tr>
                     </thead>
                     <tbody>
@@ -35,9 +36,16 @@
                         {
                             <tr>
                                 <td>@request.RejectionReasons</td>
-                                <td>@request.EventName</td> <!-- new: عرض اسم الفعالية -->
-                                <td>@request.RequestStatusName</td> <!-- new: عرض اسم حالة الطلب -->
-                                <td>@request.BoardName</td> <!-- new: عرض اسم اللجنة -->
+                                <td>@request.EventName</td>
+                                <td>@request.RequestStatusName</td>
+                                <td>@request.BoardName</td>
+                                <td>
+                                    <form asp-action="CancelRequest" method="post">
+                                        <!-- new: زر الإلغاء -->
+                                        <input type="hidden" name="id" value="@request.Id" />
+                                        <button type="submit" class="btn btn-danger">إلغاء الطلب</button> <!-- new -->
+                                    </form>
+                                </td>
                             </tr>
                         }
                     </tbody>

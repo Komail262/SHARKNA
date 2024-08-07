@@ -41,42 +41,30 @@ namespace SHARKNA.Domain
 
         }
 
-        public void AddPermission(PermissionsViewModel Permission)
-        {
-            tblPermissions Permissions = new tblPermissions();
-            Permissions.Id = Permission.Id;
-            Permissions.UserName = Permission.UserName;
-            Permissions.FullNameAr = Permission.FullNameAr;
-            Permissions.FullNameEn = Permission.FullNameEn;
-            Permissions.RoleId = Guid.Parse("27BDCFC2-532F-4B34-AC91-AE5E0A84731F");
-            Permissions.IsDeleted = false;
-
-            _context.tblPermissions.Add(Permissions);
-            _context.SaveChanges();
-        }
-        public int DeleteBoard(Guid id)
+        public int AddPermission(PermissionsViewModel Permission)
         {
             try
             {
-                var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
-                if (board != null)
-                {
-                    board.IsDeleted = true;
-                    board.IsActive = false;
-                    _context.Update(board);
-                    _context.SaveChanges();
+                tblPermissions permission = new tblPermissions();
 
-                    return 1;
-                }
-                else
-                    return 0;
+                permission.Id = Permission.Id;
+                permission.UserName = Permission.UserName;
+                permission.FullNameAr = Permission.FullNameAr;
+                permission.FullNameEn = Permission.FullNameEn;
+                permission.RoleId = Permission.RoleId;
+                permission.IsDeleted = false;
+
+                _context.tblPermissions.Add(permission);
+                _context.SaveChanges();
+                return 1;
             }
             catch (Exception ex)
             {
                 return 0;
-            }
 
+            }
         }
+       
         public int UpdatePermission(PermissionsViewModel Permission)
         {
             try
@@ -91,6 +79,7 @@ namespace SHARKNA.Domain
                 existingPermission.FullNameAr = Permission.FullNameAr;
                 existingPermission.FullNameEn = Permission.FullNameEn;
                 existingPermission.RoleId = Permission.RoleId;
+                existingPermission.IsDeleted = false;
                 _context.Update(existingPermission);
                 _context.SaveChanges();
                 return 1;
@@ -102,6 +91,40 @@ namespace SHARKNA.Domain
             }
         }
 
+        public int DeletePermission(Guid id)
+        {
+            try
+            {
+                var Per = _context.tblPermissions.FirstOrDefault(b => b.Id == id);
+                if (Per != null)
+                {
+                    Per.IsDeleted = true;
+                    _context.Update(Per);
+                    _context.SaveChanges();
+
+                    return 1;
+                }
+                else
+                    return 0;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+        public bool IsRoleNameDuplicate(string name, Guid? Permissionn = null)
+        {
+            if (Permissionn == null)
+            {
+                return _context.tblPermissions.Any(u => u.UserName == name);
+
+            }
+            else
+            {
+                return _context.tblPermissions.Any(u => u.UserName == name && u.Id != Permissionn);
+            }
+        }
 
     }
 }
