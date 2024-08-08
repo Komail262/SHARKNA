@@ -36,7 +36,7 @@ namespace SHARKNA.Domain
                 Id = view.Id,
                 RejectionReasons = view.RejectionReasons,
                 EventId = view.EventId,
-                RequestStatusId = view.RequestStatusId,
+                RequestStatusId = view.RequestStatusId, // استخدم الحالة المحددة من المستخدم
                 BoardId = view.BoardId
             };
 
@@ -44,14 +44,17 @@ namespace SHARKNA.Domain
             _context.SaveChanges();
         }
 
-        // الدالة الجديدة لإلغاء الطلب
-        public void CancelRequest(Guid id)
+        public void CancelEventRequest(Guid id)
         {
-            var eventRequest = _context.tblEventRequests.FirstOrDefault(r => r.Id == id);
-            if (eventRequest != null)
+            var request = _context.tblEventRequests.FirstOrDefault(r => r.Id == id);
+            if (request != null)
             {
-                eventRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
-                _context.SaveChanges();
+                var canceledStatus = _context.tblRequestStatus.FirstOrDefault(s => s.Id == Guid.Parse("E2D4F6A8-B2C3-4E5D-8A9F-0B1C2D3E4F5A"));
+                if (canceledStatus != null)
+                {
+                    request.RequestStatusId = canceledStatus.Id;
+                    _context.SaveChanges();
+                }
             }
         }
 

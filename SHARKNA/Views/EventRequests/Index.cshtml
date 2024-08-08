@@ -1,5 +1,22 @@
 ﻿@model IEnumerable<SHARKNA.ViewModels.EventRequestViewModel>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @if (TempData["Success"] != null)
+    {
+        <text>
+            Swal.fire('نجاح', '@TempData["Success"]', 'success');
+        </text>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <text>
+            Swal.fire('خطأ', '@TempData["Error"]', 'error');
+        </text>
+    }
+</script>
+
 @{
     ViewData["Title"] = "Event Requests List";
 }
@@ -28,7 +45,7 @@
                             <th>الفعالية</th>
                             <th>حالة الطلب</th>
                             <th>اللجنة</th>
-                            <th>الإجراءات</th> <!-- new -->
+                            <th>الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,11 +57,13 @@
                                 <td>@request.RequestStatusName</td>
                                 <td>@request.BoardName</td>
                                 <td>
-                                    <form asp-action="CancelRequest" method="post">
-                                        <!-- new: زر الإلغاء -->
-                                        <input type="hidden" name="id" value="@request.Id" />
-                                        <button type="submit" class="btn btn-danger">إلغاء الطلب</button> <!-- new -->
-                                    </form>
+                                    @if (request.RequestStatusName != "تم الإلغاء")
+                                    {
+                                        <form asp-action="Cancel" method="post">
+                                            <input type="hidden" name="id" value="@request.Id" />
+                                            <button type="submit" class="btn btn-danger">إلغاء الطلب</button>
+                                        </form>
+                                    }
                                 </td>
                             </tr>
                         }
@@ -53,4 +72,4 @@
             </div>
         </div>
     </div>
-</section><!-- End Page Wrap -->
+</section>
