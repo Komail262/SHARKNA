@@ -12,7 +12,7 @@ namespace SHARKNA.Domain
         {
             _context = context;
         }
-
+//m
         public IEnumerable<BoardRolesViewModel> GettbBoardRoles()
         {
             return _context.tblBoardRoles.Where(i => i.IsDeleted == false).Select(boardRoles => new BoardRolesViewModel
