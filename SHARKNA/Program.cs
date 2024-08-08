@@ -18,8 +18,8 @@ builder.Services.AddDbContext<SHARKNAContext>(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {
-                options.AccessDeniedPath = "/Home/Error";
-                options.LoginPath = "/account/login";
+                options.AccessDeniedPath = "/Home/AccessDenied";
+                options.LoginPath = "/Users/login";
                 options.ExpireTimeSpan = TimeSpan.FromDays(1);
                 //options.LoginPath = "/accounts/ErrorNotLoggedIn";
                 //options.LogoutPath = "account/logout";
