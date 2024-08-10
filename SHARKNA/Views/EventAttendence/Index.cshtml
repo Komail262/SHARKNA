@@ -1,15 +1,18 @@
-﻿@model IEnumerable<BoardViewModel>
+﻿@* @model IEnumerable<EEventAttendenceViewModel>
+ *@
+ @model IEnumerable<SHARKNA.ViewModels.EventViewModel>
+
 
 @{
-    ViewData["Title"] = "Board List";
+    ViewData["Title"] = "Event Attendance List";
 }
-
+@* 
 <script>
     @{
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Successful"])';
+                                    var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -21,14 +24,14 @@
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
+                                    var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
+                                    var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
@@ -38,60 +41,55 @@
 <script>
     function Display
 </script>
-
+ *@
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
-    <script>
-
-    </script>
     <!-- Start Page Wrap -->
     <section class="page_wrap">
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">إدارة اللجان</h5>
+                    <h5 class="m-0">إدارة الفعاليات للحضور</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة لجنة</a>
-                        </div>
+                        @* <div>
+                            <a asp-action="Create" class="btn btn-primary">إضافة عضو للحضور</a>
+                        </div> *@
                     </div>
                 </div>
                 <div class="block-body">
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(m => m.NameAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.NameEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsDeleted)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsActive)</th>
+                               @*  <th>@Html.DisplayNameFor(m => m.EventDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.Day)</th> *@
+@*                                 <th>@Html.DisplayNameFor(m => m.EventName)</th>
+ *@                             <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
+                               
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var board in Model)
+
+                            @foreach (var attendence in Model)
                             {
                                 <tr>
-                                    <td>@board.NameAr</td>
-                                    <td>@board.NameEn</td>
-                                    <td>@board.DescriptionAr</td>
-                                    <td>@board.DescriptionEn</td>
-                                    <td>@board.IsDeleted</td>
-                                    <td>@board.IsActive</td>
-                                    @* <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
-                                            <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-sm btn-danger" >حذف</a>
-                                        </div>
-                                    </td> *@
+                                    @*here i can make index start from 1 and increment by 1 *@
+                                    <td>@attendence.EventTitleAr</td>
+@*                                     <td>@attendence.EventstId</td>
+ *@
+                                    <td>@attendence.EventTitleEn</td>
+                                    <td>@attendence.EventStartDate.ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@attendence.EventEndtDate.ToString("yyyy-MM-dd HH:mm")</td>
+                               
                                     <td>
-                                        <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-primary">تعديل</a> |
-                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a>
+                                        <a asp-action="Details" asp-route-id="@attendence.Id" class="btn btn-primary">سجل الحضور</a> 
 
                                     </td>
                                 </tr>
