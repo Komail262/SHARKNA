@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+
+<!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 
 <head>
@@ -171,12 +173,46 @@
                             <li><a class="dropdown-item" href="#">English Language</a></li>
                             <li>
                                 <hr class="dropdown-divider w-100">
-                            *@ </li>
-                    <li><a class="dropdown-item" href="/Users/Login">تسجيل الدخول</a></li>
+                            </li>*@ 
+                   @*  <li><a class="dropdown-item" href="/Users/Login">تسجيل الدخول</a></li> *@
+
+
+                          @*   @if (User.Identity.IsAuthenticated)
+                            {
+                                <li>
+                                    <form asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-primary">تسجيل الخروج</button>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a class="nav-link" href="/Users/Login">تسجيل الدخول</a></li>
+                            } *@
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <span> مرحبا بك @User.FindFirst(ClaimTypes.GivenName).Value </span>
+                                //<span>          @User.FindFirst(ClaimTypes.Email).Value </span>
+                                <span>          @User.FindFirst(ClaimTypes.Role).Value </span>
+                               
+                                <li>
+                                    <form id="logoutForm" asp-action="Logout" asp-controller="Users" method="post" class="d-inline" style="display: none;">
+                                        @Html.AntiForgeryToken()
+                                    </form>
+                                    <a class="btn btn-primary" href="#" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">تسجيل الخروج</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a class="btn btn-primary" href="/Users/Login">تسجيل الدخول</a></li>
+                               // <a class="btn btn-primary" href="/Users/Login" onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">تسجيل الخروج</a>
+                            }
+
                         </ul>
                     </li>
                 </ul>
-            </header>
+            </header> 
             <!-- End Header Navbar -->
           
             <!-- Start Page Wrap -->
