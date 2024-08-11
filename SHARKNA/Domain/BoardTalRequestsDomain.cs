@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -44,6 +45,7 @@ namespace SHARKNA.Domain
             tt.Email = Btal.Email;
             tt.BoardId = Btal.BoardId;
             tt.RejectionReasons = Btal.RejectionReasons;
+            tt.RequestStatusId = Btal.RequestStatusId;
             tt.FullNameAr = Btal.FullNameAr;
             tt.MobileNumber = Btal.MobileNumber;
             tt.FullNameEn = Btal.FullNameEn;
@@ -81,6 +83,16 @@ namespace SHARKNA.Domain
 
         }
 
+        public void CancelRequest(Guid id)
+        {
+            var Request = _context.tblBoardTalRequests.FirstOrDefault(r => r.Id == id);
+            if (Request != null)
+            {
+                Request.RequestStatusId = Guid.Parse("e2d4f6a8-b2c3-4e5d-8a9f-0b1c2d3e4f5a"); // تعيين الحالة "تم الإلغاء"
+                _context.SaveChanges();
+            }
+        }
+
         public void UpdateUser(BoardTalRequestsViewModel user)
 
         {
@@ -100,6 +112,8 @@ namespace SHARKNA.Domain
             _context.SaveChanges();
         }
 
+
+
         public bool IsEmailDuplicate(string email, Guid? userId = null)
         {
             if (userId == null)
@@ -118,5 +132,7 @@ namespace SHARKNA.Domain
             return _context.tblBoards.Where(e => !e.IsDeleted && e.IsActive).ToList();
         }
 
+
     }
 }
+
