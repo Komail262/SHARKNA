@@ -12,7 +12,6 @@ namespace SHARKNA.Domain
         {
             _context = context;
         }
-//m
         public IEnumerable<BoardRolesViewModel> GettbBoardRoles()
         {
             return _context.tblBoardRoles.Where(i => i.IsDeleted == false).Select(boardRoles => new BoardRolesViewModel
@@ -41,18 +40,27 @@ namespace SHARKNA.Domain
 
         }
 
-        public void AddBoardRoles(BoardRolesViewModel boardRoles)
+        public int AddBoardRoles(BoardRolesViewModel boardRoles)
         {
-            tblBoardRoles VboardRoles = new tblBoardRoles();
-            VboardRoles.Id = boardRoles.Id;
-            VboardRoles.NameAr = boardRoles.NameAr;
-            VboardRoles.NameEn = boardRoles.NameEn;
-            VboardRoles.IsActive = boardRoles.IsActive;
-            VboardRoles.IsDeleted = boardRoles.IsDeleted;
+            try
+            {
+                tblBoardRoles VboardRoles = new tblBoardRoles();
 
+                VboardRoles.Id = boardRoles.Id;
+                VboardRoles.NameAr = boardRoles.NameAr;
+                VboardRoles.NameEn = boardRoles.NameEn;
+                VboardRoles.IsDeleted = false;
+                VboardRoles.IsActive = true;
 
-            _context.tblBoardRoles.Add(VboardRoles);
-            _context.SaveChanges();
+                _context.tblBoardRoles.Add(VboardRoles);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+
+            }
         }
 
         public int UpdateBoardRoles(BoardRolesViewModel boardRoles)

@@ -33,6 +33,7 @@ namespace SHARKNA.Domain
                 DescriptionEn = E.DescriptionEn,
                 LocationAr = E.LocationAr,
                 LocationEn = E.LocationEn,
+                MaxAttendence = E.MaxAttendence,
                 IsActive = E.IsActive,
                 IsDeleted = E.IsDeleted,
 
@@ -60,36 +61,50 @@ namespace SHARKNA.Domain
             uu.LocationAr = Tuser.LocationAr;
             uu.LocationEn = Tuser.LocationEn;
             uu.LocationEn = Tuser.LocationEn;
+            uu.MaxAttendence = Tuser.MaxAttendence;
             uu.IsActive = Tuser.IsActive;
             uu.IsDeleted = Tuser.IsDeleted;
             return uu;
 
         }
 
-        public void AddEvent(EventViewModel Event)
+        public int AddEvent(EventViewModel Event)
         {
-            tblEvents VEvent = new tblEvents();
-            VEvent.Id = Event.Id;
-            VEvent.EventTitleAr = Event.EventTitleAr;
-            VEvent.EventTitleEn = Event.EventTitleEn;
-            VEvent.EventStartDate = Event.EventStartDate;
-            VEvent.EventEndtDate = Event.EventEndtDate;
-            VEvent.Time = Event.Time;
-            VEvent.EndRegTime = Event.EndRegTime;
-            VEvent.SpeakersAr = Event.SpeakersAr;
-            VEvent.SpeakersEn = Event.SpeakersEn;
-            VEvent.TopicAr = Event.TopicAr;
-            VEvent.TopicEn = Event.TopicEn;
-            VEvent.DescriptionAr = Event.DescriptionAr;
-            VEvent.DescriptionEn = Event.DescriptionEn;
-            VEvent.LocationAr = Event.LocationAr;
-            VEvent.LocationEn = Event.LocationEn;
-            VEvent.IsActive = Event.IsActive;
-            VEvent.IsDeleted = Event.IsDeleted;
+            try
+            {
+                tblEvents VEvent = new tblEvents();
+
+                VEvent.Id = Event.Id;
+                VEvent.EventTitleAr = Event.EventTitleAr;
+                VEvent.EventTitleEn = Event.EventTitleEn;
+                VEvent.EventStartDate = Event.EventStartDate;
+                VEvent.EventEndtDate = Event.EventEndtDate;
+                VEvent.Time = Event.Time;
+                VEvent.EndRegTime = Event.EndRegTime;
+                VEvent.SpeakersAr = Event.SpeakersAr;
+                VEvent.SpeakersEn = Event.SpeakersEn;
+                VEvent.TopicAr = Event.TopicAr;
+                VEvent.TopicEn = Event.TopicEn;
+                VEvent.DescriptionAr = Event.DescriptionAr;
+                VEvent.DescriptionEn = Event.DescriptionEn;
+                VEvent.LocationAr = Event.LocationAr;
+                VEvent.LocationEn = Event.LocationEn;
+                VEvent.MaxAttendence = Event.MaxAttendence;
+                VEvent.IsActive = Event.IsActive;
+                VEvent.IsDeleted = Event.IsDeleted;
+
+                _context.tblEvents.Add(VEvent);
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+
+            }
 
 
-            _context.tblEvents.Add(VEvent);
-            _context.SaveChanges();
+            
         }
 
         public int UpdateEvent(EventViewModel Event)
@@ -116,6 +131,7 @@ namespace SHARKNA.Domain
                 existingEvent.DescriptionEn = Event.DescriptionEn;
                 existingEvent.LocationAr = Event.LocationAr;
                 existingEvent.LocationEn = Event.LocationEn;
+                existingEvent.MaxAttendence = Event.MaxAttendence;
                 existingEvent.IsDeleted = false;
                 existingEvent.IsActive = true;
 

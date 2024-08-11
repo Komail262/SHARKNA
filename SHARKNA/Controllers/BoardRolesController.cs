@@ -30,24 +30,38 @@ namespace SHARKNA.Controllers
             return View(boardRoles);
         }
 
-
         public IActionResult Create()
         {
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(BoardRolesViewModel boardRoles)
         {
-            if (ModelState.IsValid)
+            try
             {
-               boardRoles.Id = Guid.NewGuid();
-                _BoardRolesDomain.AddBoardRoles(boardRoles);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+
+                    boardRoles.Id = Guid.NewGuid();
+
+                    int check = _BoardRolesDomain.AddBoardRoles(boardRoles);
+                    // return RedirectToAction(nameof(Index));
+                    if (check == 1)
+                        ViewData["Successful"] = "تم إضافة  بنجاح";
+                    else
+                        ViewData["Falied"] = "حدث خطأ بالإضافة";
+                    return View(boardRoles);
+
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء إضافة لجنة";
+            }
+
+            return View(boardRoles);
         }
 
 
@@ -68,11 +82,23 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(BoardRolesViewModel boardRoles)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _BoardRolesDomain.UpdateBoardRoles(boardRoles);
+                if (ModelState.IsValid)
+                {
 
-                return RedirectToAction(nameof(Index));
+                    int check = _BoardRolesDomain.UpdateBoardRoles(boardRoles);
+                    if (check == 1)
+                        ViewData["Successful"] = "تم التعديل بنجاح";
+                    else
+                        ViewData["Falied"] = "خطأ بالتعديل";
+                    return View(boardRoles);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
             }
             return View(boardRoles);
         }

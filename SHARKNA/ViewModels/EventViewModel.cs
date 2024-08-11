@@ -49,6 +49,7 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("الموضوع الحدث بالعربي")]
         public string TopicAr { get; set; }
+
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
         [DisplayName("الموضوع بالانجليزي")]
@@ -66,15 +67,19 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("مواقع الحدث بالعرب")]
+        [DisplayName("موقع الحدث بالعرب")]
         public string LocationAr { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("مواقع الحدث بالانجليزي")]
+        [DisplayName("موقع الحدث بالانجليزي")]
 
         public string LocationEn { get; set; }
-      
+
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("الحد الأقصى للحضور")]
+        public int MaxAttendence { get; set; }
 
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

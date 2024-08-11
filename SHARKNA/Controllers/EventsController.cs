@@ -41,13 +41,43 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventViewModel Event)
         {
-            if (ModelState.IsValid)
+           
+
+            try
             {
-                Event.Id =Guid.NewGuid();
-                _EventDomain.AddEvent(Event);
-                return RedirectToAction(nameof(Index));
+               
+                if (ModelState.IsValid)
+                {
+                    if (Event.EventStartDate >= Event.EventEndtDate)
+                    {
+                        ModelState.AddModelError("", "تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية.");
+                        return View(Event);
+                    }
+
+
+                    if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                    {
+                        ModelState.AddModelError("", "بداية الساعة يجب أن تكون أصغر من نهاية الساعة.");
+                        return View(Event);
+                    }
+
+                    Event.Id = Guid.NewGuid();
+
+                    int check = _EventDomain.AddEvent(Event);
+                    if (check == 1)
+                        ViewData["Successful"] = "تم إضافة الحدث بنجاح";
+                    else
+                        ViewData["Falied"] = "حدث خطأ بالإضافة";
+                    return View(Event);
+
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء إضافة الحدث";
+            }
+
+            return View(Event);
         }
 
 
@@ -68,11 +98,36 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EventViewModel Event)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _EventDomain.UpdateEvent(Event);
+                if (ModelState.IsValid)
+                {
 
-                return RedirectToAction(nameof(Index));
+                    if (Event.EventStartDate >= Event.EventEndtDate)
+                    {
+                        ModelState.AddModelError("", "تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية.");
+                        return View(Event);
+                    }
+
+
+                    if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                    {
+                        ModelState.AddModelError("", "بداية الساعة يجب أن تكون أصغر من نهاية الساعة.");
+                        return View(Event);
+                    }
+
+                    int check = _EventDomain.UpdateEvent(Event);
+                    if (check == 1)
+                        ViewData["Successful"] = "تم التعديل بنجاح";
+                    else
+                        ViewData["Falied"] = "خطأ بالتعديل";
+                    return View(Event);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
             }
             return View(Event);
         }
@@ -91,7 +146,7 @@ namespace SHARKNA.Controllers
                 int check = _EventDomain.DeleteEvent(id);
                 if (check == 1)
                 {
-                    Successful = "تم حذف  بنجاح";
+                    Successful = "تم حذف الحدث بنجاح";
                 }
 
                 else
@@ -108,7 +163,6 @@ namespace SHARKNA.Controllers
                 Falied = "حدث خطأ";
 
             }
-            //_boardDomain.DeleteBoard(id);
             return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
         
         
