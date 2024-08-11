@@ -108,8 +108,8 @@ namespace SHARKNA.Controllers
 
         
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+       // [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
             string Successful = "";
