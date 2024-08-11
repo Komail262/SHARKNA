@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BoardTalRequestsViewModel>
+﻿    @model IEnumerable<BoardTalRequestsViewModel>
 
 @{
     ViewData["Title"] = "Users List";
@@ -58,9 +58,21 @@
                                     <td>@user.RejectionReasons</td>
                                     <td class="action_td text-end">
                                         <div class="d-flex gap-2">
-                                            <a asp-action=" " asp-route-id="@user.Id" class="btn btn-sm btn-danger">الغاء الطلب</a>
+                                            @if (user.RequestStatusName != "تم الإلغاء") 
+                                            {
+                                                <form asp-action="CancelRequest" method="post" onsubmit="hideButton(this.querySelector('button'))">
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button type="submit" class="btn btn-danger">إلغاء الطلب</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">الطلب تم إلغاؤه</span>
+                                            }
                                         </div>
-                                    </td>
+
+
+                               
                                 </tr>
                             }
                         </tbody>

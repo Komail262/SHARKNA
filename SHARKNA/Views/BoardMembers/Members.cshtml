@@ -1,7 +1,8 @@
-﻿@model IEnumerable<BoardRequestsViewModel>
+﻿@model IEnumerable<SHARKNA.ViewModels.BoardMembersViewModel>
+
 
 @{
-    ViewData["Title"] = "Board Requests List";
+    ViewData["Title"] = "Board Members List";
 }
 
 <!DOCTYPE html>
@@ -18,7 +19,7 @@
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
                         <div>
-                            <a asp-action="Create" class="btn btn-primary">التسجيل في نادي </a>
+                            @*  <a asp-action="Create" class="btn btn-primary">التسجيل في نادي </a> *@
                         </div>
                     </div>
                 </div>
@@ -26,46 +27,26 @@
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
+
                                 <th>@Html.DisplayNameFor(m => m.UserName)</th>
                                 <th>@Html.DisplayNameFor(m => m.Email)</th>
-                                <th>@Html.DisplayNameFor(m => m.BoardId)</th>
                                 <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
-                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
-
-                                <th>الإجراءات</th>
+                                <th>@Html.DisplayNameFor(m => m.BoardRoleName)</th>
                             </tr>
-                            
+
                         </thead>
                         <tbody>
-                            @foreach (var user in Model)
+                            @foreach (var member in Model)
                             {
                                 <tr>
-                                    <td>@user.UserName</td>
-                                    <td>@user.Email</td>
-                                    <td>@user.BoardName</td>
-                                    <td>@user.MobileNumber</td>
-                                    <td>@user.FullNameAr</td>
-                                    <td>@user.FullNameEn</td>
-                                    <td>@user.RequestStatusName</td>
-                                    <td>@user.RejectionReasons</td>
-                                    <td class="action_td text-end">
-                                       
-                                        @if (@user.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
-                                        {
-                                            <form asp-action="CancelRequest" method="post">
-                                                <input type="hidden" name="id" value="@user.Id" />
-                                                <button type="submit" class="btn btn-danger">إلغاء الطلب</button> 
-                                            </form>
-
-
-                                        }else
-                                        {
-                                           
-                                        }
-                                    </td>
+                                    <td>@member.UserName</td>
+                                    <td>@member.Email</td>
+                                    <td>@member.MobileNumber</td>
+                                    <td>@member.FullNameAr</td>
+                                    <td>@member.FullNameEn</td>
+                                    <td>@member.BoardRoleName</td>
                                 </tr>
                             }
                         </tbody>
