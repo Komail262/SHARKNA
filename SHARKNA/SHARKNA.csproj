@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Home\AccessDenied.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Home\AccessDenied.cshtml" />
     <None Include="wwwroot\Assets\.DS_Store" />
     <None Include="wwwroot\Assets\css\.DS_Store" />
     <None Include="wwwroot\Assets\fonts\.DS_Store" />
@@ -55,6 +60,14 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Home\AccessDenied.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
 
 </Project>
