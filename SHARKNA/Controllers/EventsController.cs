@@ -44,6 +44,7 @@ namespace SHARKNA.Controllers
             if (ModelState.IsValid)
             {
                 Event.Id =Guid.NewGuid();
+                Event.IsActive = true;
                 _EventDomain.AddEvent(Event);
                 return RedirectToAction(nameof(Index));
             }

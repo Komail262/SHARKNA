@@ -11,12 +11,15 @@ namespace SHARKNA.Controllers
     public class EventAttendenceController : Controller
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
-        private readonly EventMembersDomain _eventmembersDomain;
+        //private readonly EventMembersDomain _eventmembersDomain;
+        private readonly EventRegistrationsDomain _EventRegistrations;
 
-        public EventAttendenceController (EventAttendenceDomain eventAttendenceDomain, EventMembersDomain eventMembersDomain)
+
+        public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain)
         {
             _eventattendenceDomain = eventAttendenceDomain;
-            _eventmembersDomain = eventMembersDomain;
+            //_eventmembersDomain = eventMembersDomain;
+            _EventRegistrations = eventRegDomain;
         }
         public IActionResult Index()
         {
@@ -36,7 +39,7 @@ namespace SHARKNA.Controllers
             return View(eventDays);
         }
 
- 
+
 
 
         [HttpPost]
@@ -67,7 +70,11 @@ namespace SHARKNA.Controllers
             return View(atten);
         }
 
+        //public IActionResult Attend(Guid eventId)
+        //{
+        //    Guid Accepted = Guid.Parse("")
 
 
+        //}
     }
 }

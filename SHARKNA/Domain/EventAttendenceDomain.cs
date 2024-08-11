@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
+using System.Xml;
 
 namespace SHARKNA.Domain
 {
@@ -10,8 +11,8 @@ namespace SHARKNA.Domain
         public EventAttendenceDomain(SHARKNAContext context)
         {
             _context = context;
-        }  
-        public IEnumerable<EventViewModel> GetTblEvents() 
+        }
+        public IEnumerable<EventViewModel> GetTblEvents()
         {
             return _context.tblEvents.Select(x => new EventViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
@@ -72,17 +73,27 @@ namespace SHARKNA.Domain
 
         // new list
 
-        public IEnumerable<EventMemberViewModel> GetTblEventMemberbyEventId()
+
+        public IEnumerable<EventRegistrationsViewModel> GetTblEventRegistrations(Guid eventId , Guid Accepted)
         {
-            return _context.tblEventMembers.Where(em => em.IsDeleted).Select(x => new EventMemberViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return _context.tblEventRegistrations
+                .Where(x => x.EventsId == eventId && x.EventStatusId == Accepted)
+                .Select(x => new EventRegistrationsViewModel //استرجع جميع قيم المسجلين من الداتابيس واحطهم في الايفنت فيو موديل
+
             {
                 Id = x.Id,
+                RegDate = x.RegDate,
+                RejectionReasons = x.RejectionReasons,
+                UserName = x.UserName,
+                Email = x.Email,
+                MobileNumber = x.MobileNumber,
                 FullNameAr = x.FullNameAr,
                 FullNameEn = x.FullNameEn,
-                MobileNumber = x.MobileNumber,
-                IsActive = x.IsActive,
-                IsDeleted = x.IsDeleted
+                EventId = x.EventsId,
+                RequestStatusId = x.EventStatusId
+
             }).ToList();
+
         }
 
         public int AddEventAttend(EEventAttendenceViewModel eventatten)
@@ -99,7 +110,7 @@ namespace SHARKNA.Domain
                     IsAttend = eventatten.IsAttend
                 };
 
-                _context.Add(At);
+                _context.tblEventAttendence.Add(At);
                 _context.SaveChanges();
                 return 1;
             }
