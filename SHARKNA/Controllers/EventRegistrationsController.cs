@@ -57,6 +57,7 @@ namespace SHARKNA.Controllers
 
                     EventReg.Id = Guid.NewGuid();
                     EventReg.RegDate = DateTime.Now;
+                    EventReg.RejectionReasons = "";
                     _EventRegistrations.AddEventReg(EventReg);
                     ViewData["Successful"] = "تمت التسجيل بنجاح";
                 }

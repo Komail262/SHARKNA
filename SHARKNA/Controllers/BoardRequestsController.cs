@@ -12,13 +12,14 @@ namespace SHARKNA.Controllers
         private readonly BoardRequestsDomain _boardRequestsDomain;
         private readonly BoardDomain _BoardDomain;
         private readonly RequestStatusDomain _RequestStatusDomain;
+        private readonly BoardMembersDomain _BoardMembersDomain;
 
-
-        public BoardRequestsController (BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain)
+        public BoardRequestsController (BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain)
         {
             _boardRequestsDomain = boardRequestsDomain;
             _BoardDomain = BoardDomain;
             _RequestStatusDomain = requestStatusDomain;
+            _BoardMembersDomain = boardMembersDomain;   
         }
         public IActionResult Index()
         {
@@ -26,15 +27,19 @@ namespace SHARKNA.Controllers
             return View(BoardReq);
         }
 
+        public IActionResult Admin()
+        {
+            var BoardReq = _boardRequestsDomain.GetTblBoardRequests();
+            return View(BoardReq);
+        }
         public IActionResult Create()
         {
            
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-           
-
-
             return View();
         }
+
+     
 
 
         [HttpPost]
@@ -52,7 +57,7 @@ namespace SHARKNA.Controllers
                         ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
                         return View(BoardReq);
                     }
-                     //m
+                     
                     BoardReq.Id = Guid.NewGuid();
                     
                    int check =  _boardRequestsDomain.AddBoardReq(BoardReq);
@@ -73,7 +78,58 @@ namespace SHARKNA.Controllers
 
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelRequest(Guid id)
+        {
+            try
+            {
+                _boardRequestsDomain.CancelRequest(id);
+                ViewData["Successful"] = "تم إلغاء الطلب بنجاح."; 
+            }
+            catch (Exception)
+            {
+                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+            }
 
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Accept(Guid id)
+        {
+            try
+            {
+                _boardRequestsDomain.Accept(id);
+                ViewData["Successful"] = "تم قبول الطلب بنجاح.";
+            }
+            catch (Exception)
+            {
+                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+            }
+
+            return RedirectToAction(nameof(Admin));
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Reject(Guid id, string rejectionReason)
+        {
+            try
+            {
+                _boardRequestsDomain.Reject(id , rejectionReason);
+                ViewData["Successful"] = "تم قبول الطلب بنجاح.";
+            }
+            catch (Exception)
+            {
+                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+            }
+
+            return RedirectToAction(nameof(Admin));
+        }
     }
 
 }

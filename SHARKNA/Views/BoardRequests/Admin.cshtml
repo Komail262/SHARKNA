@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<BoardRequestsViewModel>
 
-@{
-    ViewData["Title"] = "Board Requests List";
-}
+
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
@@ -37,7 +35,7 @@
 
                                 <th>الإجراءات</th>
                             </tr>
-                            
+
                         </thead>
                         <tbody>
                             @foreach (var user in Model)
@@ -52,19 +50,37 @@
                                     <td>@user.RequestStatusName</td>
                                     <td>@user.RejectionReasons</td>
                                     <td class="action_td text-end">
-                                       
+
                                         @if (@user.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
                                         {
-                                            <form asp-action="CancelRequest" method="post">
-                                                <input type="hidden" name="id" value="@user.Id" />
-                                                <button type="submit" class="btn btn-danger">إلغاء الطلب</button> 
-                                            </form>
+                                          
 
+                                            <div>
+                                                <form asp-action="Accept" method="post" style="display:inline;">
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <button type="submit" class="btn btn-success">قبول</button>
+                                                </form>
 
-                                        }else
-                                        {
-                                           
+                                                <button type="button" class="btn btn-danger" onclick="showRejectForm('@user.Id')">رفض</button>
+
+                                                <form asp-action="Reject" method="post" id="rejectForm-@user.Id" style="display:none; margin-top:10px;">
+                                                    <input type="hidden" name="id" value="@user.Id" />
+                                                    <div class="form-group">
+                                                        <label for="rejectionReason">سبب الرفض:</label>
+                                                        <input type="text" name="rejectionReason" class="form-control" required />
+                                                    </div>
+                                                    <button type="submit" class="btn btn-warning btn-sm">تأكيد الرفض</button>
+                                                </form>
+                                            </div>
                                         }
+                                        else
+                                        {
+
+                                        }
+                                        <div class="d-flex gap-2">
+                                            
+                                        </div>
+                                       
                                     </td>
                                 </tr>
                             }
@@ -80,6 +96,10 @@
             جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
         </p>
     </footer><!-- End Footer -->
-
+    <script>
+        function showRejectForm(id) {
+            document.getElementById('rejectForm-' + id).style.display = 'block';
+        }
+    </script>
 </body>
 </html>

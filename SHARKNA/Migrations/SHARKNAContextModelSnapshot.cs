@@ -384,16 +384,10 @@ namespace SHARKNA.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EvenetStatusId")
+                    b.Property<Guid>("EventStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EventStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("EventsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventstId")
+                    b.Property<Guid>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
@@ -786,11 +780,15 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "EventStatus")
                         .WithMany("EventReg")
-                        .HasForeignKey("EventStatusId");
+                        .HasForeignKey("EventStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EventStatus");
 

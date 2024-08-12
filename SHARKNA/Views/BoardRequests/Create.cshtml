@@ -57,7 +57,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label asp-for="BoardId" class="mb-1"> النادي </label>
-                                        <select asp-for="BoardId" class="form-control" asp-items="@ViewBag.BoardsOfList"></select>
+                                        <select asp-for="BoardId" class="form-control" asp-items="@ViewBag.BoardsOfList">
+                                            <option value="">اختر النادي</option>
+                                        </select>
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
 
                                     </div>

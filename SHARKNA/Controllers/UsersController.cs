@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Security.Principal;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace SHARKNA.Controllers
 {
@@ -24,6 +25,7 @@ namespace SHARKNA.Controllers
             _userDomain = userDomain;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var users = _userDomain.GetTblUsers();
@@ -31,11 +33,13 @@ namespace SHARKNA.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Edite()
         {
             return View();
@@ -71,7 +75,8 @@ namespace SHARKNA.Controllers
             }
             return View(user);
         }
-
+        
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(Guid id)
         {
             var user = _userDomain.GetTblUserById(id);
@@ -82,7 +87,9 @@ namespace SHARKNA.Controllers
             return View(user);
         }
 
+       
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(UserViewModel user)
         {
@@ -114,24 +121,22 @@ namespace SHARKNA.Controllers
         {
             try
             {
-                int check = _userDomain.Login(user);
+                
+                var userRecord = _userDomain.GetUserByUsernameAndPassword(user.UserName , user.Password);
 
-                if (check == 1)
+                if (userRecord != null)
                 {
-                    // Get user permissions
+                    
                     var userPermissions = _userDomain.GetUserByUsername(user.UserName);
 
-                    // Handle the case where the user has no permissions
+                   
                     if (userPermissions == null)
                     {
-                        // Assign a default role or continue without specific permissions
-                        //ViewData["Failed"] = "حدث خطأ في النظام: لم يتم العثور على صلاحيات المستخدم. سيتم تسجيل الدخول كزائر.";
-
-                        userPermissions = new PermissionsViewModel // Use PermissionsViewModel instead
+                        userPermissions = new PermissionsViewModel
                         {
-                            RoleName = "Student", // Default role for regular users
-                            Id = Guid.Empty, // Or some default ID
-                            FullNameAr = "'طالب'" // Default name for visitor
+                            RoleName = "NoRole",
+                            Id = userRecord.Id,  
+                            FullNameAr = userRecord.FullNameAr  
                         };
                     }
 
@@ -149,19 +154,17 @@ namespace SHARKNA.Controllers
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         principal);
 
-                    ViewData["Successful"] = "تم التسجيل الدخول بنجاح";
-                    return View();
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ViewData["Failed"] = "البريد الالكتروني او كلمة المرور غير صحيح";
+                    ModelState.AddModelError(string.Empty, "اسم المستخدم أو كلمة المرور غير صحيحة");
                     return View(user);
                 }
             }
             catch (Exception ex)
             {
-                // Log the exception (ex) here using your logging framework
-                ViewData["Failed"] = "حدث خطأ في النظام";
+                ViewData["Login_error"] = "حدث خطأ في النظام";
                 return View(user);
             }
         }
