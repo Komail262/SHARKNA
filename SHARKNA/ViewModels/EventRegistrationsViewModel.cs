@@ -42,9 +42,9 @@ namespace SHARKNA.ViewModels
         public string FullNameEn { get; set; }
 
 
-        public ICollection<tblEvents> EventsOfList { get; set; }
+       // public ICollection<tblEvents> EventsOfList { get; set; }
 
-        public ICollection<tblRequestStatus> RequeststatusOfList { get; set; }
+    //    public ICollection<tblRequestStatus> RequeststatusOfList { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("الحدث")]

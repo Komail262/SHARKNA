@@ -32,7 +32,7 @@ namespace SHARKNA.Controllers
         // GET: EventRegistrations/Create
         public IActionResult Create()
         {
-            // Initialize the ViewModel with dropdown data
+        
             ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
             return View();
         }
