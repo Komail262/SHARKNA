@@ -39,31 +39,35 @@ namespace SHARKNA.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(PermissionsViewModel Permission)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
+                    bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(Permission.UserName);
+                    if (userHasRole)
                     {
-                        Permission.Id = Guid.NewGuid();
-                        _PermissionDomain.AddPermission(Permission);
-                    ViewData["Successful"] = "Successful";
-                //    return RedirectToAction(nameof(Index));
+           
+                        ViewData["Falied"] = "The user already has a role .";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(Permission);
                     }
-                    catch (Exception ex)
-                    {
-                    // Log the exception (ex)
-                    // Consider using a logging framework like NLog, Serilog, or log4net
+
+                    Permission.Id = Guid.NewGuid();
+                    _PermissionDomain.AddPermission(Permission);
+                    ViewData["Successful"] = "Successful";
+                }
+                catch (Exception ex)
+                {
                     ViewData["Falied"] = "Falied";
                 }
             }
-                return View(Permission);
-            
-
+            return View(Permission);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)

@@ -25,7 +25,7 @@ namespace SHARKNA.Controllers
             _userDomain = userDomain;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Index()
         {
             var users = _userDomain.GetTblUsers();
@@ -33,13 +33,13 @@ namespace SHARKNA.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Edite()
         {
             return View();
@@ -76,7 +76,7 @@ namespace SHARKNA.Controllers
             return View(user);
         }
         
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Edit(Guid id)
         {
             var user = _userDomain.GetTblUserById(id);
@@ -89,7 +89,7 @@ namespace SHARKNA.Controllers
 
        
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "SuperAdmin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(UserViewModel user)
         {
