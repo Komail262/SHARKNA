@@ -19,15 +19,17 @@ namespace SHARKNA.Controllers
             _EventDomain = EventDomain;
         }
 
-        public IActionResult Index(string Successful = "", string Falied = "")
+        public IActionResult Index(string Successful = "", string Falied = "" )
         {
             if (Successful != "")
                 ViewData["Successful"] = Successful;
+
             else if (Falied != "")
                 ViewData["Falied"] = Falied;
 
             var Events = _EventDomain.GettblEvents();
             return View(Events);
+
         }
 
 
@@ -41,35 +43,38 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventViewModel Event)
         {
-           
+
 
             try
             {
-               
                 if (ModelState.IsValid)
                 {
-                    if (Event.EventStartDate >= Event.EventEndtDate)
+                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
                     {
-                        ModelState.AddModelError("", "تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية.");
-                        return View(Event);
+                        Event.Id = Guid.NewGuid();
+                        int check = _EventDomain.AddEvent(Event);
+
+                        if (check == 1)
+                        {
+                            ViewData["Successful"] = "تم إضافة الحدث بنجاح";
+                        }
+                        else
+                        {
+                            ViewData["Falied"] = "حدث خطأ بالإضافة";
+                        }
                     }
-
-
-                    if (Event.Time >= Event.EndRegTime.TimeOfDay)
-                    {
-                        ModelState.AddModelError("", "بداية الساعة يجب أن تكون أصغر من نهاية الساعة.");
-                        return View(Event);
-                    }
-
-                    Event.Id = Guid.NewGuid();
-
-                    int check = _EventDomain.AddEvent(Event);
-                    if (check == 1)
-                        ViewData["Successful"] = "تم إضافة الحدث بنجاح";
                     else
-                        ViewData["Falied"] = "حدث خطأ بالإضافة";
-                    return View(Event);
-
+                    {
+                        if (Event.EventStartDate > Event.EventEndtDate)
+                        {
+                            ViewData["Falied"] = "تأكد من تاريخ الحدث";
+                        }
+                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        {
+                            ViewData["Falied"] = "تأكد من الساعة";
+                        }
+                        return View(Event);
+                    }
                 }
             }
             catch (Exception ex)
@@ -78,6 +83,7 @@ namespace SHARKNA.Controllers
             }
 
             return View(Event);
+
         }
 
 
@@ -102,29 +108,38 @@ namespace SHARKNA.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-                    if (Event.EventStartDate >= Event.EventEndtDate)
+                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
                     {
-                        ModelState.AddModelError("", "تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية.");
-                        return View(Event);
+                        Event.Id = Guid.NewGuid();
+                        int check = _EventDomain.AddEvent(Event);
+
+                        if (check == 1)
+                        {
+                            ViewData["Successful"] = "تم تعدل الحدث بنجاح";
+                        }
+                        else
+                        {
+                            ViewData["Falied"] = "حدث خطأ تعديل";
+                        }
                     }
-
-
-                    if (Event.Time >= Event.EndRegTime.TimeOfDay)
-                    {
-                        ModelState.AddModelError("", "بداية الساعة يجب أن تكون أصغر من نهاية الساعة.");
-                        return View(Event);
-                    }
-
-                    int check = _EventDomain.UpdateEvent(Event);
-                    if (check == 1)
-                        ViewData["Successful"] = "تم التعديل بنجاح";
                     else
-                        ViewData["Falied"] = "خطأ بالتعديل";
-                    return View(Event);
+                    {
+                        if (Event.EventStartDate > Event.EventEndtDate)
+                        {
+                            ViewData["Falied"] = "تأكد من تاريخ الحدث";
+                        }
+                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        {
+                            ViewData["Falied"] = "تأكد من الساعة";
+                        }
+                        _EventDomain.UpdateEvent(Event);
+                        return View(Event);
+
+                    }
 
                 }
             }
+
             catch (Exception ex)
             {
                 ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
