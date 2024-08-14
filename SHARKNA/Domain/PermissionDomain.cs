@@ -41,6 +41,23 @@ namespace SHARKNA.Domain
 
         }
 
+        public async Task<UserViewModel> GetTblUsersByUserName(string userName)
+        {
+            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == userName);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserViewModel
+            {
+                UserName = user.UserName,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn
+            };
+        }
+
+
         public int AddPermission(PermissionsViewModel Permission)
         {
             try
