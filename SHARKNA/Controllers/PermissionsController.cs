@@ -41,32 +41,44 @@ namespace SHARKNA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PermissionsViewModel Permission)
+        public IActionResult Create(PermissionsViewModel permission)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(Permission.UserName);
-                    if (userHasRole)
+                    
+                    var user = _PermissionDomain.GetTblUsersByUserName(permission.UserName).Result;
+                    if (user == null)
                     {
-           
-                        ViewData["Falied"] = "The user already has a role .";
+                        ViewData["Falied"] = "The user does not exist.";
                         ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
-                        return View(Permission);
+                        return View(permission);
                     }
 
-                    Permission.Id = Guid.NewGuid();
-                    _PermissionDomain.AddPermission(Permission);
+                 
+                    bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(permission.UserName);
+                    if (userHasRole)
+                    {
+                        ViewData["Falied"] = "The user already has a role.";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(permission);
+                    }
+
+                    permission.Id = Guid.NewGuid();
+                    _PermissionDomain.AddPermission(permission);
                     ViewData["Successful"] = "Successful";
                 }
                 catch (Exception ex)
                 {
-                    ViewData["Falied"] = "Falied";
+                    ViewData["Falied"] = "Failed to create permission.";
                 }
             }
-            return View(Permission);
+
+            ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+            return View(permission);
         }
+
 
 
         [HttpGet]
