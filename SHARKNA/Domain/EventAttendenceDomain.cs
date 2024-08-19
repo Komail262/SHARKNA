@@ -97,9 +97,9 @@ namespace SHARKNA.Domain
         //}
 
 
-        public IEnumerable<EventRegistrationsViewModel> GetTblEventreg()
+        public IEnumerable<EventRegistrationsViewModel> GetTblEventreg(Guid eventId)
         {
-            return _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return _context.tblEventRegistrations.Where(x => x.EventsId == eventId).Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
                 RegDate = x.RegDate,

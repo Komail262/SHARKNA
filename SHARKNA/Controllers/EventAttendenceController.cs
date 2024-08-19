@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SHARKNA.Domain;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
@@ -37,12 +38,12 @@ namespace SHARKNA.Controllers
             return View(eventDays);
         }
 
-        public IActionResult Members()
+        public IActionResult Members(Guid id)
         {
 
 
 
-            var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            var Ereg = _eventattendenceDomain.GetTblEventreg(id);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
             return View(Ereg);
         }
 
@@ -81,18 +82,19 @@ namespace SHARKNA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Members(FormCollection forms)
+        public IActionResult Members(FormCollection forms, Guid id)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    //var eventId = new Guid(forms["eventId"]);
                     var count = forms["attendanceStatus"].Count;
 
 
 
-                    var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-                                                                       //return View(Ereg);
+                    var Ereg = _eventattendenceDomain.GetTblEventreg (id);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                  //return View(Ereg);
 
                     if (count == 1)
                     ViewData["Successful"] = "تم تسجيل الحضور بنجاح";
