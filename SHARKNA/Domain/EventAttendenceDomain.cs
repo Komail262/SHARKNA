@@ -74,12 +74,32 @@ namespace SHARKNA.Domain
         // new list
 
 
-        public IEnumerable<EventRegistrationsViewModel> GetTblEventRegistrations(Guid eventId , Guid Accepted)
-        {
-            return _context.tblEventRegistrations
-                .Where(x => x.EventsId == eventId && x.EventStatusId == Accepted)
-                .Select(x => new EventRegistrationsViewModel //استرجع جميع قيم المسجلين من الداتابيس واحطهم في الايفنت فيو موديل
+        //public IEnumerable<EventRegistrationsViewModel> GetTblEventRegistrations(Guid eventId , Guid Accepted)
+        //{
+        //    return _context.tblEventRegistrations
+        //        .Where(x => x.EventsId == eventId && x.EventStatusId == Accepted)
+        //        .Select(x => new EventRegistrationsViewModel //استرجع جميع قيم المسجلين من الداتابيس واحطهم في الايفنت فيو موديل
 
+        //    {
+        //        Id = x.Id,
+        //        RegDate = x.RegDate,
+        //        RejectionReasons = x.RejectionReasons,
+        //        UserName = x.UserName,
+        //        Email = x.Email,
+        //        MobileNumber = x.MobileNumber,
+        //        FullNameAr = x.FullNameAr,
+        //        FullNameEn = x.FullNameEn,
+        //        EventId = x.EventsId,
+        //        RequestStatusId = x.EventStatusId
+
+        //    }).ToList();
+
+        //}
+
+
+        public IEnumerable<EventRegistrationsViewModel> GetTblEventreg()
+        {
+            return _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
                 RegDate = x.RegDate,
@@ -93,8 +113,9 @@ namespace SHARKNA.Domain
                 RequestStatusId = x.EventStatusId
 
             }).ToList();
-
         }
+
+
 
         public int AddEventAttend(EEventAttendenceViewModel eventatten)
         {
