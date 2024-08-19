@@ -19,15 +19,17 @@ namespace SHARKNA.Controllers
             _EventDomain = EventDomain;
         }
 
-        public IActionResult Index(string Successful = "", string Falied = "")
+        public IActionResult Index(string Successful = "", string Falied = "" )
         {
             if (Successful != "")
                 ViewData["Successful"] = Successful;
+
             else if (Falied != "")
                 ViewData["Falied"] = Falied;
 
             var Events = _EventDomain.GettblEvents();
             return View(Events);
+
         }
 
 
@@ -41,14 +43,47 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventViewModel Event)
         {
-            if (ModelState.IsValid)
+
+
+            try
             {
-                Event.Id =Guid.NewGuid();
-                Event.IsActive = true;
-                _EventDomain.AddEvent(Event);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
+                    {
+                        Event.Id = Guid.NewGuid();
+                        int check = _EventDomain.AddEvent(Event);
+
+                        if (check == 1)
+                        {
+                            ViewData["Successful"] = "تم إضافة الحدث بنجاح";
+                        }
+                        else
+                        {
+                            ViewData["Falied"] = "حدث خطأ بالإضافة";
+                        }
+                    }
+                    else
+                    {
+                        if (Event.EventStartDate > Event.EventEndtDate)
+                        {
+                            ViewData["Falied"] = "تأكد من تاريخ الحدث";
+                        }
+                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        {
+                            ViewData["Falied"] = "تأكد من الساعة";
+                        }
+                        return View(Event);
+                    }
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء إضافة الحدث";
+            }
+
+            return View(Event);
+
         }
 
 
@@ -69,11 +104,45 @@ namespace SHARKNA.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(EventViewModel Event)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _EventDomain.UpdateEvent(Event);
+                if (ModelState.IsValid)
+                {
+                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
+                    {
+                        Event.Id = Guid.NewGuid();
+                        int check = _EventDomain.AddEvent(Event);
 
-                return RedirectToAction(nameof(Index));
+                        if (check == 1)
+                        {
+                            ViewData["Successful"] = "تم تعدل الحدث بنجاح";
+                        }
+                        else
+                        {
+                            ViewData["Falied"] = "حدث خطأ تعديل";
+                        }
+                    }
+                    else
+                    {
+                        if (Event.EventStartDate > Event.EventEndtDate)
+                        {
+                            ViewData["Falied"] = "تأكد من تاريخ الحدث";
+                        }
+                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        {
+                            ViewData["Falied"] = "تأكد من الساعة";
+                        }
+                        _EventDomain.UpdateEvent(Event);
+                        return View(Event);
+
+                    }
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
             }
             return View(Event);
         }
@@ -92,7 +161,7 @@ namespace SHARKNA.Controllers
                 int check = _EventDomain.DeleteEvent(id);
                 if (check == 1)
                 {
-                    Successful = "تم حذف  بنجاح";
+                    Successful = "تم حذف الحدث بنجاح";
                 }
 
                 else
@@ -109,7 +178,6 @@ namespace SHARKNA.Controllers
                 Falied = "حدث خطأ";
 
             }
-            //_boardDomain.DeleteBoard(id);
             return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
         
         

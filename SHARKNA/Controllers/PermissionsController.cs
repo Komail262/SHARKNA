@@ -39,31 +39,47 @@ namespace SHARKNA.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PermissionsViewModel Permission)
+        public IActionResult Create(PermissionsViewModel permission)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
+                    
+                    var user = _PermissionDomain.GetTblUsersByUserName(permission.UserName).Result;
+                    if (user == null)
                     {
-                        Permission.Id = Guid.NewGuid();
-                        _PermissionDomain.AddPermission(Permission);
-                    ViewData["Successful"] = "Successful";
-                //    return RedirectToAction(nameof(Index));
+                        ViewData["Falied"] = "The user does not exist.";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(permission);
                     }
-                    catch (Exception ex)
+
+                 
+                    bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(permission.UserName);
+                    if (userHasRole)
                     {
-                    // Log the exception (ex)
-                    // Consider using a logging framework like NLog, Serilog, or log4net
-                    ViewData["Falied"] = "Falied";
+                        ViewData["Falied"] = "The user already has a role.";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(permission);
+                    }
+
+                    permission.Id = Guid.NewGuid();
+                    _PermissionDomain.AddPermission(permission);
+                    ViewData["Successful"] = "Successful";
+                }
+                catch (Exception ex)
+                {
+                    ViewData["Falied"] = "Failed to create permission.";
                 }
             }
-                return View(Permission);
-            
 
+            ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+            return View(permission);
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)

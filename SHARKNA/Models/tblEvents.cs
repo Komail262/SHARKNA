@@ -22,6 +22,8 @@ namespace SHARKNA.Models
         public int MaxAttendence { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
+        //public tblBoards Board { get; set; }
+        //public Guid BoardId { get; set; }
         ICollection<tblEventRegistrations> EventReg { get; set; }
         ICollection<tblEventRequests> EventReq { get; set; }
         ICollection<tblEventAttendence> EventAttend { get; set; }
