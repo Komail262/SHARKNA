@@ -11,14 +11,12 @@ namespace SHARKNA.Controllers
     public class EventAttendenceController : Controller
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
-        //private readonly EventMembersDomain _eventmembersDomain;
         private readonly EventRegistrationsDomain _EventRegistrations;
 
 
         public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain)
         {
             _eventattendenceDomain = eventAttendenceDomain;
-            //_eventmembersDomain = eventMembersDomain;
             _EventRegistrations = eventRegDomain;
         }
         public IActionResult Index()
@@ -37,6 +35,15 @@ namespace SHARKNA.Controllers
             }
 
             return View(eventDays);
+        }
+
+        public IActionResult Members()
+        {
+
+
+
+            var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            return View(Ereg);
         }
 
 
@@ -70,11 +77,41 @@ namespace SHARKNA.Controllers
             return View(atten);
         }
 
-        //public IActionResult Attend(Guid eventId)
-        //{
-        //    Guid Accepted = Guid.Parse("")
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult Members(FormCollection forms)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var count = forms["attendanceStatus"].Count;
 
 
-        //}
+
+                    var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                                                                       //return View(Ereg);
+
+                    if (count == 1)
+                    ViewData["Successful"] = "تم تسجيل الحضور بنجاح";
+                    else
+                        ViewData["Falied"] = "حدث خطأ";
+
+                    return RedirectToAction("Index");
+
+                }
+            } 
+            
+            catch (Exception ex) {
+                ViewData["Falied"] = "حدث خطأ";
+            }
+
+            return RedirectToAction("Index");
+
+        }
+
+     
     }
 }

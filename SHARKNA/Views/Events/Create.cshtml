@@ -17,14 +17,14 @@
                 );
             </Text>
         }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        else if (@ViewData["Falied"] != null )
         {
             <Text>
                         var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        else if (@ViewData["Falied"] != null)
         {
             <Text>
                         var result = '@Html.Raw(ViewData["Falied"])';
@@ -33,6 +33,7 @@
         }
     }
 </script>
+
 
 
 <h2>اضافة حدث</h2>
