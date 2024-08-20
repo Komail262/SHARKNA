@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Collections.Generic;
@@ -32,25 +33,32 @@ namespace SHARKNA.Domain
             }).ToList();
         }
 
-        public BoardRequestsViewModel GetTblBoardRequestsById(Guid id)
-        {
-            var BoardReq = _context.tblBoardRequests.FirstOrDefault(u => u.Id == id);
-            BoardRequestsViewModel uu = new BoardRequestsViewModel();
-            uu.Id = id;
-            uu.UserName = BoardReq.UserName;
-            uu.BoardId = BoardReq.BoardId;
-            uu.RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
-            uu.RejectionReasons = BoardReq.RejectionReasons;
-            uu.Email = BoardReq.Email;
-            uu.FullNameAr = BoardReq.FullNameAr;
-            uu.MobileNumber = BoardReq.MobileNumber;
-            uu.FullNameEn = BoardReq.FullNameEn;
-            return uu;
+     
 
+        public BoardRequestsViewModel GetBoardRequestById(Guid id)
+        {
+            return _context.tblBoardRequests
+                .Where(x => x.Id == id)
+                .Include(x => x.Board) 
+                .Include(x => x.RequestStatus) 
+                .Select(x => new BoardRequestsViewModel
+                {
+                    Id = x.Id,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    UserName = x.UserName,
+                    Email = x.Email,
+                    MobileNumber = x.MobileNumber,
+                    BoardName = x.Board.NameAr,
+                    RequestStatusId = x.RequestStatusId,
+                    RequestStatusName = x.RequestStatus.RequestStatusAr, 
+                    RejectionReasons = x.RejectionReasons
+                })
+                .FirstOrDefault(); 
         }
 
-        
-        
+
+
 
         public int AddBoardReq(BoardRequestsViewModel BoardReq)
         {
@@ -106,13 +114,27 @@ namespace SHARKNA.Domain
             }
         }
 
-        public void Accept(Guid id)
+        public async Task Accept(Guid id)
         {
-            var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+            var BoardRequest =  _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
             if (BoardRequest != null)
             {
                 BoardRequest.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"); // تعيين الحالة "مقبول"
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+                tblBoardMembers member = new tblBoardMembers()
+                {
+                    BoardId = BoardRequest.BoardId,
+                    BoardRoleId = Guid.Parse("7d67185d-81bd-4738-a6c5-2106e441eea1"),
+                    Email = BoardRequest.Email,
+                    FullNameAr = BoardRequest.FullNameAr,
+                    FullNameEn = BoardRequest.FullNameEn,
+                    IsDeleted = false,
+                    IsActive = false,
+                    MobileNumber = BoardRequest.MobileNumber,
+                    UserName = BoardRequest.UserName,
+                };
+                await _context.AddAsync(member);
+                await _context.SaveChangesAsync();
             }
         }
 
