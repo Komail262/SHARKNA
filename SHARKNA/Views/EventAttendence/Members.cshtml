@@ -1,9 +1,43 @@
-﻿@model IEnumerable<EEventAttendenceViewModel>
+﻿@model IEnumerable<EventRegistrationsViewModel>
 
 @{
     ViewData["Title"] = "Event Attendance Members sheets";
 }
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "EventAttendence")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
 @*
+
+
 <script>
     @{
         if (@ViewData["Successful"] != null)
@@ -61,32 +95,49 @@
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="selectAll" /></th>
+                                <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /> تحضير الجميع </th> <!-- Master Checkbox -->
 
-                                <th>@Html.DisplayNameFor(model => model.EventMemName)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsAttend)</th>
+@*                                 <th><input type="checkbox" id="selectAll" /></th>
+ *@
+                                <th>@Html.DisplayNameFor(model => model.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.RegDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
 
-                                <th>الإجراءات</th>
+                                <th>حالة الحضور</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var member in Model)
                             {
                                 <tr>
-                                    <td><input type="checkbox" asp-for="@member.IsAttend" /></td>
-                                    <td>@member.EventMemName</td>
-                                    <td>@member.IsAttend</td>
-                                    <td>@member.EventMemId</td>
-
-
                                     <td>
-                                        <a asp-action="Save Attend" asp-route-id="@member.Id" class="btn btn-primary"> تأكيد الحضور </a> |
 
                                     </td>
+                                  
+                                  <td>@member.FullNameAr</td>
+                                    <td>@member.RegDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@member.Email</td>
+
+                                
+                                    <td>
+                                        <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" /> <!-- Single Attendance Checkbox -->
+
+                                    </td>
+
+
+                        @*             <td>
+                                        <a asp-action="Save Attend" asp-route-id="@member.Id" class="btn btn-primary"> تأكيد الحضور </a> |
+
+                                    </td> *@
                                 </tr>
                             }
                         </tbody>
                     </table>
+@*                     <button type="submit" class="btn btn-success">تأكيد الحضور </button> <!-- Save Attendance Button -->
+ *@
+                    <a asp-action="Index" type="submit" class="btn btn-success"> تأكيد الحضور </a> 
+
+
                 </div>
             </div>
         </div>
@@ -96,7 +147,17 @@
         <p class="m-0 d-flex justify-content-center">
             جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
         </p>
-    </footer><!-- End Footer -->
+    </footer>
+    <!-- End Footer -->
+
+    <script>
+        function toggleSelectAll(source) {
+            checkboxes = document.querySelectorAll('.attendance-checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
 
 </body>
 </html>
