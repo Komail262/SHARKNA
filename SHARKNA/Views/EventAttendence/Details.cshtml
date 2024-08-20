@@ -85,10 +85,14 @@
                                     <td>@attendence.EventDate.ToString("dd/MM/yyyy HH:MM")</td>
 
 
-                                    <td>@attendence.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
-
+@*                                     <td>@attendence.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
+ *@
                                     <td>
-                                        <a asp-action="Members" asp-route-id="@attendence.Id" class="btn btn-primary"> التحضير </a> |
+                                       
+                                            <a asp-action="Members" asp-route-id="@attendence.EventstId" class="btn btn-primary"> التحضير </a>
+
+
+                                        
 
                                     </td>
                                 </tr>

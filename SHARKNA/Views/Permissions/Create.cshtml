@@ -8,7 +8,7 @@
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                                var result = '@Html.Raw(ViewData["Successful"])';
+                                            var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -20,21 +20,21 @@
         else if (@ViewData["Falied"] != null)
         {
             <Text>
-                                var result = '@Html.Raw(ViewData["Falied"])';
+                                            var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
     }
 </script>
 
-<h2>اضافة مستخدم</h2>
+<h2>اضافة صلاحية للمستخدم </h2>
 
 <section class="page_wrap">
     <div class="page_content">
 
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">إضافة دور</h5>
+                <h5 class="m-0">إضافة صلاحية</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">

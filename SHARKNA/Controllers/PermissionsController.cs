@@ -39,57 +39,72 @@ namespace SHARKNA.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PermissionsViewModel Permission)
+        public async Task<IActionResult> Create(PermissionsViewModel permission)
         {
-                if (ModelState.IsValid)
+            if (ModelState.IsValid)
+            {
+                try
                 {
-                    try
+
+                    var user = await _PermissionDomain.GetTblUsersByUserName(permission.UserName);
+                    if (user == null)
                     {
-                        Permission.Id = Guid.NewGuid();
-                        _PermissionDomain.AddPermission(Permission);
-                    ViewData["Successful"] = "Successful";
-                //    return RedirectToAction(nameof(Index));
+                        ViewData["Falied"] = "لم يتم العثور على المستخدم";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(permission);
                     }
-                    catch (Exception ex)
+
+
+                    bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(permission.UserName);
+                    if (userHasRole)
                     {
-                    // Log the exception (ex)
-                    // Consider using a logging framework like NLog, Serilog, or log4net
-                    ViewData["Falied"] = "Falied";
+                        ViewData["Falied"] = "المستخدم لديه صلاحية بالفعل";
+                        ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+                        return View(permission);
+                    }
+
+                    permission.Id = Guid.NewGuid();
+                    _PermissionDomain.AddPermission(permission);
+                    ViewData["Successful"] = "Successful";
+                }
+                catch (Exception ex)
+                {
+                    ViewData["Falied"] = "فشل في انشاء صلاحية";
                 }
             }
-                return View(Permission);
-            
-
+            ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
+            return View(permission);
         }
+
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
 
             //return View()
-                try
+            try
+            {
+                var Permission = await _PermissionDomain.GetTblPermissionsById(id);
+                if (Permission == null)
                 {
-                    var Permission = await _PermissionDomain.GetTblPermissionsById(id);
-                    if (Permission == null)
-                    {
 
-                        return NotFound();
-                    }
+                    return NotFound();
+                }
 
-                    ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
-                    return View(Permission);
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception (ex)
-                    // Consider using a logging framework like NLog, Serilog, or log4net
-                    ModelState.AddModelError("", "An error occurred while retrieving the permission. Please try again.");
-                    return View(); // or you might want to redirect to an error page
-                }
-            
+                ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
+                return View(Permission);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex)
+                // Consider using a logging framework like NLog, Serilog, or log4net
+                ModelState.AddModelError("", "حدث خطأ. حاول مرا اخرى");
+                return View(); // or you might want to redirect to an error page
+            }
+
 
         }
 
@@ -105,14 +120,14 @@ namespace SHARKNA.Controllers
                 try
                 {
                     _PermissionDomain.UpdatePermission(Permission);
-                   // return RedirectToAction(nameof(Index));
-                    ViewData["Successful"] = "Successful";
+                    // return RedirectToAction(nameof(Index));
+                    ViewData["Successful"] = "تم التعديل بنجاح";
                 }
                 catch (Exception ex)
                 {
                     // Log the exception (ex)
                     // Consider using a logging framework like NLog, Serilog, or log4net
-                    ViewData["Falied"] = "Falied";
+                    ViewData["Falied"] = "فشل التعديل";
                 }
             }
 
@@ -152,7 +167,7 @@ namespace SHARKNA.Controllers
             return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
         }
 
-       
+
         public IActionResult Privacy()
         {
             return View();

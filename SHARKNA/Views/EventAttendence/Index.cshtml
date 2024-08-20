@@ -1,51 +1,12 @@
-﻿@* @model IEnumerable<EEventAttendenceViewModel>
- *@
- @model IEnumerable<SHARKNA.ViewModels.EventViewModel>
-
+﻿@model IEnumerable<EventViewModel>
 
 @{
-    ViewData["Title"] = "Event Attendance List";
+    ViewData["Title"] = "Event List";
 }
-@* 
-<script>
-    @{
-        if (@ViewData["Successful"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Boards")';
-                    }
-                );
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-    }
-</script>
 
-<script>
-    function Display
-</script>
- *@
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
-    <!-- Start Page Wrap -->
     <section class="page_wrap">
         <div class="page_content">
             <div class="block mb-4">
@@ -55,42 +16,29 @@
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        @* <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة عضو للحضور</a>
-                        </div> *@
                     </div>
                 </div>
                 <div class="block-body">
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                               @*  <th>@Html.DisplayNameFor(m => m.EventDate)</th>
-                                <th>@Html.DisplayNameFor(m => m.Day)</th> *@
-@*                                 <th>@Html.DisplayNameFor(m => m.EventName)</th>
- *@                             <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
                                 <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
-                               
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-
                             @foreach (var attendence in Model)
                             {
                                 <tr>
-                                    @*here i can make index start from 1 and increment by 1 *@
                                     <td>@attendence.EventTitleAr</td>
-@*                                     <td>@attendence.EventstId</td>
- *@
                                     <td>@attendence.EventTitleEn</td>
-                                    <td>@attendence.EventStartDate.ToString("yyyy-MM-dd HH:mm")</td>
-                                    <td>@attendence.EventEndtDate.ToString("yyyy-MM-dd HH:mm")</td>
-                               
+                                    <td>@attendence.EventStartDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
+                                    <td>@attendence.EventEndtDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@attendence.Id" class="btn btn-primary">سجل الحضور</a> 
-
+                                        <a asp-action="Details" asp-route-id="@attendence.Id" class="btn btn-primary">سِجل الحضور</a>
                                     </td>
                                 </tr>
                             }
@@ -99,13 +47,11 @@
                 </div>
             </div>
         </div>
-    </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
+    </section>
     <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
+        <p class="m-0 د-flex justify-content-center">
             جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
         </p>
-    </footer><!-- End Footer -->
-
+    </footer>
 </body>
 </html>

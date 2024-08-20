@@ -41,6 +41,23 @@ namespace SHARKNA.Domain
 
         }
 
+        public async Task<UserViewModel> GetTblUsersByUserName(string userName)
+        {
+            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == userName);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserViewModel
+            {
+                UserName = user.UserName,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn
+            };
+        }
+
+
         public int AddPermission(PermissionsViewModel Permission)
         {
             try
@@ -64,7 +81,7 @@ namespace SHARKNA.Domain
 
             }
         }
-       
+
         public int UpdatePermission(PermissionsViewModel Permission)
         {
             try
@@ -117,14 +134,17 @@ namespace SHARKNA.Domain
         {
             if (Permissionn == null)
             {
-                return _context.tblPermissions.Any(u => u.UserName == name);
-
+                // Check if there is any non-deleted permission with the given user name
+                return _context.tblPermissions.Any(u => u.UserName == name && !u.IsDeleted);
             }
             else
             {
-                return _context.tblPermissions.Any(u => u.UserName == name && u.Id != Permissionn);
+                // Check if there is any non-deleted permission with the given user name
+                // excluding the permission with the specified Permissionn ID
+                return _context.tblPermissions.Any(u => u.UserName == name && u.Id != Permissionn && !u.IsDeleted);
             }
         }
 
     }
+
 }

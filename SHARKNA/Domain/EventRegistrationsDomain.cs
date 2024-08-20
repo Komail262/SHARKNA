@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
@@ -17,7 +18,7 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventRegistrationsViewModel> GettblEventRegistrations()
         {
-            var test = _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel
+            var EventReg = _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel
             {
                 Id = x.Id,
                 RegDate = x.RegDate,
@@ -30,7 +31,7 @@ namespace SHARKNA.Domain
                 EventId = x.EventsId,
                 RequestStatusId = x.EventStatusId
             }).ToList();
-            return test;
+            return EventReg;
         }
 
         public EventRegistrationsViewModel GettblEventRegistrations(Guid id)
@@ -88,6 +89,8 @@ namespace SHARKNA.Domain
                 return _context.tblEventRegistrations.Any(u => u.Email == email && u.Id != EventRegId);
             }
         }
+
+
         public List<tblEvents> GettblEvents()
         {
             return _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
