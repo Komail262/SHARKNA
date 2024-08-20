@@ -44,6 +44,7 @@ namespace SHARKNA.Domain
             tt.UserName = Btal.UserName;
             tt.Email = Btal.Email;
             tt.BoardId = Btal.BoardId;
+
             tt.RejectionReasons = Btal.RejectionReasons;
             tt.RequestStatusId = Btal.RequestStatusId;
             tt.FullNameAr = Btal.FullNameAr;
@@ -127,12 +128,6 @@ namespace SHARKNA.Domain
             }
         }
 
-        public List<tblBoards> GettblBoard()
-        {
-            return _context.tblBoards.Where(e => !e.IsDeleted && e.IsActive).ToList();
-        }
-
-
-    }
+      }
 }
 
