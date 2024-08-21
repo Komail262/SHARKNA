@@ -71,7 +71,7 @@ namespace SHARKNA.Controllers
         [HttpPost]
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(Guid EventId)
+        public async Task<IActionResult> Register(Guid EventId)
         {
             try
             {
@@ -94,12 +94,14 @@ namespace SHARKNA.Controllers
                     FullNameEn = user.FullNameEn
                 };
 
-                _EventRegistrations.AddEventReg(EventReg);
+                await _EventRegistrations.AddEventRegAsync(EventReg);
+
+           
 
             }
             catch (Exception ex)
             {
-                ViewData["Failed"] = "هناك خطأ في النظام";
+                 TempData["Failed"] = "هناك خطأ في النظام";
             }
 
             return RedirectToAction("Register");

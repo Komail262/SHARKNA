@@ -17,33 +17,33 @@ namespace SHARKNA.Domain
             _context = context;
         }
 
-        public void AddEventReg(EventRegistrationsViewModel EventReg)
+        public async Task AddEventRegAsync(EventRegistrationsViewModel EventReg)
         {
-            
-            
+            // Create a new instance of tblEventRegistrations
+            tblEventRegistrations VEventReg = new tblEventRegistrations
+            {
+                Id = EventReg.Id,
+                RegDate = EventReg.RegDate,
+                RejectionReasons = EventReg.RejectionReasons,
+                UserName = EventReg.UserName,
+                Email = EventReg.Email,
+                MobileNumber = EventReg.MobileNumber,
+                FullNameAr = EventReg.FullNameAr,
+                FullNameEn = EventReg.FullNameEn,
+                EventStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"),
+                EventsId = EventReg.EventId
+            };
 
+           
+            await _context.AddAsync(VEventReg);
 
-                tblEventRegistrations VEventReg = new tblEventRegistrations();
-                VEventReg.Id = EventReg.Id;
-                VEventReg.RegDate = EventReg.RegDate;
-                VEventReg.RejectionReasons = EventReg.RejectionReasons;
-                VEventReg.UserName = EventReg.UserName;
-                VEventReg.Email = EventReg.Email;
-                VEventReg.MobileNumber = EventReg.MobileNumber;
-                VEventReg.FullNameAr = EventReg.FullNameAr;
-                VEventReg.FullNameEn = EventReg.FullNameEn;
-                VEventReg.EventStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
-                VEventReg.EventsId = EventReg.EventId;
-                _context.Add(VEventReg);
-                _context.SaveChanges();
-                
-
-            
-        
+           
+            await _context.SaveChangesAsync();
         }
 
-        
-       
+
+
+
 
         public IEnumerable<EventRegistrationsViewModel> GetUserRegisteredEvents(string username)
         {

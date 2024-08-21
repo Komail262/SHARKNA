@@ -51,6 +51,7 @@ namespace SHARKNA.Controllers
         }
 
         [HttpPost]
+         [Authorize(Roles = "SuperAdmin")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(UserViewModel user)
         {
