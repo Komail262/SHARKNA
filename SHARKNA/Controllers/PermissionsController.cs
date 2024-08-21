@@ -47,20 +47,20 @@ namespace SHARKNA.Controllers
             {
                 try
                 {
-                   
+
                     var user = await _PermissionDomain.GetTblUsersByUserName(permission.UserName);
                     if (user == null)
                     {
-                        ViewData["Falied"] = "The user does not exist.";
+                        ViewData["Falied"] = "لم يتم العثور على المستخدم";
                         ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
                         return View(permission);
                     }
 
-                    
+
                     bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(permission.UserName);
                     if (userHasRole)
                     {
-                        ViewData["Falied"] = "The user already has a role.";
+                        ViewData["Falied"] = "المستخدم لديه صلاحية بالفعل";
                         ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
                         return View(permission);
                     }
@@ -71,10 +71,9 @@ namespace SHARKNA.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewData["Falied"] = "Failed to create permission.";
+                    ViewData["Falied"] = "فشل في انشاء صلاحية";
                 }
             }
-
             ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr");
             return View(permission);
         }
@@ -86,26 +85,26 @@ namespace SHARKNA.Controllers
         {
 
             //return View()
-                try
+            try
+            {
+                var Permission = await _PermissionDomain.GetTblPermissionsById(id);
+                if (Permission == null)
                 {
-                    var Permission = await _PermissionDomain.GetTblPermissionsById(id);
-                    if (Permission == null)
-                    {
 
-                        return NotFound();
-                    }
+                    return NotFound();
+                }
 
-                    ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
-                    return View(Permission);
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception (ex)
-                    // Consider using a logging framework like NLog, Serilog, or log4net
-                    ModelState.AddModelError("", "An error occurred while retrieving the permission. Please try again.");
-                    return View(); // or you might want to redirect to an error page
-                }
-            
+                ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
+                return View(Permission);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (ex)
+                // Consider using a logging framework like NLog, Serilog, or log4net
+                ModelState.AddModelError("", "حدث خطأ. حاول مرا اخرى");
+                return View(); // or you might want to redirect to an error page
+            }
+
 
         }
 
@@ -121,14 +120,14 @@ namespace SHARKNA.Controllers
                 try
                 {
                     _PermissionDomain.UpdatePermission(Permission);
-                   // return RedirectToAction(nameof(Index));
-                    ViewData["Successful"] = "Successful";
+                    // return RedirectToAction(nameof(Index));
+                    ViewData["Successful"] = "تم التعديل بنجاح";
                 }
                 catch (Exception ex)
                 {
                     // Log the exception (ex)
                     // Consider using a logging framework like NLog, Serilog, or log4net
-                    ViewData["Falied"] = "Falied";
+                    ViewData["Falied"] = "فشل التعديل";
                 }
             }
 
@@ -168,7 +167,7 @@ namespace SHARKNA.Controllers
             return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
         }
 
-       
+
         public IActionResult Privacy()
         {
             return View();

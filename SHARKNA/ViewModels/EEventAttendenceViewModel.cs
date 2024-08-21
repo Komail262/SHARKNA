@@ -23,6 +23,8 @@ namespace SHARKNA.ViewModels
         [DisplayName("اسم الفعالية")]
         public Guid EventstId { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("اسم الحدث")]
         public string EventName { get; set; }  //هنا عشان يعرض اسم الفعالية
 
 

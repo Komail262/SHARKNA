@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SHARKNA.Models;
 
@@ -11,9 +12,10 @@ using SHARKNA.Models;
 namespace SHARKNA.Migrations
 {
     [DbContext(typeof(SHARKNAContext))]
-    partial class SHARKNAContextModelSnapshot : ModelSnapshot
+    [Migration("20240819122454_adddb")]
+    partial class adddb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,6 +133,15 @@ namespace SHARKNA.Migrations
                     b.Property<Guid>("BoardId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BoardMemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BoardRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BoardRolesId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -155,6 +166,10 @@ namespace SHARKNA.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BoardId");
+
+                    b.HasIndex("BoardMemberId");
+
+                    b.HasIndex("BoardRolesId");
 
                     b.HasIndex("RequestStatusId");
 
@@ -507,9 +522,6 @@ namespace SHARKNA.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("BoardId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("DescriptionAr")
                         .HasColumnType("nvarchar(max)");
 
@@ -562,8 +574,6 @@ namespace SHARKNA.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BoardId");
 
                     b.ToTable("tblEvents");
                 });
@@ -709,60 +719,6 @@ namespace SHARKNA.Migrations
                     b.ToTable("tblUsers");
                 });
 
-            modelBuilder.Entity("SHARKNA.ViewModels.EventRegistrationsViewModel", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FullNameAr")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FullNameEn")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("MobileNumber")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("RegDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RejectionReasons")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid>("RequestStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<Guid?>("tblRequestStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("tblRequestStatusId");
-
-                    b.ToTable("EventRegistrationsViewModel");
-                });
-
             modelBuilder.Entity("SHARKNA.Models.tblBoardMembers", b =>
                 {
                     b.HasOne("SHARKNA.Models.tblBoards", "Board")
@@ -790,6 +746,16 @@ namespace SHARKNA.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SHARKNA.Models.tblBoardMembers", "BoardMember")
+                        .WithMany("BoardRequests")
+                        .HasForeignKey("BoardMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SHARKNA.Models.tblBoardRoles", "BoardRoles")
+                        .WithMany()
+                        .HasForeignKey("BoardRolesId");
+
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "RequestStatus")
                         .WithMany("BoardReq")
                         .HasForeignKey("RequestStatusId")
@@ -797,6 +763,10 @@ namespace SHARKNA.Migrations
                         .IsRequired();
 
                     b.Navigation("Board");
+
+                    b.Navigation("BoardMember");
+
+                    b.Navigation("BoardRoles");
 
                     b.Navigation("RequestStatus");
                 });
@@ -838,7 +808,7 @@ namespace SHARKNA.Migrations
             modelBuilder.Entity("SHARKNA.Models.tblEventRegistrations", b =>
                 {
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "EventStatus")
-                        .WithMany()
+                        .WithMany("EventReg")
                         .HasForeignKey("EventStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -881,17 +851,6 @@ namespace SHARKNA.Migrations
                     b.Navigation("RequestStatus");
                 });
 
-            modelBuilder.Entity("SHARKNA.Models.tblEvents", b =>
-                {
-                    b.HasOne("SHARKNA.Models.tblBoards", "Board")
-                        .WithMany("Events")
-                        .HasForeignKey("BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Board");
-                });
-
             modelBuilder.Entity("SHARKNA.Models.tblPermissions", b =>
                 {
                     b.HasOne("SHARKNA.Models.tblRoles", "Role")
@@ -903,11 +862,9 @@ namespace SHARKNA.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SHARKNA.ViewModels.EventRegistrationsViewModel", b =>
+            modelBuilder.Entity("SHARKNA.Models.tblBoardMembers", b =>
                 {
-                    b.HasOne("SHARKNA.Models.tblRequestStatus", null)
-                        .WithMany("EventReg")
-                        .HasForeignKey("tblRequestStatusId");
+                    b.Navigation("BoardRequests");
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardRoles", b =>
@@ -924,8 +881,6 @@ namespace SHARKNA.Migrations
                     b.Navigation("BoardTalRequests");
 
                     b.Navigation("EventRequests");
-
-                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventMembers", b =>

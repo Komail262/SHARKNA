@@ -17,6 +17,8 @@
         public ICollection<tblBoardTalRequests> BoardTalRequests { get; set; }
         public ICollection<tblBoardRequests> BoardRequests { get; set; }
         public ICollection<tblEventRequests> EventRequests { get; set; }
+        //public ICollection<tblEvents> Events { get; set; }
+
 
 
     }
