@@ -1,74 +1,93 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SHARKNA.Models;
 using SHARKNA.Domain;
+using SHARKNA.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using SHARKNA.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SHARKNA.Controllers
 {
     public class EventRegistrationsController : Controller
     {
         private readonly EventRegistrationsDomain _EventRegistrations;
+        private readonly EventDomain _EventDomain;
+        private readonly UserDomain _UserDomain;
 
-        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain)
+        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain, UserDomain userDomain)
         {
             _EventRegistrations = eventRegDomain;
-
+            _EventDomain = eventDomain;
+            _UserDomain = userDomain;
         }
 
-        public IActionResult Index()
+
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public IActionResult MyEventRegistrations()
         {
-            var EventReg = _EventRegistrations.GettblEventRegistrations();
-            return View(EventReg);
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            // Fetch the user's registration information
+            var eventRegs = _EventRegistrations.GetUserRegisteredEvents(username);
+
+            // Fetch detailed event information
+            var eventDetails = eventRegs.Select(reg =>
+            {
+                var eventDetail = _EventDomain.GetEventById(reg.EventId);
+                return new
+                {
+                    EventReg = reg,
+                    EventDetail = eventDetail
+                };
+            }).ToList();
+
+            return View(eventDetails);
         }
-       
-        
 
 
-        // GET: EventRegistrations/Create
-        public IActionResult Create()
+
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public IActionResult Register()
         {
-        
-            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-            return View();
-        }
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-      
+            var events = _EventRegistrations.GetEventsForUser(username);
+            return View(events);
+        }
 
         [HttpPost]
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(Guid EventId)
+        public IActionResult Register(Guid EventId)
         {
-           
             try
             {
-                if (ModelState.IsValid)
+                var username = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = _UserDomain.GetUserFER(username);
+
+                var EventReg = new EventRegistrationsViewModel
                 {
-                    if (_EventRegistrations.IsEmailDuplicate(EventReg.Email))
-                    {
-                        ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
-                        ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-                        return View(EventReg);
-                    }
+                    Id = Guid.NewGuid(),
+                    RegDate = DateTime.Now,
+                    RejectionReasons = "b674955e60fd",
+                    EventId = EventId,
+                    UserName = username,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+                    FullNameAr = user.FullNameAr,
+                    FullNameEn = user.FullNameEn
+                };
 
-                await _EventRegistrations.AddEventRegAsync(EventReg);
-
-           
-
+                _EventRegistrations.AddEventReg(EventReg);
+                
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                 TempData["Failed"] = "هناك خطأ في النظام";
+                ViewData["Failed"] = "هناك خطأ في النظام";
             }
 
-            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-            return View();
+            return RedirectToAction("Register");
         }
-
-
     }
 }

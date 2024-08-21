@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -8,61 +9,100 @@ namespace SHARKNA.Domain
 {
     public class EventRegistrationsDomain
     {
-        
-
         private readonly SHARKNAContext _context;
+
         public EventRegistrationsDomain(SHARKNAContext context)
         {
             _context = context;
         }
 
-        public async Task AddEventRegAsync(EventRegistrationsViewModel EventReg)
-        {
-            // Create a new instance of tblEventRegistrations
-            tblEventRegistrations VEventReg = new tblEventRegistrations
-            {
-                Id = EventReg.Id,
-                RegDate = EventReg.RegDate,
-                RejectionReasons = EventReg.RejectionReasons,
-                UserName = EventReg.UserName,
-                Email = EventReg.Email,
-                MobileNumber = EventReg.MobileNumber,
-                FullNameAr = EventReg.FullNameAr,
-                FullNameEn = EventReg.FullNameEn,
-                EventStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"),
-                EventsId = EventReg.EventId
-            };
-
-           
-            await _context.AddAsync(VEventReg);
-
-           
-            await _context.SaveChangesAsync();
-        }
-
-
-
-
-
         public IEnumerable<EventRegistrationsViewModel> GetUserRegisteredEvents(string username)
         {
-            if (EventRegId == null)
-            {
-                return _context.tblEventRegistrations.Any(u => u.Email == email);
-
-            }
-            else
-            {
-                return _context.tblEventRegistrations.Any(u => u.Email == email && u.Id != EventRegId);
-            }
+            return _context.tblEventRegistrations
+                .Where(reg => reg.UserName == username)
+                .Select(reg => new EventRegistrationsViewModel
+                {
+                    Id = reg.Id,
+                    RegDate = reg.RegDate,
+                    RejectionReasons = reg.RejectionReasons,
+                    UserName = reg.UserName,
+                    Email = reg.Email,
+                    MobileNumber = reg.MobileNumber,
+                    FullNameAr = reg.FullNameAr,
+                    FullNameEn = reg.FullNameEn,
+                    EventId = reg.EventsId
+                })
+                .ToList();
         }
 
-
-        public List<tblEvents> GettblEvents()
+        public void AddEventReg(EventRegistrationsViewModel eventReg)
         {
-            return _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
+            var tblEventReg = new tblEventRegistrations
+            {
+                Id = eventReg.Id,
+                RegDate = eventReg.RegDate,
+                RejectionReasons = eventReg.RejectionReasons,
+                UserName = eventReg.UserName,
+                Email = eventReg.Email,
+                MobileNumber = eventReg.MobileNumber,
+                FullNameAr = eventReg.FullNameAr,
+                FullNameEn = eventReg.FullNameEn,
+                EventStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"), 
+                EventsId = eventReg.EventId
+            };
+            _context.tblEventRegistrations.Add(tblEventReg);
+            _context.SaveChanges();
         }
 
+        public List<EventViewModel> GetEventsForUser(string username)
+        {
+            var events = _context.tblEvents
+                .Where(e => !e.IsDeleted && e.IsActive)
+                .ToList();
 
+            var registeredEventIds = _context.tblEventRegistrations
+                .Where(reg => reg.UserName == username)
+                .Select(reg => reg.EventsId)
+                .ToList();
+
+            var availableEvents = events
+                .Where(e => !registeredEventIds.Contains(e.Id))
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    Time = e.Time,
+                    LocationAr = e.LocationAr,
+                    SpeakersAr = e.SpeakersAr,
+                    TopicAr = e.TopicAr,
+                    DescriptionAr = e.DescriptionAr
+                })
+                .ToList();
+
+            return availableEvents;
+        }
+
+        public EventViewModel GetEventById(Guid eventId)
+        {
+            return _context.tblEvents
+                .Where(e => e.Id == eventId)
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    Time = e.Time,
+                    LocationAr = e.LocationAr,
+                    SpeakersAr = e.SpeakersAr,
+                    TopicAr = e.TopicAr,
+                    DescriptionAr = e.DescriptionAr
+                })
+                .FirstOrDefault();
+        }
+
+        
     }
 }
