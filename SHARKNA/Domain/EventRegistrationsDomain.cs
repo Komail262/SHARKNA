@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -47,60 +46,23 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventRegistrationsViewModel> GetUserRegisteredEvents(string username)
         {
-            return _context.tblEventRegistrations
-                .Where(reg => reg.UserName == username)
-                .Select(reg => new EventRegistrationsViewModel
-                {
-                    Id = reg.Id,
-                    RegDate = reg.RegDate,
-                    RejectionReasons = reg.RejectionReasons,
-                    UserName = reg.UserName,
-                    Email = reg.Email,
-                    MobileNumber = reg.MobileNumber,
-                    FullNameAr = reg.FullNameAr,
-                    FullNameEn = reg.FullNameEn,
-                    EventId = reg.EventsId
+            if (EventRegId == null)
+            {
+                return _context.tblEventRegistrations.Any(u => u.Email == email);
 
-                })
-                .ToList();
+            }
+            else
+            {
+                return _context.tblEventRegistrations.Any(u => u.Email == email && u.Id != EventRegId);
+            }
         }
 
 
-        public List<EventViewModel> GetEventsForUser(string username)
+        public List<tblEvents> GettblEvents()
         {
-
-            var events = _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
-
-            var registeredEvents = _context.tblEventRegistrations
-                .Where(reg => reg.UserName == username)
-                .Select(reg => reg.EventsId)
-                .ToList();
-
-
-            var availableEvents = events
-                .Where(e => !registeredEvents.Contains(e.Id))
-                .Select(e => new EventViewModel
-                {
-                    Id = e.Id,
-                    EventTitleAr = e.EventTitleAr,
-                    EventStartDate = e.EventStartDate,
-                    EventEndtDate = e.EventEndtDate,
-                    Time = e.Time,
-                    LocationAr = e.LocationAr,
-                    SpeakersAr = e.SpeakersAr,
-                    TopicAr = e.TopicAr,
-                    DescriptionAr = e.DescriptionAr
-                }).ToList();
-
-            return availableEvents;
+            return _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
         }
-
-        
-
-
 
 
     }
-
 }
-

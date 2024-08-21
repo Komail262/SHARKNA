@@ -49,7 +49,5 @@ namespace SHARKNA.ViewModels
 
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
-
-       
     }
 }

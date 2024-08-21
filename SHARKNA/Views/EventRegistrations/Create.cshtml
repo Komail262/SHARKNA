@@ -1,0 +1,102 @@
+﻿@model SHARKNA.ViewModels.EventRegistrationsViewModel
+
+@{
+    ViewData["Title"] = "Create EventReg ";
+}
+
+<h2>تسجيل في فعالية</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">طلب حضور فعالية</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+
+                         <script>
+                @{
+                if (@ViewData["Successful"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result,'','success')
+                        .then(
+                            function () {
+                                                window.location.href = '@Url.Action("Index", "Home")';
+                            }
+                        );
+                    </Text>
+                }
+                else if (@ViewData["Falied"] != null)
+                {
+                    <Text>
+                    var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
+                    </Text>
+                }
+            }
+        </script>
+
+                        <form asp-action="Create" method="post">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="UserName" class="mb-1">اسم المستخدم</label>
+                                        <input asp-for="UserName" type="text" placeholder="اسم المستخدم" class="form-control">
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="EventId" class="mb-1">الفعالية</label>
+                                        <select asp-for="EventId" class="form-control" asp-items="@ViewBag.EventsOfList"></select>
+                                        <span asp-validation-for="EventId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="Email" class="mb-1">البريد الإلكتروني</label>
+                                        <input asp-for="Email" type="email" placeholder="name@email.com" class="form-control text-start">
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="MobileNumber" class="mb-1">رقم الجوال</label>
+                                        <input asp-for="MobileNumber" type="tel" placeholder="رقم الجوال" class="form-control">
+                                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameAr" class="mb-1">الاسم بالعربي</label>
+                                        <input asp-for="FullNameAr" type="text" placeholder="الاسم" class="form-control">
+                                        <span asp-validation-for="FullNameAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameEn" class="mb-1">Full Name</label>
+                                        <input asp-for="FullNameEn" type="text" placeholder="Name" class="form-control">
+                                        <span asp-validation-for="FullNameEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" value="Create" class="btn btn-primary px-5" title="save">تقديم الطلب</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div>
+    <a href="javascript:window.history.back();">Back</a>
+
+</div>

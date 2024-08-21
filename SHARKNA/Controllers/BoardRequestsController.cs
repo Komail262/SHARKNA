@@ -39,13 +39,7 @@ namespace SHARKNA.Controllers
             return View();
         }
 
-        public IActionResult Details(Guid id)
-        {
-            var request = _boardRequestsDomain.GetBoardRequestById(id);
-            return View(request); 
-        }
-
-
+     
 
 
         [HttpPost]
@@ -102,12 +96,13 @@ namespace SHARKNA.Controllers
         }
 
 
-        [HttpGet]
-        public async Task<IActionResult> Accept(Guid id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Accept(Guid id)
         {
             try
             {
-                await _boardRequestsDomain.Accept(id);
+                _boardRequestsDomain.Accept(id);
                 ViewData["Successful"] = "تم قبول الطلب بنجاح.";
             }
             catch (Exception)
@@ -136,9 +131,6 @@ namespace SHARKNA.Controllers
             return RedirectToAction(nameof(Admin));
         }
     }
-
-
-    
 
 }
 

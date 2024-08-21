@@ -91,56 +91,7 @@ namespace SHARKNA.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        public IActionResult AllRequests()
-        {
-            var requests = _BoardTalRequestsDomain.GetTblBoardTalRequests();
-            return View(requests);
-        }
-
-        public IActionResult RequestDetails(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-            return View(request);
-        }
-
-        public IActionResult AcceptRequest(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            // Update the status of the request to "Accepted"
-            request.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
-            _BoardTalRequestsDomain.UpdateUser(request);
-
-            return RedirectToAction("RequestDetails", new { id });
-        }
-
-        public IActionResult RejectRequest(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            // Update the status of the request to "Rejected"
-            request.RequestStatusId = Guid.Parse("271A02AD-8510-406C-BEB4-832BF79159D4"); 
-            _BoardTalRequestsDomain.UpdateUser(request);
-
-            return RedirectToAction("RequestDetails", new { id });
-        }
-
-
-
     }
+
+
 }
-
-

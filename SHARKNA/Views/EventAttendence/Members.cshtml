@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EventRegistrationsViewModel>
+﻿@model IEnumerable<EEventAttendenceViewModel>
 
 @{
     ViewData["Title"] = "Event Attendance Members sheets";
@@ -109,6 +109,7 @@
                         <tbody>
                             @foreach (var member in Model)
                             {
+                                bool check = false;
                                 <tr>
                                     <td>
 
@@ -116,13 +117,12 @@
                                   
                                   <td>@member.FullNameAr</td>
                                     <td>@member.RegDate.ToString("yyyy-MM-dd")</td>
-                                    <td>@member.Email</td>
-
-                                
+                                    <td>@member.Email</td>                                 
                                     <td>
-                                        <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" /> <!-- Single Attendance Checkbox -->
+                                        <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@{member.IsAttend = true ? true: false;} "/> < !--Single Attendance Checkbox -->
 
                                     </td>
+                                   
 
 
                         @*             <td>

@@ -7,92 +7,53 @@ using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SHARKNA.Controllers
 {
     public class EventRegistrationsController : Controller
     {
         private readonly EventRegistrationsDomain _EventRegistrations;
-        private readonly EventDomain _EventDomain;
-        private readonly UserDomain _UserDomain;
 
-        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain , UserDomain userDomain)
+        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain)
         {
             _EventRegistrations = eventRegDomain;
-            _EventDomain = eventDomain;
-            _UserDomain = userDomain;
-            
+
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult MyEventRegistrations()
+        public IActionResult Index()
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-            var eventRegs = _EventRegistrations.GetUserRegisteredEvents(username);
-
-            var eventDetails = eventRegs.Select(reg => {
-                var eventDetail = _EventDomain.GetEventById(reg.EventId);
-                return new
-                {
-                    EventReg = reg,
-                    EventDetail = eventDetail
-                };
-            }).ToList();
-
-            return View(eventDetails);
+            var EventReg = _EventRegistrations.GettblEventRegistrations();
+            return View(EventReg);
         }
+       
+        
 
 
-
-
-
-
-
-
-
-
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult Register()
+        // GET: EventRegistrations/Create
+        public IActionResult Create()
         {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-            var events = _EventRegistrations.GetEventsForUser(username); 
-            return View(events);
+        
+            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
+            return View();
         }
 
-
-
-
+      
 
         [HttpPost]
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Guid EventId)
         {
+           
             try
             {
-                
-                var username = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-
-                var user = _UserDomain.GetUserFER(username);
-
-
-                var EventReg = new EventRegistrationsViewModel
+                if (ModelState.IsValid)
                 {
-                    Id = Guid.NewGuid(),
-                    RegDate = DateTime.Now,
-                    RejectionReasons = "b674955e60fd",
-                    EventId = EventId,
-                    UserName = username,
-                    Email = user.Email,
-                    MobileNumber = user.MobileNumber,
-                    FullNameAr = user.FullNameAr,
-                    FullNameEn = user.FullNameEn
-                };
+                    if (_EventRegistrations.IsEmailDuplicate(EventReg.Email))
+                    {
+                        ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
+                        ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
+                        return View(EventReg);
+                    }
 
                 await _EventRegistrations.AddEventRegAsync(EventReg);
 
@@ -104,7 +65,8 @@ namespace SHARKNA.Controllers
                  TempData["Failed"] = "هناك خطأ في النظام";
             }
 
-            return RedirectToAction("Register");
+            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
+            return View();
         }
 
 

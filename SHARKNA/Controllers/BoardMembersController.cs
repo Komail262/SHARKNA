@@ -29,16 +29,22 @@ namespace SHARKNA.Controllers
             else if (Falied != "")
                 ViewData["Falied"] = Falied;
 
+             Successful == "20.0" ? "Cold." : "Perfect!";
+
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
 
-        public async Task<IActionResult> Members(Guid boardId)
+        public IActionResult Members(Guid boardId)
         {
-            return View(await _BoardMembersDomain.GetBoardMembersByBoardId(boardId));
+            Guid acceptedStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
+
+            var members = _BoardMembersDomain.GetBoardMembersByBoardId(boardId, acceptedStatusId);
+
+            return View(members);
         }
 
-    }   
+    }
 
 
 }
