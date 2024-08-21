@@ -1,0 +1,82 @@
+﻿    @model IEnumerable<BoardTalRequestsViewModel>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <!-- Start Page Wrap -->
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">ادارة المستخدمين</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.UserName)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
+                                <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.BoardId)</th>
+                                <th>@Html.DisplayNameFor(m => m.Skills)</th>
+                                <th>@Html.DisplayNameFor(m => m.Experiences)</th>
+                                <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
+                                
+
+
+
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model)
+                            {
+                                <tr>
+                                    <td>@user.UserName</td>
+                                    <td>@user.Email</td>
+                                    <td>@user.MobileNumber</td>
+                                    <td>@user.FullNameAr</td>
+                                    <td>@user.FullNameEn</td>
+                                    <td>@user.BoardName</td>
+                                    <td>@user.Skills</td>
+                                    <td>@user.Experiences</td>
+                                    <td>@user.RequestStatusName</td>
+                                    
+                                    <td class="action_td text-end">
+                                        <div>
+                                            @if (user.RequestStatusName == "تم الإلغاء")
+                                            {
+                                                <button class="btn btn-secondary" disabled>الطلب ملغي</button>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="RequestDetails" asp-route-id="@user.Id" class="btn btn-primary">عرض التفاصيل</a>
+                                            }
+                                        </div>
+
+
+                               
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+</body>
+</html>
+
