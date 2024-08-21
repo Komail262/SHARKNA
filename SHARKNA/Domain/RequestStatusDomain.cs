@@ -1,4 +1,7 @@
 ﻿using SHARKNA.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SHARKNA.Domain
 {
@@ -44,6 +47,4 @@ namespace SHARKNA.Domain
             }
         }
     }
-
 }
-

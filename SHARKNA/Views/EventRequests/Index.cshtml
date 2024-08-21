@@ -41,10 +41,10 @@
                 <table class="table table-hover js-dataTable">
                     <thead>
                         <tr>
-                            <th>أسباب الرفض</th>
                             <th>الفعالية</th>
-                            <th>حالة الطلب</th>
                             <th>اللجنة</th>
+                            <th>حالة الطلب</th>
+                            <th>أسباب الرفض</th>
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -52,18 +52,26 @@
                         @foreach (var request in Model)
                         {
                             <tr>
-                                <td>@request.RejectionReasons</td>
                                 <td>@request.EventName</td>
-                                <td>@request.RequestStatusName</td>
                                 <td>@request.BoardName</td>
+                                <td>@request.RequestStatusName</td>
                                 <td>
-                                    @if (request.RequestStatusName != "تم الإلغاء")
+                                    @if (request.RequestStatusName == "مرفوض")
                                     {
-                                        <form asp-action="Cancel" method="post">
-                                            <input type="hidden" name="id" value="@request.Id" />
-                                            <button type="submit" class="btn btn-danger">إلغاء الطلب</button>
-                                        </form>
+                                        @request.RejectionReasons
                                     }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@request.Id" class="btn btn-primary btn-sm details-btn">عرض التفاصيل</a>
+                                        @if (request.RequestStatusName != "تم الإلغاء")
+                                        {
+                                            <form asp-action="Cancel" method="post" style="margin: 0;">
+                                                <input type="hidden" name="id" value="@request.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm">إلغاء الطلب</button>
+                                            </form>
+                                        }
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -73,3 +81,23 @@
         </div>
     </div>
 </section>
+
+<style>
+    .btn-group {
+        display: flex;
+        gap: 0.5rem; /* Adjust gap between buttons */
+    }
+
+    .details-btn {
+        /* Default width for details button */
+    }
+
+    .btn-group form {
+        margin: 0;
+    }
+
+    /* Style for details button when it's the only button in the group */
+    .btn-group:only-child .details-btn {
+        width: 100%; /* Full width when only button */
+    }
+</style>

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
 using SHARKNA.ViewModels;
+using System;
 
 public class EventRequestsController : Controller
 {
@@ -40,7 +41,8 @@ public class EventRequestsController : Controller
         {
             eventRequest.Id = Guid.NewGuid();
             _eventRequestDomain.AddEventViewRequest(eventRequest);
-            return RedirectToAction(nameof(Index));
+            ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+            return View(eventRequest);
         }
 
         ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
@@ -49,6 +51,56 @@ public class EventRequestsController : Controller
 
         return View(eventRequest);
     }
+
+    [HttpGet]
+    public IActionResult Details(Guid id)
+    {
+        var request = _eventRequestDomain.GetEventRequestById(id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+
+        ViewBag.RequestStatusList = new SelectList(_eventRequestDomain.GetTblRequestStatus(), "Id", "RequestStatusAr");
+        return View(request);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult UpdateRequestStatus(Guid id, Guid RequestStatusId, string RejectionReasons)
+    {
+        try
+        {
+            var request = _eventRequestDomain.GetEventRequestById(id);
+            if (request == null)
+            {
+                ViewData["Failed"] = "الطلب غير موجود";
+                return RedirectToAction(nameof(Details), new { id = id });
+            }
+
+            if (ModelState.IsValid)
+            {
+                int check = _eventRequestDomain.UpdateRequestStatus(id, RequestStatusId, RejectionReasons);
+                if (check == 1)
+                {
+                    ViewData["Successful"] = "تم تحديث حالة الطلب بنجاح";
+                }
+                else
+                {
+                    ViewData["Failed"] = "حدث خطأ أثناء تحديث حالة الطلب";
+                    ViewData["NoRedirect"] = true; // التحكم بعدم إعادة التوجيه
+                }
+            }
+        }
+        catch (Exception)
+        {
+            ViewData["Failed"] = "حدث خطأ أثناء محاولة تحديث حالة الطلب";
+            ViewData["NoRedirect"] = true; // التحكم بعدم إعادة التوجيه
+        }
+
+        return RedirectToAction(nameof(Details), new { id = id });
+    }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
