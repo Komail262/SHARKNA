@@ -143,9 +143,12 @@ namespace SHARKNA.Controllers
                     var identity = new ClaimsIdentity(new[]
                     {
                 new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, userRecord.Email),
+                new Claim(ClaimTypes.MobilePhone, userRecord.MobileNumber),
                 new Claim(ClaimTypes.Role, userPermissions.RoleName),
                 new Claim(ClaimTypes.NameIdentifier, userPermissions.Id.ToString()),
-                new Claim(ClaimTypes.GivenName, userPermissions.FullNameAr)
+                new Claim("FullNameAr", userRecord.FullNameAr),
+                new Claim("FullNameEn", userRecord.FullNameEn)
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);

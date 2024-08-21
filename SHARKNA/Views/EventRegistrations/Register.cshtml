@@ -1,0 +1,85 @@
+﻿@model IEnumerable<SHARKNA.ViewModels.EventViewModel>
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>تسجيل في فعالية</h2>
+
+<section class="page_wrap">
+    <div class="container-fluid">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">تسجيل طلب حضور فعالية</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 col-md-12">
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                var messageType = '@TempData["MessageType"]';
+
+                                if (messageType == 1) {
+                                    Swal.fire('تم التسجيل بنجاح', '', 'success');
+                                } else if (messageType == 2) {
+                                    Swal.fire('هناك خطأ في النظام', '', 'error');
+                                }
+                            });
+                        </script>
+
+                        <form asp-action="Register" method="post">
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="UserName" value="@User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value" />
+
+                            <div class="block-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>عنوان الفعالية</th>
+                                                <th>تاريخ البداية</th>
+                                                <th>تاريخ النهاية</th>
+                                                <th>الوقت</th>
+                                                <th>الموقع</th>
+                                                <th>تفاصيل</th>
+                                                <th>تسجيل</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var eventItem in Model)
+                                            {
+                                                <tr>
+                                                    <td class="event-title">@eventItem.EventTitleAr</td>
+                                                    <td>@eventItem.EventStartDate.ToString("dd-MM-yyyy")</td>
+                                                    <td>@eventItem.EventEndtDate.ToString("dd-MM-yyyy")</td>
+                                                    <td>@eventItem.Time.ToString(@"hh\:mm")</td>
+                                                    <td>@eventItem.LocationAr</td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#details-@eventItem.Id">المزيد</button>
+                                                        <div id="details-@eventItem.Id" class="collapse mt-2">
+                                                            <div class="card card-body">
+                                                                <p><strong>المتحدث:</strong> @eventItem.SpeakersAr</p>
+                                                                <p><strong>الموضوع:</strong> @eventItem.TopicAr</p>
+                                                                <p><strong>الوصف:</strong> @eventItem.DescriptionAr</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-primary" formaction="@Url.Action("Register", "EventRegistrations")" formmethod="post" name="EventId" value="@eventItem.Id">تسجيل</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>

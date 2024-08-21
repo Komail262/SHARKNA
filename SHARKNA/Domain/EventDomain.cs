@@ -169,5 +169,25 @@ namespace SHARKNA.Domain
             
         }
 
+        public EventViewModel GetEventById(Guid eventId)
+        {
+            return _context.tblEvents
+                .Where(e => e.Id == eventId && !e.IsDeleted && e.IsActive)
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    Time = e.Time,
+                    LocationAr = e.LocationAr,
+                    SpeakersAr = e.SpeakersAr,
+                    TopicAr = e.TopicAr,
+                    DescriptionAr = e.DescriptionAr
+                }).FirstOrDefault();
+        }
+
+
+
     }
 }

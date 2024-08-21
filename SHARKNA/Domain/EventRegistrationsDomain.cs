@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -14,41 +15,6 @@ namespace SHARKNA.Domain
         public EventRegistrationsDomain(SHARKNAContext context)
         {
             _context = context;
-        }
-
-        public IEnumerable<EventRegistrationsViewModel> GettblEventRegistrations()
-        {
-            var EventReg = _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel
-            {
-                Id = x.Id,
-                RegDate = x.RegDate,
-                RejectionReasons = x.RejectionReasons,
-                UserName = x.UserName,
-                Email = x.Email,
-                MobileNumber = x.MobileNumber,
-                FullNameAr = x.FullNameAr,
-                FullNameEn = x.FullNameEn,
-                EventId = x.EventsId,
-                RequestStatusId = x.EventStatusId
-            }).ToList();
-            return EventReg;
-        }
-
-        public EventRegistrationsViewModel GettblEventRegistrations(Guid id)
-        {
-
-            var EventReg = _context.tblEventRegistrations.FirstOrDefault(u => u.Id == id);
-            EventRegistrationsViewModel uu = new EventRegistrationsViewModel();
-            uu.Id = id;
-            uu.RegDate = EventReg.RegDate;
-            uu.RejectionReasons = EventReg.RejectionReasons;
-            uu.UserName = EventReg.UserName;
-            uu.Email = EventReg.Email;
-            uu.MobileNumber = EventReg.MobileNumber;
-            uu.FullNameAr = EventReg.FullNameAr;
-            uu.FullNameEn = EventReg.FullNameEn;
-            return uu;
-
         }
 
         public void AddEventReg(EventRegistrationsViewModel EventReg)
@@ -77,25 +43,64 @@ namespace SHARKNA.Domain
         }
 
         
-        public bool IsEmailDuplicate(string email, Guid? EventRegId = null)
-        {
-            if (EventRegId == null)
-            {
-                return _context.tblEventRegistrations.Any(u => u.Email == email);
+       
 
-            }
-            else
-            {
-                return _context.tblEventRegistrations.Any(u => u.Email == email && u.Id != EventRegId);
-            }
+        public IEnumerable<EventRegistrationsViewModel> GetUserRegisteredEvents(string username)
+        {
+            return _context.tblEventRegistrations
+                .Where(reg => reg.UserName == username)
+                .Select(reg => new EventRegistrationsViewModel
+                {
+                    Id = reg.Id,
+                    RegDate = reg.RegDate,
+                    RejectionReasons = reg.RejectionReasons,
+                    UserName = reg.UserName,
+                    Email = reg.Email,
+                    MobileNumber = reg.MobileNumber,
+                    FullNameAr = reg.FullNameAr,
+                    FullNameEn = reg.FullNameEn,
+                    EventId = reg.EventsId
+
+                })
+                .ToList();
         }
 
 
-        public List<tblEvents> GettblEvents()
+        public List<EventViewModel> GetEventsForUser(string username)
         {
-            return _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
+
+            var events = _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
+
+            var registeredEvents = _context.tblEventRegistrations
+                .Where(reg => reg.UserName == username)
+                .Select(reg => reg.EventsId)
+                .ToList();
+
+
+            var availableEvents = events
+                .Where(e => !registeredEvents.Contains(e.Id))
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    Time = e.Time,
+                    LocationAr = e.LocationAr,
+                    SpeakersAr = e.SpeakersAr,
+                    TopicAr = e.TopicAr,
+                    DescriptionAr = e.DescriptionAr
+                }).ToList();
+
+            return availableEvents;
         }
+
+        
+
+
 
 
     }
+
 }
+

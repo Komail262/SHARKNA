@@ -7,72 +7,102 @@ using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SHARKNA.Controllers
 {
     public class EventRegistrationsController : Controller
     {
         private readonly EventRegistrationsDomain _EventRegistrations;
+        private readonly EventDomain _EventDomain;
+        private readonly UserDomain _UserDomain;
 
-        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain)
+        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain , UserDomain userDomain)
         {
             _EventRegistrations = eventRegDomain;
-
+            _EventDomain = eventDomain;
+            _UserDomain = userDomain;
+            
         }
 
-        public IActionResult Index()
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public IActionResult MyEventRegistrations()
         {
-            var EventReg = _EventRegistrations.GettblEventRegistrations();
-            return View(EventReg);
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var eventRegs = _EventRegistrations.GetUserRegisteredEvents(username);
+
+            var eventDetails = eventRegs.Select(reg => {
+                var eventDetail = _EventDomain.GetEventById(reg.EventId);
+                return new
+                {
+                    EventReg = reg,
+                    EventDetail = eventDetail
+                };
+            }).ToList();
+
+            return View(eventDetails);
         }
-       
-        
 
 
-        // GET: EventRegistrations/Create
-        public IActionResult Create()
+
+
+
+
+
+
+
+
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public IActionResult Register()
         {
-        
-            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-            return View();
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var events = _EventRegistrations.GetEventsForUser(username); 
+            return View(events);
         }
 
-      
+
+
+
 
         [HttpPost]
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EventRegistrationsViewModel EventReg)
+        public IActionResult Register(Guid EventId)
         {
-           
             try
             {
-                if (ModelState.IsValid)
-                {
-                    if (_EventRegistrations.IsEmailDuplicate(EventReg.Email))
-                    {
-                        ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
-                        ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-                        return View(EventReg);
-                    }
+                
+                var username = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
 
-                    EventReg.Id = Guid.NewGuid();
-                    EventReg.RegDate = DateTime.Now;
-                    EventReg.RejectionReasons = "";
-                    _EventRegistrations.AddEventReg(EventReg);
-                    ViewData["Successful"] = "تمت التسجيل بنجاح";
-                }
-                else
+                var user = _UserDomain.GetUserFER(username);
+
+
+                var EventReg = new EventRegistrationsViewModel
                 {
-                    ViewData["Falied"] = "حدث خطأ أثناء معالجة طلبك , الرجاء اعادة المحاولة   ";
-                }
+                    Id = Guid.NewGuid(),
+                    RegDate = DateTime.Now,
+                    RejectionReasons = "b674955e60fd",
+                    EventId = EventId,
+                    UserName = username,
+                    Email = user.Email,
+                    MobileNumber = user.MobileNumber,
+                    FullNameAr = user.FullNameAr,
+                    FullNameEn = user.FullNameEn
+                };
+
+                _EventRegistrations.AddEventReg(EventReg);
+
             }
             catch (Exception ex)
             {
-                ViewData["Falied"] = "هناك خطا في النظام";
+                ViewData["Failed"] = "هناك خطأ في النظام";
             }
 
-            ViewBag.EventsOfList = new SelectList(_EventRegistrations.GettblEvents(), "Id", "EventTitleAr");
-            return View();
+            return RedirectToAction("Register");
         }
 
 

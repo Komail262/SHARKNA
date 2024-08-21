@@ -41,14 +41,14 @@ namespace SHARKNA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(PermissionsViewModel permission)
+        public async Task<IActionResult> Create(PermissionsViewModel permission)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    
-                    var user = _PermissionDomain.GetTblUsersByUserName(permission.UserName).Result;
+                   
+                    var user = await _PermissionDomain.GetTblUsersByUserName(permission.UserName);
                     if (user == null)
                     {
                         ViewData["Falied"] = "The user does not exist.";
@@ -56,7 +56,7 @@ namespace SHARKNA.Controllers
                         return View(permission);
                     }
 
-                 
+                    
                     bool userHasRole = _PermissionDomain.IsRoleNameDuplicate(permission.UserName);
                     if (userHasRole)
                     {
