@@ -54,29 +54,7 @@ namespace SHARKNA.Domain
             }).ToListAsync();
         }
 
-        //public IEnumerable<BoardMembersViewModel> GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardRequests
-
-
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-        //        .Select(x => new BoardMembersViewModel
-        //        {
-        //            Id = x.Id,
-        //            UserName = x.UserName,
-        //            Email = x.Email,
-        //            MobileNumber = x.MobileNumber,
-        //            FullNameAr = x.FullNameAr,
-        //            FullNameEn = x.FullNameEn,
-        //            BoardId = boardId, 
-        //            BoardRoleId = Guid.Parse("7D67185D-81BD-4738-A6C5-2106E441EEA1"), 
-        //           // BoardRoleName = x.,
-        //           // IsActive = true,
-        //           // IsDeleted = false ,
-
-        //        })
-        //        .ToList();
-        //}
+       
 
 
         public IEnumerable<BoardViewModel> GetTblBoards()
@@ -97,54 +75,7 @@ namespace SHARKNA.Domain
 
 
 
-        //public IEnumerable<BoardMembersViewModel> GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardRequests
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-        //        .Join(_context.tblBoardMembers,
-        //              request => request.Id,  
-        //              member => member.Id,              
-        //              (request, member) => new BoardMembersViewModel
-        //              {
-        //                  Id = member.Id,
-        //                  UserName = member.UserName,
-        //                  Email = member.Email,
-        //                  MobileNumber = member.MobileNumber,
-        //                  FullNameAr = member.FullNameAr,
-        //                  FullNameEn = member.FullNameEn,
-        //                  BoardId = request.BoardId,
-        //                  BoardName = request.Board.NameAr,
-        //                  BoardRoleId = Guid.Parse("7D67185D-81BD-4738-A6C5-2106E441EEA1"),
-        //                  BoardRoleName = member.BoardRole.NameAr,
-        //                  IsActive = true ,
-        //                  IsDeleted = false ,
-
-        //              })
-        //        .ToList();
-        //}
-
-
-        //public BoardMembersViewModel GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardMembers
-        //        .Include(x => x.tblBoardRequests)
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-           
-               
-        //        .Select(x => new BoardRequestsViewModel
-        //        {
-        //            Id = x.Id,
-        //            FullNameAr = x.FullNameAr,
-        //            UserName = x.UserName,
-        //            Email = x.Email,
-        //            MobileNumber = x.MobileNumber,
-        //            BoardName = x.Board.NameAr,
-        //            RequestStatusId = x.RequestStatusId,
-        //            RequestStatusName = x.RequestStatus.RequestStatusAr,
-        //            RejectionReasons = x.RejectionReasons
-        //        })
-        //        .FirstOrDefault();
-        //}
+       
     }
 
 }

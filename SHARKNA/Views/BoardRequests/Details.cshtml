@@ -59,14 +59,16 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="RequestStatusName" class="mb-1">حالة الطلب</label>
-                                        <input type="text" id="RequestStatusName" class="form-control" value="@Model.RequestStatusName" disabled />
+                                        @* <input type="text" id="RequestStatusName" class="form-control" value="@Model.RequestStatusName" disabled /> *@
+                                        <p><strong>  @Model.RequestStatusName </strong></p>
                                     </div>
                                 </div><!-- END ITEM -->
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="RejectionReasons" class="mb-1">سبب الرفض</label>
-                                        <input type="text" id="RejectionReasons" class="form-control" value="@Model.RejectionReasons" disabled />
+                                        <label for="RejectionReasons" class="mb-1">سبب الرفض:</label>
+                                        @* <input type="text" id="RejectionReasons" class="form-control" value="@Model.RejectionReasons" disabled /> *@
+                                        <p><strong>  @Model.RejectionReasons </strong></p>
                                     </div>
                                 </div><!-- END ITEM -->
                             </div>
@@ -74,11 +76,14 @@
                             @if (Model.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
                             {
                                 <div class="text-center mt-4">
-                                    <a asp-action="Accept" asp-route-id="@Model.Id" class="btn btn-success px-5">Accept</a>
+                                   
+                                    <a asp-action="Accept" asp-route-id="@Model.Id" class="btn btn-success px-5">قبول</a>
+
+                                   
                                     <button type="button" class="btn btn-danger px-5" onclick="showRejectForm('@Model.Id')">رفض</button>
 
-                                    <form asp-action="Reject" method="post" id="rejectForm-@Model.Id" style="display:none; margin-top:10px;">
-                                        <input type="hidden" name="id" value="@Model.Id" />
+                                    
+                                    <form asp-action="Reject" asp-route-id="@Model.Id" method="post" id="rejectForm-@Model.Id" style="display:none; margin-top:10px;">
                                         <div class="form-group mt-3">
                                             <label for="rejectionReason">سبب الرفض:</label>
                                             <input type="text" name="rejectionReason" class="form-control" required />
@@ -86,6 +91,9 @@
                                         </div>
                                     </form>
                                 </div>
+
+                               
+
                             }
                         </form>
                     </div>
