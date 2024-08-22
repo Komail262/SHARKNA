@@ -33,7 +33,19 @@ namespace SHARKNA.ViewModels
         [DisplayName("اسم الأعضاء بالفعالية")]
         public Guid EventMemId { get; set; }
 
-        public string EventMemName { get; set; }  //هنا عشان يعرض اسم الأعضاء بالفعالية 
+        //public string EventMemName { get; set; }  //هنا عشان يعرض اسم الأعضاء بالفعالية 
+
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("اسم الأعضاء بالفعالية")]
+        public Guid EventsRegId { get; set; }
+
+        public string Email { get; set; }
+        public DateTime RegDate { get; set; }
+        public string RegDateString => RegDate.ToString("yyyy-MM-dd HH:mm:ss");
+
+        public string FullNameAr { get; set; }
+
 
 
 

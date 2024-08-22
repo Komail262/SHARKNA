@@ -11,7 +11,7 @@
 
         public string FullNameAr { get; set; }
         public string FullNameEn { get; set; }
-
+        
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 
@@ -21,6 +21,6 @@
         public tblBoards Board { get; set; }
         public Guid BoardId { get; set; }
 
-        //new
+
     }
 }

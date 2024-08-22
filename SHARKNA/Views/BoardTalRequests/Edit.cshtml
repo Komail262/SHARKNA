@@ -1,39 +1,8 @@
 ﻿@model SHARKNA.ViewModels.BoardTalRequestsViewModel
+@{
+    ViewData["Title"] = "Create User";
+}
 
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
-<script>
-    @{
-        if (@ViewData["Successful"] != null)
-        {
-            <Text>
-                                            var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "BoardTalRequests")';
-                    }
-                );
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
-        {
-            <Text>
-                                            var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                            var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-    }
-</script>
 <h2>اضافة مستخدم</h2>
 
 <section class="page_wrap">
@@ -46,7 +15,8 @@
             <div class="block-body py-5">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <form asp-action="Create" method="post">
+                        <form asp-action="Edit" method="post">
+                            <input hidden asp-for="Id" />
                             <div class="row">
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
@@ -57,19 +27,7 @@
 
                                     </div>
                                 </div><!-- END ITEM -->
-                                <!-- START ITEM -->
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label asp-for="BoardId" class="mb-1">اسم النادي </label>
-                                        <select asp-for="BoardId"
-                                                class="form-control"
-                                                asp-items="@ViewBag.BoardsOfList">
-                                        </select>
-                                        <span asp-validation-for="BoardId" class="text-danger"></span>
-
-                                    </div>
-                                </div><!-- END ITEM -->
-            
+                          
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -83,16 +41,16 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">رقم الجوال</label>
-                                        <input asp-for="MobileNumber" type="tel" placeholder="رقم الجوال" class="form-control">
+                                        <input asp-for="MobileNumber" type="text" placeholder="رقم الجوال" class="form-control">
                                         <span asp-validation-for="MobileNumber" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">الاسم كامل</label>
-                                        <input asp-for="FullNameAr" type="text" placeholder="الاسم " class="form-control">
-                                        <span asp-validation-for="FullNameAr" class="text-danger"></span>
+                                        <label for="" class="mb-1">رقم الجوال</label>
+                                        <input asp-for="MobileNumber" type="tel" placeholder="رقم الجوال" class="form-control">
+                                        <span asp-validation-for="MobileNumber" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
                                 <!-- START ITEM -->
@@ -111,7 +69,6 @@
                                         <span asp-validation-for="Skills" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
- 
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -120,7 +77,7 @@
                                         <span asp-validation-for="Experiences" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
-                           
+
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="submit" value="Create" class="btn btn-primary px-5" title="save">حفظ</button>

@@ -43,40 +43,40 @@ namespace SHARKNA.Controllers
 
 
 
-            var Ereg = _eventattendenceDomain.GetTblEventreg(id);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            var Ereg = _eventattendenceDomain.GetTblEventattendence(id);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
             return View(Ereg);
         }
 
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
 
-        public IActionResult Details(EEventAttendenceViewModel atten)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    atten.Id = Guid.NewGuid();
+        //public IActionResult Details(EEventAttendenceViewModel atten)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            atten.Id = Guid.NewGuid();
 
-                    int check = _eventattendenceDomain.AddEventAttend(atten);
-                    if (check == 1)
-                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
-                    else
-                        ViewData["Falied"] = "حدث خطأ";
-                    return View(atten);
+        //            int check = _eventattendenceDomain.AddEventAttend(atten);
+        //            if (check == 1)
+        //                ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+        //            else
+        //                ViewData["Falied"] = "حدث خطأ";
+        //            return View(atten);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewData["Falied"] = "حدث خطأ";
-            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewData["Falied"] = "حدث خطأ";
+        //    }
 
-            return View(atten);
-        }
+        //    return View(atten);
+        //}
 
 
         [HttpPost]
@@ -93,7 +93,7 @@ namespace SHARKNA.Controllers
 
 
 
-                    var Ereg = _eventattendenceDomain.GetTblEventreg (id);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                    var Ereg = _eventattendenceDomain.GetTblEventattendence(id);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
                   //return View(Ereg);
 
                     if (count == 1)
@@ -115,5 +115,5 @@ namespace SHARKNA.Controllers
         }
 
      
-    }
+    }//h
 }

@@ -6,11 +6,9 @@ namespace SHARKNA.Domain
     public class BoardMembersDomain
     {
         private readonly SHARKNAContext _context;
-        private readonly BoardRequestsDomain _boardRequestsDomain;
-        public BoardMembersDomain(SHARKNAContext context, BoardRequestsDomain boardRequestsDomain)
+        public BoardMembersDomain(SHARKNAContext context)
         {
             _context = context;
-            _boardRequestsDomain = boardRequestsDomain;
         }
 
 
@@ -79,4 +77,3 @@ namespace SHARKNA.Domain
     }
 
 }
-

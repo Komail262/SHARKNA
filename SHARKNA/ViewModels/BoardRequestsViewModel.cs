@@ -55,7 +55,5 @@ namespace SHARKNA.ViewModels
         [DisplayName(" سبب الرفض")]
         public string? RejectionReasons { get; set; }
 
-        //new
-
     }
 }

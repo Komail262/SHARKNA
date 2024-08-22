@@ -4,7 +4,7 @@
 
 namespace SHARKNA.Migrations
 {
-    public partial class Sharkna : Migration
+    public partial class Ssharkna : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

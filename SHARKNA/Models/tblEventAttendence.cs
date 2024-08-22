@@ -9,9 +9,11 @@
 
         public tblEvents Events { get; set; }
         public Guid EventstId { get; set; }
-        public tblEventMembers EventMember { get; set; }
-        public Guid EventMemId { get; set; }
+        //public tblEventMembers EventMember { get; set; }
+        //public Guid EventMemId { get; set; }
 
+        public tblEventRegistrations EventsReg { get; set; }
+        public Guid EventsRegId { get; set; }
         public bool IsAttend { get; set; }
 
 

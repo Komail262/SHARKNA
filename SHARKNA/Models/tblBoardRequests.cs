@@ -23,15 +23,16 @@ namespace SHARKNA.Models
 
 
         public tblBoards Board { get; set; }
+
+       
         public Guid BoardId { get; set; }
 
        
         public tblRequestStatus RequestStatus { get; set; }
+
+       
         public Guid RequestStatusId { get; set; }
-
         public string? RejectionReasons { get; set; }
-
-
         
     }
 }

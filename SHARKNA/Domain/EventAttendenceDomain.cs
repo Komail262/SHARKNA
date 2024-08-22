@@ -97,49 +97,66 @@ namespace SHARKNA.Domain
         //}
 
 
-        public IEnumerable<EventRegistrationsViewModel> GetTblEventreg(Guid eventId)
+
+        //correct retriever
+        //public IEnumerable<EventRegistrationsViewModel> GetTblEventreg(Guid eventId)
+        //{
+        //    return _context.tblEventRegistrations.Where(x => x.EventsId == eventId).Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+        //    {
+        //        Id = x.Id,
+        //        RegDate = x.RegDate,
+        //        RejectionReasons = x.RejectionReasons,
+        //        UserName = x.UserName,
+        //        Email = x.Email,
+        //        MobileNumber = x.MobileNumber,
+        //        FullNameAr = x.FullNameAr,
+        //        FullNameEn = x.FullNameEn,
+        //        EventId = x.EventsId,
+        //        RequestStatusId = x.EventStatusId
+
+        //    }).ToList();
+        //}
+
+        public IEnumerable<EEventAttendenceViewModel> GetTblEventattendence(Guid eventId)
         {
-            return _context.tblEventRegistrations.Where(x => x.EventsId == eventId).Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return _context.tblEventAttendence.Where(x => x.EventstId == eventId).Select(x => new EEventAttendenceViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
-                RegDate = x.RegDate,
-                RejectionReasons = x.RejectionReasons,
-                UserName = x.UserName,
-                Email = x.Email,
-                MobileNumber = x.MobileNumber,
-                FullNameAr = x.FullNameAr,
-                FullNameEn = x.FullNameEn,
-                EventId = x.EventsId,
-                RequestStatusId = x.EventStatusId
+
+                EventsRegId = x.EventsRegId,
+                FullNameAr = x.EventsReg.FullNameAr,
+                RegDate = x.EventsReg.RegDate,
+                Email = x.EventsReg.Email,
+                IsAttend=x.IsAttend
 
             }).ToList();
         }
 
 
 
-        public int AddEventAttend(EEventAttendenceViewModel eventatten)
-        {
-            try
-            {
-                var At = new tblEventAttendence
-                {
-                    Id = eventatten.Id,
-                    EventMemId = eventatten.EventMemId,
-                    EventstId = Guid.Parse(" "),
-                    EventDate = eventatten.EventDate,
-                    Day = eventatten.Day,
-                    IsAttend = eventatten.IsAttend
-                };
+        //public int AddEventAttend(EEventAttendenceViewModel eventatten)
+        //{
+        //    try
+        //    {
+        //        var At = new tblEventAttendence
+        //        {
+        //            Id = eventatten.Id,
+        //            EventMemId = eventatten.EventMemId,
+        //            EventstId = Guid.Parse(" "),
+        //            EventDate = eventatten.EventDate,
+        //            Day = eventatten.Day,
+        //            IsAttend = eventatten.IsAttend
+        //        };
 
-                _context.tblEventAttendence.Add(At);
-                _context.SaveChanges();
-                return 1;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
+        //        _context.tblEventAttendence.Add(At);
+        //        _context.SaveChanges();
+        //        return 1;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return 0;
+        //    }
+        //}
 
 
     }
