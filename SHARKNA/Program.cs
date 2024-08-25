@@ -38,7 +38,6 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.Secure = CookieSecurePolicy.None;
 });
 builder.Services.AddScoped<UserDomain>();
-
 builder.Services.AddScoped<BoardDomain>();
 builder.Services.AddScoped<EventRegistrationsDomain>();
 builder.Services.AddScoped<RequestStatusDomain>();
@@ -48,11 +47,9 @@ builder.Services.AddScoped<RoleDomain>();
 builder.Services.AddScoped<PermissionDomain>();
 builder.Services.AddScoped<BoardRolesDomain>();
 builder.Services.AddScoped<EventAttendenceDomain>();
-builder.Services.AddScoped<EventRequestsDomain>();
-
-
-//.Services.AddScoped<PermissionDomain>();
 builder.Services.AddScoped<BoardRequestsDomain>();
+builder.Services.AddScoped<BoardMembersDomain>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.  

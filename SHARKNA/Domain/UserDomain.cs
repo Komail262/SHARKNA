@@ -149,7 +149,27 @@ namespace SHARKNA.Domain
             };
         }
 
+        public UserViewModel GetUserFER(string username)
+        {
+            // Retrieve the user from the tblUsers table based on the username
+            var user = _context.tblUsers
+                .FirstOrDefault(u => u.UserName == username);
 
+            // If no user is found, return null
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Return the UserViewModel populated with the user details
+            return new UserViewModel
+            {
+                Email = user.Email,
+                MobileNumber = user.MobileNumber,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn
+            };
+        }
 
 
 

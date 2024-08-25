@@ -33,22 +33,32 @@ namespace SHARKNA.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Update(Guid id)
+        {
+            var board = await _boardDomain.GetTblBoardByIdAsync(id);
+            if (board == null)
+            {
+                return NotFound();
+            }
+            return View(board);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BoardViewModel board)
+        public async Task<IActionResult> Create(BoardViewModel board)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    if (await _boardDomain.IsBoardNameDuplicateAsync(board.NameEn))
                     {
                         ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
                         return View(board);
                     }
                     board.Id = Guid.NewGuid();
 
-                    int check = _boardDomain.AddBoard(board);
+                    int check = await _boardDomain.AddBoardAsync(board);
                     // return RedirectToAction(nameof(Index));
                     if (check == 1)
                         ViewData["Successful"] = "تم إضافة اللجنة بنجاح";
@@ -66,31 +76,30 @@ namespace SHARKNA.Controllers
             return View(board);
         }
 
-        public IActionResult Update(Guid id)
-        {
-            var board = _boardDomain.GetTblBoardById(id);
-            if (board == null)
-            {
-                return NotFound();
-            }
-            return View(board);
-        }
+       
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(BoardViewModel board)
+        public async  Task<IActionResult> Update(BoardViewModel board)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    var Eboard = await _boardDomain.GetTblBoardByIdAsync(board.Id);//ياخذ بيانات اللجنة الحالموجودة حاليا من الداتابيس باستخدام ID قبل اي تعديل  
 
-                    if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    if (Eboard != null && Eboard.NameEn != board.NameEn && await _boardDomain.IsBoardNameDuplicateAsync(board.NameEn))//new
+                        // Eboard != null يتأكد اللجنة موجودة ولا 
+                        //Eboard.NameEn != board.NameEn يتأكد اذا كنت تبي تغير الاسم بالانجليزي وهل اذا غيرته بيكون مختلف اذا مختلف بيكمل 
+                        // _boardDomain.IsBoardNameDuplicate(board.NameEn) يتأكد هل الاسم الجديد موجود بالداتابيس 
+
+
+                    //if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
                     {
                         ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
                         return View(board);
                     }
-                    int check = _boardDomain.UpdateBoard(board);
+                    int check = await _boardDomain.UpdateBoardAsync(board);
                     if (check == 1)
                         ViewData["Successful"] = "تم التعديل بنجاح";
                     else
@@ -101,7 +110,7 @@ namespace SHARKNA.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
+                ViewData["Falied"] = "حدث خطأ أثناء التعديل";
             }
             return View(board);
         }
@@ -110,7 +119,7 @@ namespace SHARKNA.Controllers
 
         [HttpGet]
        // [ValidateAntiForgeryToken]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             string Successful = "";
             string Falied = "";
@@ -118,7 +127,7 @@ namespace SHARKNA.Controllers
             {
                
 
-                int check = _boardDomain.DeleteBoard(id);
+                int check = await _boardDomain.DeleteBoardAsync(id);
                 if (check == 1)
                 {
                      Successful = "تم حذف اللجنة بنجاح";

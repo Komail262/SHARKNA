@@ -58,7 +58,7 @@
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1"> اسم اللجنة بالانجليزي</label>
+                                        <label for="" class="mb-1"> اسم اللجنة بالإنجليزي</label>
                                         <input asp-for="NameEn" type="text" placeholder="اسم اللجنة بالإنجليزي"
                                                class="form-control text-start">
                                         <span asp-validation-for="NameEn" class="text-danger"></span>
@@ -69,8 +69,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">الوصف بالعربي</label>
-                                        <input asp-for="DescriptionAr" type="text"
-                                               class="form-control text-start">
+                                        <textarea asp-for="DescriptionAr" type="text" class="form-control text-start"> </textarea>
                                         <span asp-validation-for="DescriptionAr" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
@@ -78,7 +77,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1"> الوصف بالإنجليزي </label>
-                                        <input asp-for="DescriptionEn" type="text" class="form-control">
+                                        <textarea asp-for="DescriptionEn" type="text" class="form-control"></textarea>
                                         <span asp-validation-for="DescriptionEn" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
