@@ -49,6 +49,8 @@ builder.Services.AddScoped<BoardRolesDomain>();
 builder.Services.AddScoped<EventAttendenceDomain>();
 builder.Services.AddScoped<BoardRequestsDomain>();
 builder.Services.AddScoped<BoardMembersDomain>();
+builder.Services.AddScoped<EventRequestsDomain>();
+
 
 var app = builder.Build();
 
