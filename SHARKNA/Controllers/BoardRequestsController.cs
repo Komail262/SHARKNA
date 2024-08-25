@@ -14,12 +14,12 @@ namespace SHARKNA.Controllers
         private readonly RequestStatusDomain _RequestStatusDomain;
         private readonly BoardMembersDomain _BoardMembersDomain;
 
-        public BoardRequestsController (BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain)
+        public BoardRequestsController(BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain)
         {
             _boardRequestsDomain = boardRequestsDomain;
             _BoardDomain = BoardDomain;
             _RequestStatusDomain = requestStatusDomain;
-            _BoardMembersDomain = boardMembersDomain;   
+            _BoardMembersDomain = boardMembersDomain;
         }
         public IActionResult Index()
         {
@@ -34,12 +34,18 @@ namespace SHARKNA.Controllers
         }
         public IActionResult Create()
         {
-           
+
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
             return View();
         }
 
-     
+        public IActionResult Details(Guid id)
+        {
+            var request = _boardRequestsDomain.GetBoardRequestById(id);
+            return View(request);
+        }
+
+
 
 
         [HttpPost]
@@ -57,19 +63,20 @@ namespace SHARKNA.Controllers
                         ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
                         return View(BoardReq);
                     }
-                     
+
                     BoardReq.Id = Guid.NewGuid();
-                    
-                   int check =  _boardRequestsDomain.AddBoardReq(BoardReq);
+
+                    int check = _boardRequestsDomain.AddBoardReq(BoardReq);
                     if (check == 1)
                         ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
                     else
                         ViewData["Falied"] = "حدث خطأ";
                     return View(BoardReq);
-                    
+
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 ViewData["Falied"] = "حدث خطأ";
             }
 
@@ -85,7 +92,7 @@ namespace SHARKNA.Controllers
             try
             {
                 _boardRequestsDomain.CancelRequest(id);
-                ViewData["Successful"] = "تم إلغاء الطلب بنجاح."; 
+                ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
             catch (Exception)
             {
@@ -96,13 +103,12 @@ namespace SHARKNA.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Accept(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> Accept(Guid id)
         {
             try
             {
-                _boardRequestsDomain.Accept(id);
+                await _boardRequestsDomain.Accept(id);
                 ViewData["Successful"] = "تم قبول الطلب بنجاح.";
             }
             catch (Exception)
@@ -120,7 +126,7 @@ namespace SHARKNA.Controllers
         {
             try
             {
-                _boardRequestsDomain.Reject(id , rejectionReason);
+                _boardRequestsDomain.Reject(id, rejectionReason);
                 ViewData["Successful"] = "تم قبول الطلب بنجاح.";
             }
             catch (Exception)
@@ -131,6 +137,9 @@ namespace SHARKNA.Controllers
             return RedirectToAction(nameof(Admin));
         }
     }
+
+
+
 
 }
 

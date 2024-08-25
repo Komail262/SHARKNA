@@ -13,7 +13,7 @@ namespace SHARKNA.Controllers
         private readonly BoardMembersDomain _BoardMembersDomain;
         private readonly BoardDomain _boardDomain;
         private readonly SHARKNAContext _context;
-       
+
         public BoardMembersController(BoardMembersDomain Boardmembersdomain, BoardDomain BoardDomain, SHARKNAContext context)
         {
             _BoardMembersDomain = Boardmembersdomain;
@@ -29,23 +29,17 @@ namespace SHARKNA.Controllers
             else if (Falied != "")
                 ViewData["Falied"] = Falied;
 
-             Successful == "20.0" ? "Cold." : "Perfect!";
-
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
 
-        public IActionResult Members(Guid boardId)
+        public async Task<IActionResult> Members(Guid boardId)
         {
-            Guid acceptedStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
-
-            var members = _BoardMembersDomain.GetBoardMembersByBoardId(boardId, acceptedStatusId);
-
-            return View(members);
+            return View(await _BoardMembersDomain.GetBoardMembersByBoardId(boardId));
         }
 
-    }   
-    
+    }
+
 
 }
 
