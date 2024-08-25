@@ -21,8 +21,6 @@ namespace SHARKNA.Domain
                 EventTitleEn = x.EventTitleEn,
                 EventStartDate = x.EventStartDate,
                 EventEndtDate = x.EventEndtDate,
-                Time = x.Time,
-                EndRegTime = x.EndRegTime,
                 SpeakersAr = x.SpeakersAr,
                 SpeakersEn = x.SpeakersEn,
                 TopicAr = x.TopicAr,

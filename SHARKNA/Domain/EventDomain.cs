@@ -23,8 +23,6 @@ namespace SHARKNA.Domain
                 EventTitleEn = E.EventTitleEn,
                 EventStartDate = E.EventStartDate,
                 EventEndtDate = E.EventEndtDate,
-                Time = E.Time,
-                EndRegTime = E.EndRegTime,
                 SpeakersAr = E.SpeakersAr,
                 SpeakersEn = E.SpeakersEn,
                 TopicAr = E.TopicAr,
@@ -50,8 +48,6 @@ namespace SHARKNA.Domain
             uu.EventTitleEn = Tuser.EventTitleEn;
             uu.EventStartDate = Tuser.EventStartDate;
             uu.EventEndtDate = Tuser.EventEndtDate;
-            uu.Time = Tuser.Time;
-            uu.EndRegTime = Tuser.EndRegTime;
             uu.SpeakersAr = Tuser.SpeakersAr;
             uu.SpeakersEn = Tuser.SpeakersEn;
             uu.TopicAr = Tuser.TopicAr;
@@ -79,8 +75,6 @@ namespace SHARKNA.Domain
                 VEvent.EventTitleEn = Event.EventTitleEn;
                 VEvent.EventStartDate = Event.EventStartDate;
                 VEvent.EventEndtDate = Event.EventEndtDate;
-                VEvent.Time = Event.Time;
-                VEvent.EndRegTime = Event.EndRegTime;
                 VEvent.SpeakersAr = Event.SpeakersAr;
                 VEvent.SpeakersEn = Event.SpeakersEn;
                 VEvent.TopicAr = Event.TopicAr;
@@ -121,8 +115,6 @@ namespace SHARKNA.Domain
                 existingEvent.EventTitleEn = Event.EventTitleEn;
                 existingEvent.EventStartDate = Event.EventStartDate;
                 existingEvent.EventEndtDate = Event.EventEndtDate;
-                existingEvent.Time = Event.Time;
-                existingEvent.EndRegTime = Event.EndRegTime;
                 existingEvent.SpeakersAr = Event.SpeakersAr;
                 existingEvent.SpeakersEn = Event.SpeakersEn;
                 existingEvent.TopicAr = Event.TopicAr;
@@ -179,7 +171,6 @@ namespace SHARKNA.Domain
                     EventTitleAr = e.EventTitleAr,
                     EventStartDate = e.EventStartDate,
                     EventEndtDate = e.EventEndtDate,
-                    Time = e.Time,
                     LocationAr = e.LocationAr,
                     SpeakersAr = e.SpeakersAr,
                     TopicAr = e.TopicAr,

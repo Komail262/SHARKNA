@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SHARKNA.Migrations
 {
-    public partial class adddb : Migration
+    public partial class addFirst : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -158,34 +158,6 @@ namespace SHARKNA.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblEvents",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventTitleAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EventTitleEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EventStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EventEndtDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Time = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndRegTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SpeakersAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SpeakersEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TopicAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TopicEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LocationEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MaxAttendence = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblEvents", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "tblPermmisionLogs",
                 columns: table => new
                 {
@@ -271,41 +243,103 @@ namespace SHARKNA.Migrations
                         column: x => x.BoardRoleId,
                         principalTable: "tblBoardRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_tblBoardMembers_tblBoards_BoardId",
                         column: x => x.BoardId,
                         principalTable: "tblBoards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblEventAttendence",
+                name: "tblEvents",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Day = table.Column<int>(type: "int", nullable: false),
-                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventMemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsAttend = table.Column<bool>(type: "bit", nullable: false)
+                    EventTitleAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EventTitleEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EventStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EventEndtDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    SpeakersAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpeakersEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TopicAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TopicEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxAttendence = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblEventAttendence", x => x.Id);
+                    table.PrimaryKey("PK_tblEvents", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblEventAttendence_tblEventMembers_EventMemberId",
-                        column: x => x.EventMemberId,
-                        principalTable: "tblEventMembers",
-                        principalColumn: "Id");
+                        name: "FK_tblEvents_tblBoards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "tblBoards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventRegistrationsViewModel",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MobileNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FullNameAr = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FullNameEn = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    tblRequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventRegistrationsViewModel", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblEventAttendence_tblEvents_EventsId",
-                        column: x => x.EventsId,
-                        principalTable: "tblEvents",
+                        name: "FK_EventRegistrationsViewModel_tblRequestStatus_tblRequestStatusId",
+                        column: x => x.tblRequestStatusId,
+                        principalTable: "tblRequestStatus",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblBoardRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "tblBoards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
+                        column: x => x.RequestStatusId,
+                        principalTable: "tblRequestStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,13 +366,35 @@ namespace SHARKNA.Migrations
                         column: x => x.BoardId,
                         principalTable: "tblBoards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_tblBoardTalRequests_tblRequestStatus_RequestStatusId",
                         column: x => x.RequestStatusId,
                         principalTable: "tblRequestStatus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblPermissions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblPermissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblPermissions_tblRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "tblRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -364,13 +420,13 @@ namespace SHARKNA.Migrations
                         column: x => x.EventsId,
                         principalTable: "tblEvents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_tblEventRegistrations_tblRequestStatus_EventStatusId",
                         column: x => x.EventStatusId,
                         principalTable: "tblRequestStatus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
@@ -391,87 +447,59 @@ namespace SHARKNA.Migrations
                         column: x => x.BoardId,
                         principalTable: "tblBoards",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_tblEventRequests_tblEvents_EventId",
                         column: x => x.EventId,
                         principalTable: "tblEvents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_tblEventRequests_tblRequestStatus_RequestStatusId",
                         column: x => x.RequestStatusId,
                         principalTable: "tblRequestStatus",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateTable(
-                name: "tblPermissions",
+                name: "tblEventAttendence",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Day = table.Column<int>(type: "int", nullable: false),
+                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventsRegId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsAttend = table.Column<bool>(type: "bit", nullable: false),
+                    tblEventMembersId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_tblPermissions", x => x.Id);
+                    table.PrimaryKey("PK_tblEventAttendence", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_tblPermissions_tblRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "tblRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblBoardRequests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BoardRolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    BoardRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BoardMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblBoardMembers_BoardMemberId",
-                        column: x => x.BoardMemberId,
-                        principalTable: "tblBoardMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblBoardRoles_BoardRolesId",
-                        column: x => x.BoardRolesId,
-                        principalTable: "tblBoardRoles",
+                        name: "FK_tblEventAttendence_tblEventMembers_tblEventMembersId",
+                        column: x => x.tblEventMembersId,
+                        principalTable: "tblEventMembers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblBoards_BoardId",
-                        column: x => x.BoardId,
-                        principalTable: "tblBoards",
+                        name: "FK_tblEventAttendence_tblEventRegistrations_EventsRegId",
+                        column: x => x.EventsRegId,
+                        principalTable: "tblEventRegistrations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
-                        column: x => x.RequestStatusId,
-                        principalTable: "tblRequestStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_tblEventAttendence_tblEvents_EventsId",
+                        column: x => x.EventsId,
+                        principalTable: "tblEvents",
+                        principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventRegistrationsViewModel_tblRequestStatusId",
+                table: "EventRegistrationsViewModel",
+                column: "tblRequestStatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblBoardMembers_BoardId",
@@ -489,16 +517,6 @@ namespace SHARKNA.Migrations
                 column: "BoardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblBoardRequests_BoardMemberId",
-                table: "tblBoardRequests",
-                column: "BoardMemberId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblBoardRequests_BoardRolesId",
-                table: "tblBoardRequests",
-                column: "BoardRolesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tblBoardRequests_RequestStatusId",
                 table: "tblBoardRequests",
                 column: "RequestStatusId");
@@ -514,14 +532,19 @@ namespace SHARKNA.Migrations
                 column: "RequestStatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_tblEventAttendence_EventMemberId",
-                table: "tblEventAttendence",
-                column: "EventMemberId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_tblEventAttendence_EventsId",
                 table: "tblEventAttendence",
                 column: "EventsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblEventAttendence_EventsRegId",
+                table: "tblEventAttendence",
+                column: "EventsRegId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblEventAttendence_tblEventMembersId",
+                table: "tblEventAttendence",
+                column: "tblEventMembersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblEventRegistrations_EventsId",
@@ -549,6 +572,11 @@ namespace SHARKNA.Migrations
                 column: "RequestStatusId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_tblEvents_BoardId",
+                table: "tblEvents",
+                column: "BoardId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_tblPermissions_RoleId",
                 table: "tblPermissions",
                 column: "RoleId");
@@ -556,6 +584,12 @@ namespace SHARKNA.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "EventRegistrationsViewModel");
+
+            migrationBuilder.DropTable(
+                name: "tblBoardMembers");
+
             migrationBuilder.DropTable(
                 name: "tblBoardMembersLogs");
 
@@ -578,9 +612,6 @@ namespace SHARKNA.Migrations
                 name: "tblEventLogs");
 
             migrationBuilder.DropTable(
-                name: "tblEventRegistrations");
-
-            migrationBuilder.DropTable(
                 name: "tblEventRegLogs");
 
             migrationBuilder.DropTable(
@@ -599,22 +630,22 @@ namespace SHARKNA.Migrations
                 name: "tblUsers");
 
             migrationBuilder.DropTable(
-                name: "tblBoardMembers");
+                name: "tblBoardRoles");
 
             migrationBuilder.DropTable(
                 name: "tblEventMembers");
+
+            migrationBuilder.DropTable(
+                name: "tblEventRegistrations");
+
+            migrationBuilder.DropTable(
+                name: "tblRoles");
 
             migrationBuilder.DropTable(
                 name: "tblEvents");
 
             migrationBuilder.DropTable(
                 name: "tblRequestStatus");
-
-            migrationBuilder.DropTable(
-                name: "tblRoles");
-
-            migrationBuilder.DropTable(
-                name: "tblBoardRoles");
 
             migrationBuilder.DropTable(
                 name: "tblBoards");

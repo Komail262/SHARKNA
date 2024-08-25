@@ -53,8 +53,6 @@ namespace SHARKNA.Domain
                     TopicAr = request.Event.TopicAr,
                     EventStartDate = request.Event.EventStartDate,
                     EventEndtDate = request.Event.EventEndtDate,
-                    Time = request.Event.Time,
-                    EndRegTime = request.Event.EndRegTime,
                     LocationAr = request.Event.LocationAr,
                     MaxAttendence = request.Event.MaxAttendence,
                     SpeakersAr = request.Event.SpeakersAr,
