@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -27,9 +28,9 @@ namespace SHARKNA.Domain
             }).ToList();
         }
 
-        public BoardViewModel GetTblBoardById(Guid id)
+        public async Task<BoardViewModel> GetTblBoardByIdAsync(Guid id)
         {
-            var Fboard = _context.tblBoards.FirstOrDefault(b => b.Id == id);
+            var Fboard = await _context.tblBoards.FirstOrDefaultAsync(b => b.Id == id);
             if (Fboard == null) return null;
             BoardViewModel bb = new BoardViewModel();
             bb.Id = Fboard.Id;
@@ -44,7 +45,7 @@ namespace SHARKNA.Domain
             //BoardViewModel IBoard = new BoardViewModel();
         }
 
-        public int AddBoard(BoardViewModel board)
+        public async Task<int> AddBoardAsync(BoardViewModel board)
         {
             try
             {
@@ -58,8 +59,8 @@ namespace SHARKNA.Domain
                 Aboard.IsDeleted = false;
                 Aboard.IsActive = true;
 
-                _context.tblBoards.Add(Aboard);
-                _context.SaveChanges();
+               await _context.tblBoards.AddAsync(Aboard);
+               await _context.SaveChangesAsync();
                 return 1;
             }
             catch (Exception ex)
@@ -70,11 +71,15 @@ namespace SHARKNA.Domain
         }
         //changeing here for Update
 
-        public int UpdateBoard(BoardViewModel board)
+        public async Task<int> UpdateBoardAsync(BoardViewModel board)
         {
             try
             {
-                tblBoards Aboard = new tblBoards();
+                //tblBoards Aboard = new tblBoards();
+                //s new
+                var Aboard = await _context.tblBoards.FirstOrDefaultAsync(b => b.Id == board.Id);
+                if (Aboard == null)
+                    return 0;//E new
 
                 Aboard.Id = board.Id;
                 Aboard.NameAr = board.NameAr;
@@ -85,7 +90,7 @@ namespace SHARKNA.Domain
                 Aboard.IsActive = true;
 
                 _context.tblBoards.Update(Aboard);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return 1;
             }
             catch (Exception ex)
@@ -104,17 +109,17 @@ namespace SHARKNA.Domain
 
 
 
-        public int DeleteBoard(Guid id)
+        public async Task<int> DeleteBoardAsync(Guid id)
         {
             try
             {
-                var board = _context.tblBoards.FirstOrDefault(b => b.Id == id);
+                var board = await _context.tblBoards.FirstOrDefaultAsync(b => b.Id == id);
                 if (board != null)
                 {
                     board.IsDeleted = true;
                     board.IsActive = false;
                     _context.Update(board);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     return 1;
                 }
@@ -131,16 +136,16 @@ namespace SHARKNA.Domain
 
         //if nameAr duplicated
 
-        public bool IsBoardNameDuplicate(string name, Guid? Boardn = null)
+        public async Task<bool> IsBoardNameDuplicateAsync(string name, Guid? Boardn = null)
         {
             if (Boardn == null)
             {
-                return _context.tblBoards.Any(u => u.NameEn == name);
+                return await _context.tblBoards.AnyAsync(u => u.NameEn == name);
 
             }
             else
             {
-                return _context.tblBoards.Any(u => u.NameEn == name && u.Id != Boardn);
+                return await _context.tblBoards.AnyAsync(u => u.NameEn == name && u.Id != Boardn);
             }
         }
 

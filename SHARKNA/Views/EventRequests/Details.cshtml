@@ -1,0 +1,143 @@
+﻿@model SHARKNA.ViewModels.EventRequestViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @{
+        if (ViewData["Successful"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(function () {
+                    window.location.href = '@Url.Action("details", "EventRequests")';
+                });
+            </text>
+        }
+        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] == null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Failed"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Failed"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+    }
+</script>
+
+<div class="container mt-4">
+    <h2>تفاصيل الطلب</h2>
+
+    <!-- قسم الفعالية ومعلوماتها -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>@Model.EventName</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>اسم الفعالية:</strong> @Model.EventName</p>
+            <p><strong>وصف الفعالية:</strong> @Model.EventDescriptionAr</p>
+            <p><strong>الموضوع:</strong> @Model.TopicAr</p>
+            <p><strong>تاريخ البدء:</strong> @Model.EventStartDate.ToString("MM/dd/yyyy")</p>
+            <p><strong>تاريخ الانتهاء:</strong> @Model.EventEndtDate.ToString("MM/dd/yyyy")</p>
+            <p><strong>من الساعة:</strong> @Model.Time</p>
+            <p><strong>إلى الساعة:</strong> @Model.EndRegTime.ToString("HH:mm:ss")</p>
+            <p><strong>الموقع:</strong> @Model.LocationAr</p>
+            <p><strong>الحد الأقصى للحضور:</strong> @Model.MaxAttendence</p>
+            <p><strong>المتحدثون:</strong> @Model.SpeakersAr</p>
+        </div>
+    </div>
+
+    <!-- قسم معلومات اللجنة -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>معلومات اللجنة</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>اسم اللجنة:</strong> @Model.BoardName</p>
+            <p><strong>وصف اللجنة:</strong> @Model.BoardDescriptionAr</p>
+        </div>
+    </div>
+
+    <!-- قسم حالة الطلب -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>حالة الطلب</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>حالة الطلب:</strong> @Model.RequestStatusName</p>
+
+            @if (Model.RequestStatusName == "مرفوض")
+            {
+                <p><strong>أسباب الرفض:</strong> @Model.RejectionReasons</p>
+            }
+
+            <!-- زر تعديل حالة الطلب -->
+            <button type="button" class="btn btn-primary mt-2" id="editStatusButton" onclick="toggleEditStatus()">تعديل حالة الطلب</button>
+
+            <!-- نموذج تعديل حالة الطلب -->
+            <div id="editStatusForm" style="display:none;" class="mt-3">
+                <form asp-action="UpdateRequestStatus" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="form-group">
+                        <label for="RequestStatusId">اختر حالة الطلب</label>
+                        <select asp-for="RequestStatusId" class="form-control" asp-items="ViewBag.RequestStatusList" id="requestStatusSelect" onchange="toggleRejectionReason()">
+                            <!-- خيار "اختر حالة الطلب" تمت إزالته هنا -->
+                        </select>
+                    </div>
+
+                    <!-- حقل سبب الرفض -->
+                    <div class="form-group" id="rejectionReasonDiv" style="display:none;">
+                        <label for="RejectionReasons">سبب الرفض</label>
+                        <textarea asp-for="RejectionReasons" class="form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success mt-2">حفظ التعديلات</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر العودة إلى القائمة -->
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">العودة إلى القائمة</a>
+    </div>
+</div>
+
+<script>
+    function toggleEditStatus() {
+        var form = document.getElementById("editStatusForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleRejectionReason() {
+        var select = document.getElementById("requestStatusSelect");
+        var rejectionDiv = document.getElementById("rejectionReasonDiv");
+        var selectedOption = select.options[select.selectedIndex].text;
+
+        if (selectedOption === "مرفوض") {
+            rejectionDiv.style.display = "block";
+        } else {
+            rejectionDiv.style.display = "none";
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var select = document.getElementById('requestStatusSelect');
+        if (select) {
+            var option = select.querySelector('option[value=""]');
+            if (option) {
+                select.removeChild(option);
+            }
+        }
+    });
+</script>
