@@ -1,0 +1,57 @@
+﻿@model IEnumerable<EventViewModel>
+
+@{
+    ViewData["Title"] = "Event List";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">إدارة الفعاليات للحضور</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                    </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var attendence in Model)
+                            {
+                                <tr>
+                                    <td>@attendence.EventTitleAr</td>
+                                    <td>@attendence.EventTitleEn</td>
+                                    <td>@attendence.EventStartDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
+                                    <td>@attendence.EventEndtDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
+                                    <td>
+                                        <a asp-action="Details" asp-route-id="@attendence.Id" class="btn btn-primary">سِجل الحضور</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="d-flex justify-content-center align-items-center">
+        <p class="m-0 د-flex justify-content-center">
+            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
+        </p>
+    </footer>
+</body>
+</html>

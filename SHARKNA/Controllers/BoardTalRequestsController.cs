@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace SHARKNA.Controllers
 {
-  public class BoardTalRequestsController : Controller
+    public class BoardTalRequestsController : Controller
     {
         private readonly BoardTalRequestsDomain _BoardTalRequestsDomain;
         private readonly RequestStatusDomain _RequestStatusDomain;
@@ -23,7 +24,7 @@ namespace SHARKNA.Controllers
             _BoardDomain = BoardDomain;
 
         }
-        
+
         public IActionResult Index()
         {
             var users = _BoardTalRequestsDomain.GetTblBoardTalRequests();
@@ -34,7 +35,7 @@ namespace SHARKNA.Controllers
         public IActionResult Create()
         {
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-            //    ViewBag.RequestStatusOfList = new SelectList(_RequestStatusDomain.GetTblRequestStatus(), "Id", "NameAr");
+            // ViewBag.RequestStatusOfList = new SelectList(_RequestStatusDomain.GetTblRequestStatus(), "Id", "NameAr");
             return View();
         }
 
@@ -73,18 +74,24 @@ namespace SHARKNA.Controllers
             return View(user);
         }
 
-
-        public IActionResult Edit(Guid id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CancelRequest(Guid id)
         {
-            var user = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (user == null)
+            try
             {
-                return NotFound();
+                _BoardTalRequestsDomain.CancelRequest(id);
+                TempData["Message"] = "تم إلغاء الطلب بنجاح."; // رسالة نجاح
             }
-            return View(user);
+            catch (Exception)
+            {
+                TempData["Error"] = "حدث خطأ أثناء محاولة إلغاء الطلب."; // رسالة خطأ
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
-
-
     }
+
+
 }

@@ -35,6 +35,10 @@
     }
 </script>
 
+<script>
+    function Display
+</script>
+
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
@@ -87,9 +91,8 @@
                                     </td> *@
                                     <td>
                                         <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-primary">تعديل</a> |
-                                        <form asp-action="Delete" asp-route-id="@board.Id" method="post" style="display:inline;" >
-                                            <button type="submit" class="btn btn-danger" onclick="return functionConfirm(this)">حذف</button>
-                                        </form>
+                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a>
+
                                     </td>
                                 </tr>
                             }

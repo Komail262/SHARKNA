@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace SHARKNA.Controllers
 {
@@ -22,6 +25,7 @@ namespace SHARKNA.Controllers
             _userDomain = userDomain;
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Index()
         {
             var users = _userDomain.GetTblUsers();
@@ -29,11 +33,13 @@ namespace SHARKNA.Controllers
 
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Edite()
         {
             return View();
@@ -52,8 +58,15 @@ namespace SHARKNA.Controllers
             {
                 if (_userDomain.IsEmailDuplicate(user.Email))
                 {
+                    
                     ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
                     return View(user);
+                }
+                else if (_userDomain.IsUserNameDuplicate(user.UserName))
+                {
+                    ModelState.AddModelError("UserName", " اسم المستخدم مستخدم بالفعلا.");
+                    return View(user);
+
                 }
 
                 user.Id = Guid.NewGuid();
@@ -62,7 +75,8 @@ namespace SHARKNA.Controllers
             }
             return View(user);
         }
-
+        
+        [Authorize(Roles = "SuperAdmin")]
         public IActionResult Edit(Guid id)
         {
             var user = _userDomain.GetTblUserById(id);
@@ -73,16 +87,25 @@ namespace SHARKNA.Controllers
             return View(user);
         }
 
+       
         [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(UserViewModel user)
         {
             if (ModelState.IsValid)
             {
-                if (_userDomain.IsEmailDuplicate(user.Email, user.Id))
+                if (_userDomain.IsEmailDuplicate(user.Email, user.Id) )
                 {
                     ModelState.AddModelError("Email", "البريد الإلكتروني مستخدم بالفعل.");
                     return View(user);
+                }
+               
+                 if (_userDomain.IsUserNameDuplicate(user.UserName, user.Id))
+                {
+                    ModelState.AddModelError("UserName", " اسم المستخدم ,مستخدم بالفعل.");
+                    return View(user);
+
                 }
 
                 _userDomain.UpdateUser(user);
@@ -92,31 +115,69 @@ namespace SHARKNA.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(UserLoginViewModel Tuser)
+        public async Task<IActionResult> Login(UserLoginViewModel user)
         {
             try
             {
-                int check = _userDomain.Login(Tuser);
-                if (check == 1)
-                { 
-                    ViewData["Successful"] = "تم التسجيل الدخول بنجاح";
+                
+                var userRecord = _userDomain.GetUserByUsernameAndPassword(user.UserName , user.Password);
+
+                if (userRecord != null)
+                {
+                    
+                    var userPermissions = _userDomain.GetUserByUsername(user.UserName);
+
                    
+                    if (userPermissions == null)
+                    {
+                        userPermissions = new PermissionsViewModel
+                        {
+                            RoleName = "NoRole",
+                            Id = userRecord.Id,  
+                            FullNameAr = userRecord.FullNameAr  
+                        };
+                    }
+
+                    var identity = new ClaimsIdentity(new[]
+                    {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, userPermissions.RoleName),
+                new Claim(ClaimTypes.NameIdentifier, userPermissions.Id.ToString()),
+                new Claim(ClaimTypes.GivenName, userPermissions.FullNameAr)
+            }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var principal = new ClaimsPrincipal(identity);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        principal);
+
+                    return RedirectToAction("Index", "Home");
                 }
-                else 
-                    ViewData["Failed"] = "البريد الالكتروني او كلمة المرور غير صحيح";
-               
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "اسم المستخدم أو كلمة المرور غير صحيحة");
+                    return View(user);
+                }
             }
             catch (Exception ex)
             {
-                // Log the exception (ex) here using your logging framework
-                ViewData["Failed"] = "حدث خطا في النظام";
+                ViewData["Login_error"] = "حدث خطأ في النظام";
+                return View(user);
             }
-
-            return View(Tuser);
         }
 
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Users");
+        }
 
         public IActionResult Privacy()
         {
@@ -131,7 +192,7 @@ namespace SHARKNA.Controllers
 
 
 
-       
+
 
 
     }

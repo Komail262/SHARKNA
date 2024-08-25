@@ -6,7 +6,7 @@ namespace SHARKNA.ViewModels
     public class RolesViewModel
     {
         public Guid Id { get; set; }
-       
+
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
         [DisplayName("الاسم بالعربي")]

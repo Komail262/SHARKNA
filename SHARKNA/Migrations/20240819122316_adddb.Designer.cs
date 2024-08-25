@@ -12,8 +12,8 @@ using SHARKNA.Models;
 namespace SHARKNA.Migrations
 {
     [DbContext(typeof(SHARKNAContext))]
-    [Migration("20240730084021_test")]
-    partial class test
+    [Migration("20240819122316_adddb")]
+    partial class adddb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -133,6 +133,15 @@ namespace SHARKNA.Migrations
                     b.Property<Guid>("BoardId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("BoardMemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BoardRoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("BoardRolesId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
@@ -157,6 +166,10 @@ namespace SHARKNA.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BoardId");
+
+                    b.HasIndex("BoardMemberId");
+
+                    b.HasIndex("BoardRolesId");
 
                     b.HasIndex("RequestStatusId");
 
@@ -386,16 +399,10 @@ namespace SHARKNA.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EvenetStatusId")
+                    b.Property<Guid>("EventStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EventStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("EventsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventstId")
+                    b.Property<Guid>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
@@ -495,10 +502,7 @@ namespace SHARKNA.Migrations
                     b.Property<string>("RejectionReasons")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RequestStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RequestStatustId")
+                    b.Property<Guid>("RequestStatusId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -742,6 +746,16 @@ namespace SHARKNA.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SHARKNA.Models.tblBoardMembers", "BoardMember")
+                        .WithMany("BoardRequests")
+                        .HasForeignKey("BoardMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SHARKNA.Models.tblBoardRoles", "BoardRoles")
+                        .WithMany()
+                        .HasForeignKey("BoardRolesId");
+
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "RequestStatus")
                         .WithMany("BoardReq")
                         .HasForeignKey("RequestStatusId")
@@ -749,6 +763,10 @@ namespace SHARKNA.Migrations
                         .IsRequired();
 
                     b.Navigation("Board");
+
+                    b.Navigation("BoardMember");
+
+                    b.Navigation("BoardRoles");
 
                     b.Navigation("RequestStatus");
                 });
@@ -791,11 +809,15 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "EventStatus")
                         .WithMany("EventReg")
-                        .HasForeignKey("EventStatusId");
+                        .HasForeignKey("EventStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EventStatus");
 
@@ -818,7 +840,9 @@ namespace SHARKNA.Migrations
 
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "RequestStatus")
                         .WithMany("EventReq")
-                        .HasForeignKey("RequestStatusId");
+                        .HasForeignKey("RequestStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Board");
 
@@ -836,6 +860,11 @@ namespace SHARKNA.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("SHARKNA.Models.tblBoardMembers", b =>
+                {
+                    b.Navigation("BoardRequests");
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardRoles", b =>

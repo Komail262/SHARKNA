@@ -33,6 +33,7 @@
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
+                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
 
                                 <th>الإجراءات</th>
                             </tr>
@@ -49,11 +50,21 @@
                                     <td>@user.FullNameAr</td>
                                     <td>@user.FullNameEn</td>
                                     <td>@user.RequestStatusName</td>
+                                    <td>@user.RejectionReasons</td>
                                     <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
-                                            @* <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-success">تعديل</a> *@
-                                            <a asp-action=" " asp-route-id="@user.Id" class="btn btn-sm btn-danger">الغاء الطلب</a>
-                                        </div>
+                                       
+                                        @if (@user.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
+                                        {
+                                            <form asp-action="CancelRequest" method="post">
+                                                <input type="hidden" name="id" value="@user.Id" />
+                                                <button type="submit" class="btn btn-danger">إلغاء الطلب</button> 
+                                            </form>
+
+
+                                        }else
+                                        {
+                                           
+                                        }
                                     </td>
                                 </tr>
                             }

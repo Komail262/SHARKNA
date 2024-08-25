@@ -13,6 +13,8 @@ namespace SHARKNA.Domain
             _context = context;
         }
 
+
+
         public IEnumerable<UserViewModel> GetTblUsers()
         {
             return _context.tblUsers.Select(x => new UserViewModel
@@ -29,20 +31,21 @@ namespace SHARKNA.Domain
 
         public UserViewModel GetTblUserById(Guid id)
         {
-            var Tuser = _context.tblUsers.FirstOrDefault(u => u.Id == id);
+            var user = _context.tblUsers.FirstOrDefault(u => u.Id == id);
             UserViewModel uu = new UserViewModel();
             uu.Id = id;
-            uu.UserName = Tuser.UserName;
-            uu.Password = Tuser.Password;
-            uu.Email = Tuser.Email;
-            uu.FullNameAr = Tuser.FullNameAr;
-            uu.MobileNumber = Tuser.MobileNumber;
-            uu.FullNameEn = Tuser.FullNameEn;
+            uu.UserName = user.UserName;
+            uu.Password = user.Password;
+            uu.Email = user.Email;
+            uu.FullNameAr = user.FullNameAr;
+            uu.MobileNumber = user.MobileNumber;
+            uu.FullNameEn = user.FullNameEn;
             return uu;
 
 
 
         }
+
 
         public void AddUser(UserViewModel user)
         {
@@ -88,26 +91,67 @@ namespace SHARKNA.Domain
             }
         }
 
-        public int Login(UserLoginViewModel Tuser)
+        public bool IsUserNameDuplicate(string username, Guid? userId = null)
         {
-            try
+            if (userId == null)
             {
-                if (_context.tblUsers.Any(u => u.Email == Tuser.Email && u.Password == Tuser.Password))
-                {
-                    return 1; // Login successful
-                }
-                else
-                {
-                    return 0; // Invalid username or password
-                }
+                
+                return _context.tblUsers.Any(u => u.UserName == username);
             }
-            catch (Exception ex)
+            else
             {
-                // Log the exception (ex) here using your logging framework
+                
+                return _context.tblUsers.Any(u => u.UserName == username && u.Id != userId);
             }
-            return 0;// Error occurred
-
         }
+
+
+
+       public PermissionsViewModel GetUserByUsername(string username)
+{
+    var userWithRole = (from u in _context.tblPermissions
+                        join r in _context.tblRoles on u.RoleId equals r.Id
+                        where u.UserName == username
+                        select new { u, r }).FirstOrDefault();
+
+    if (userWithRole == null)
+    {
+        return null;
+    }
+
+    return new PermissionsViewModel
+    {
+        Id = userWithRole.u.Id,
+        UserName = userWithRole.u.UserName,
+        FullNameAr = userWithRole.u.FullNameAr,
+        FullNameEn = userWithRole.u.FullNameEn,
+        RoleId = userWithRole.u.RoleId,
+        RoleName = userWithRole.r.NameEn
+    };
+}
+
+        public UserViewModel GetUserByUsernameAndPassword(string username, string password)
+        {
+            var user = _context.tblUsers.FirstOrDefault(u => u.UserName == username && u.Password == password);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return new UserViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn,
+                Email = user.Email,
+                MobileNumber = user.MobileNumber
+            };
+        }
+
+
+
+
 
     }
 

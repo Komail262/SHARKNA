@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SHARKNA.Migrations
 {
-    public partial class AddDbFirst : Migration
+    public partial class adddb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,13 +14,13 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BoMeId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoMeId = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -33,10 +33,10 @@ namespace SHARKNA.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ReqId = table.Column<int>(type: "int", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,8 +48,8 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -63,10 +63,10 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -80,10 +80,10 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReqId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -96,11 +96,11 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EvId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -113,9 +113,9 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -129,11 +129,11 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EvId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -146,10 +146,10 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OpDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ReqId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -162,20 +162,20 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventTitleAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EventTitleEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventTitleAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EventTitleEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EventEndtDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Time = table.Column<TimeSpan>(type: "time", nullable: false),
                     EndRegTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    SpeakersAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SpeakersEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TopicAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TopicEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocationAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LocationEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SpeakersAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpeakersEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TopicAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TopicEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DescriptionEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MaxAttendence = table.Column<int>(type: "int", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
@@ -190,12 +190,12 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OpType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedTo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdditionalInfo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PermId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -208,8 +208,8 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestStatusAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RequestStatusEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RequestStatusAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RequestStatusEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -223,8 +223,8 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    NameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameEn = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -236,12 +236,12 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    MobileNumber = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    FullNameAr = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    FullNameEn = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,11 +253,11 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     BoardRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -286,12 +286,12 @@ namespace SHARKNA.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsAttend = table.Column<bool>(type: "bit", nullable: false),
-                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
+                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventMemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EventMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    EventMemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsAttend = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,45 +300,12 @@ namespace SHARKNA.Migrations
                         name: "FK_tblEventAttendence_tblEventMembers_EventMemberId",
                         column: x => x.EventMemberId,
                         principalTable: "tblEventMembers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_tblEventAttendence_tblEvents_EventsId",
                         column: x => x.EventsId,
                         principalTable: "tblEvents",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblBoardRequests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblBoards_BoardId",
-                        column: x => x.BoardId,
-                        principalTable: "tblBoards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
-                        column: x => x.RequestStatusId,
-                        principalTable: "tblRequestStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -346,14 +313,14 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Skills = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Experiences = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Skills = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Experiences = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -380,16 +347,14 @@ namespace SHARKNA.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EvenetStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EventStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -413,10 +378,9 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestStatustId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -447,9 +411,9 @@ namespace SHARKNA.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
@@ -460,6 +424,51 @@ namespace SHARKNA.Migrations
                         name: "FK_tblPermissions_tblRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "tblRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "tblBoardRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardRolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BoardRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoardMembers_BoardMemberId",
+                        column: x => x.BoardMemberId,
+                        principalTable: "tblBoardMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoardRoles_BoardRolesId",
+                        column: x => x.BoardRolesId,
+                        principalTable: "tblBoardRoles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "tblBoards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
+                        column: x => x.RequestStatusId,
+                        principalTable: "tblRequestStatus",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -478,6 +487,16 @@ namespace SHARKNA.Migrations
                 name: "IX_tblBoardRequests_BoardId",
                 table: "tblBoardRequests",
                 column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblBoardRequests_BoardMemberId",
+                table: "tblBoardRequests",
+                column: "BoardMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblBoardRequests_BoardRolesId",
+                table: "tblBoardRequests",
+                column: "BoardRolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblBoardRequests_RequestStatusId",
@@ -538,9 +557,6 @@ namespace SHARKNA.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "tblBoardMembers");
-
-            migrationBuilder.DropTable(
                 name: "tblBoardMembersLogs");
 
             migrationBuilder.DropTable(
@@ -583,13 +599,10 @@ namespace SHARKNA.Migrations
                 name: "tblUsers");
 
             migrationBuilder.DropTable(
-                name: "tblBoardRoles");
+                name: "tblBoardMembers");
 
             migrationBuilder.DropTable(
                 name: "tblEventMembers");
-
-            migrationBuilder.DropTable(
-                name: "tblBoards");
 
             migrationBuilder.DropTable(
                 name: "tblEvents");
@@ -599,7 +612,12 @@ namespace SHARKNA.Migrations
 
             migrationBuilder.DropTable(
                 name: "tblRoles");
+
+            migrationBuilder.DropTable(
+                name: "tblBoardRoles");
+
+            migrationBuilder.DropTable(
+                name: "tblBoards");
         }
     }
 }
-//

@@ -12,8 +12,8 @@ using SHARKNA.Models;
 namespace SHARKNA.Migrations
 {
     [DbContext(typeof(SHARKNAContext))]
-    [Migration("20240730084312_test1")]
-    partial class test1
+    [Migration("20240814113416_Sharkna")]
+    partial class Sharkna
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -389,10 +389,7 @@ namespace SHARKNA.Migrations
                     b.Property<Guid>("EventStatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("EventsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventstId")
+                    b.Property<Guid>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullNameAr")
@@ -492,10 +489,7 @@ namespace SHARKNA.Migrations
                     b.Property<string>("RejectionReasons")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("RequestStatusId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RequestStatustId")
+                    b.Property<Guid>("RequestStatusId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -794,7 +788,9 @@ namespace SHARKNA.Migrations
 
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EventStatus");
 
@@ -817,7 +813,9 @@ namespace SHARKNA.Migrations
 
                     b.HasOne("SHARKNA.Models.tblRequestStatus", "RequestStatus")
                         .WithMany("EventReq")
-                        .HasForeignKey("RequestStatusId");
+                        .HasForeignKey("RequestStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Board");
 

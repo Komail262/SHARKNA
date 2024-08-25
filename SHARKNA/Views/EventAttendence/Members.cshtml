@@ -1,0 +1,163 @@
+﻿@model IEnumerable<EEventAttendenceViewModel>
+
+@{
+    ViewData["Title"] = "Event Attendance Members sheets";
+}
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "EventAttendence")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+@*
+
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Boards")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+<script>
+    function Display
+</script>
+ *@
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <!-- Start Page Wrap -->
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">التحضير</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                        @* <div>
+                        <a asp-action="Create" class="btn btn-primary">إضافة عضو للحضور</a>
+                        </div> *@
+                    </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)" /> تحضير الجميع </th> <!-- Master Checkbox -->
+
+@*                                 <th><input type="checkbox" id="selectAll" /></th>
+ *@
+                                <th>@Html.DisplayNameFor(model => model.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.RegDate)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+
+                                <th>حالة الحضور</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var member in Model)
+                            {
+                                bool check = false;
+                                <tr>
+                                    <td>
+
+                                    </td>
+                                  
+                                  <td>@member.FullNameAr</td>
+                                    <td>@member.RegDate.ToString("yyyy-MM-dd")</td>
+                                    <td>@member.Email</td>                                 
+                                    <td>
+                                        <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@{member.IsAttend = true ? true: false;} "/> < !--Single Attendance Checkbox -->
+
+                                    </td>
+                                   
+
+
+                        @*             <td>
+                                        <a asp-action="Save Attend" asp-route-id="@member.Id" class="btn btn-primary"> تأكيد الحضور </a> |
+
+                                    </td> *@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+@*                     <button type="submit" class="btn btn-success">تأكيد الحضور </button> <!-- Save Attendance Button -->
+ *@
+                    <a asp-action="Index" type="submit" class="btn btn-success"> تأكيد الحضور </a> 
+
+
+                </div>
+            </div>
+        </div>
+    </section><!-- End Page Wrap -->
+    <!-- Start Footer -->
+    <footer class="d-flex justify-content-center align-items-center">
+        <p class="m-0 d-flex justify-content-center">
+            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
+        </p>
+    </footer>
+    <!-- End Footer -->
+
+    <script>
+        function toggleSelectAll(source) {
+            checkboxes = document.querySelectorAll('.attendance-checkbox');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+
+</body>
+</html>

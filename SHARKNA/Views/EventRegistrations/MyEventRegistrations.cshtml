@@ -1,0 +1,41 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "My Event Registrations";
+}
+
+<h2>طلبات حضور الفعاليات</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">عنوان الفعالية</th>
+                <th scope="col">تاريخ البداية</th>
+                <th scope="col">تاريخ النهاية</th>
+                <th scope="col">الوقت</th>
+                <th scope="col">الموقع</th>
+                <th scope="col">المتحدث</th>
+                <th scope="col">الموضوع</th>
+                <th scope="col">الوصف</th>
+                <th scope="col">وقت التسجيل</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.EventDetail.EventTitleAr</td>
+                    <td>@item.EventDetail.EventStartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.EventDetail.EventEndtDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.EventDetail.Time.ToString(@"hh\:mm")</td>
+                    <td>@item.EventDetail.LocationAr</td>
+                    <td>@item.EventDetail.SpeakersAr</td>
+                    <td>@item.EventDetail.TopicAr</td>
+                    <td>@item.EventDetail.DescriptionAr</td>
+                    <td>@item.EventReg.RegDate.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

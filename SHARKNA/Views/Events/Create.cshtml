@@ -3,6 +3,39 @@
     ViewData["Title"] = "Create Event";
 }
 
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Events")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null )
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null)
+        {
+            <Text>
+                        var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+
+
 <h2>اضافة حدث</h2>
 
 <section class="page_wrap">
@@ -40,7 +73,7 @@
                                         <span asp-validation-for="EventStartDate" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
-
+                                 
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label asp-for="EventEndtDate" class="mb-1"></label>
@@ -115,17 +148,25 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="LocationAr" class="mb-1">مواقع الحدث بالعربي</label>
-                                        <input asp-for="LocationAr" type="text" placeholder="مواقع الحدث بالعربي" class="form-control">
+                                        <label for="LocationAr" class="mb-1">موقع الحدث بالعربي</label>
+                                        <input asp-for="LocationAr" type="text" placeholder="موقع الحدث بالعربي" class="form-control">
                                         <span asp-validation-for="LocationAr" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
 
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="LocationEn" class="mb-1">مواقع الحدث بالانجليزي</label>
-                                        <input asp-for="LocationEn" type="text" placeholder="مواقع الحدث بالانجليزي" class="form-control">
+                                        <label for="LocationEn" class="mb-1">موقع الحدث بالانجليزي</label>
+                                        <input asp-for="LocationEn" type="text" placeholder="موقع الحدث بالانجليزي" class="form-control">
                                         <span asp-validation-for="LocationEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="MaxAttendence" class="mb-1">الحد الأقصى للحضور</label>
+                                        <input asp-for="MaxAttendence" type="number" placeholder="الحد الأقصى للحضور" class="form-control">
+                                        <span asp-validation-for="MaxAttendence" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
                             </div>

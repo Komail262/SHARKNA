@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SHARKNA.Migrations
 {
-    public partial class addFirst : Migration
+    public partial class adddb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -286,12 +286,12 @@ namespace SHARKNA.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsAttend = table.Column<bool>(type: "bit", nullable: false),
-                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Day = table.Column<int>(type: "int", nullable: false),
+                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventMemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EventMemId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsAttend = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -306,37 +306,6 @@ namespace SHARKNA.Migrations
                         column: x => x.EventsId,
                         principalTable: "tblEvents",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "tblBoardRequests",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblBoards_BoardId",
-                        column: x => x.BoardId,
-                        principalTable: "tblBoards",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
-                        column: x => x.RequestStatusId,
-                        principalTable: "tblRequestStatus",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -384,10 +353,8 @@ namespace SHARKNA.Migrations
                     MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EvenetStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -396,12 +363,14 @@ namespace SHARKNA.Migrations
                         name: "FK_tblEventRegistrations_tblEvents_EventsId",
                         column: x => x.EventsId,
                         principalTable: "tblEvents",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_tblEventRegistrations_tblRequestStatus_EventStatusId",
                         column: x => x.EventStatusId,
                         principalTable: "tblRequestStatus",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -459,6 +428,51 @@ namespace SHARKNA.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "tblBoardRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MobileNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameAr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullNameEn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BoardId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RequestStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardRolesId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BoardRoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BoardMemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RejectionReasons = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_tblBoardRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoardMembers_BoardMemberId",
+                        column: x => x.BoardMemberId,
+                        principalTable: "tblBoardMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoardRoles_BoardRolesId",
+                        column: x => x.BoardRolesId,
+                        principalTable: "tblBoardRoles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblBoards_BoardId",
+                        column: x => x.BoardId,
+                        principalTable: "tblBoards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_tblBoardRequests_tblRequestStatus_RequestStatusId",
+                        column: x => x.RequestStatusId,
+                        principalTable: "tblRequestStatus",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_tblBoardMembers_BoardId",
                 table: "tblBoardMembers",
@@ -473,6 +487,16 @@ namespace SHARKNA.Migrations
                 name: "IX_tblBoardRequests_BoardId",
                 table: "tblBoardRequests",
                 column: "BoardId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblBoardRequests_BoardMemberId",
+                table: "tblBoardRequests",
+                column: "BoardMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_tblBoardRequests_BoardRolesId",
+                table: "tblBoardRequests",
+                column: "BoardRolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblBoardRequests_RequestStatusId",
@@ -533,9 +557,6 @@ namespace SHARKNA.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "tblBoardMembers");
-
-            migrationBuilder.DropTable(
                 name: "tblBoardMembersLogs");
 
             migrationBuilder.DropTable(
@@ -578,13 +599,10 @@ namespace SHARKNA.Migrations
                 name: "tblUsers");
 
             migrationBuilder.DropTable(
-                name: "tblBoardRoles");
+                name: "tblBoardMembers");
 
             migrationBuilder.DropTable(
                 name: "tblEventMembers");
-
-            migrationBuilder.DropTable(
-                name: "tblBoards");
 
             migrationBuilder.DropTable(
                 name: "tblEvents");
@@ -594,6 +612,12 @@ namespace SHARKNA.Migrations
 
             migrationBuilder.DropTable(
                 name: "tblRoles");
+
+            migrationBuilder.DropTable(
+                name: "tblBoardRoles");
+
+            migrationBuilder.DropTable(
+                name: "tblBoards");
         }
     }
 }
