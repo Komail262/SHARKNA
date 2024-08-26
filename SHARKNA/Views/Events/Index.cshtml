@@ -59,6 +59,8 @@
                             <th>@Html.DisplayNameFor(m => m.LocationAr)</th>
                             <th>@Html.DisplayNameFor(m => m.LocationEn)</th>
                             <th>@Html.DisplayNameFor(m => m.MaxAttendence)</th>
+                            <th>@Html.DisplayNameFor(m => m.BoardId)</th>
+
                             <th>الإجراءات</th>
                         </tr>
                     </thead>
@@ -81,6 +83,7 @@
                                 <td>@Event.LocationAr</td>
                                 <td>@Event.LocationEn</td>
                                 <td>@Event.MaxAttendence</td>
+                                <td>@Event.BoardName</td>
                                 <td class="action_td text-end">
                                     <div class="d-flex gap-2">
                                         <a asp-action="Edit" asp-route-id="@Event.Id" class="btn btn-sm btn-success">تعديل</a>

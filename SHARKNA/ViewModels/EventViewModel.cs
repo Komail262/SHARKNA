@@ -75,6 +75,7 @@ namespace SHARKNA.ViewModels
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("اللجنة")]
         public Guid BoardId { get; set; }
+        public string BoardName { get; set; }   
 
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

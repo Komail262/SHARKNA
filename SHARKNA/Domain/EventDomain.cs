@@ -37,7 +37,8 @@ namespace SHARKNA.Domain
                     MaxAttendence = e.MaxAttendence,
                     IsActive = e.IsActive,
                     IsDeleted = e.IsDeleted,
-                    BoardId = e.BoardId
+                    BoardId = e.BoardId,
+                    BoardName = e.Board.NameAr
                 })
                 .ToList();
         }
@@ -66,7 +67,9 @@ namespace SHARKNA.Domain
                 MaxAttendence = existingEvent.MaxAttendence,
                 IsActive = existingEvent.IsActive,
                 IsDeleted = existingEvent.IsDeleted,
-                BoardId = existingEvent.BoardId
+                BoardId = existingEvent.BoardId,
+                BoardName = existingEvent.Board.NameAr,
+
             };
         }
 
@@ -93,6 +96,7 @@ namespace SHARKNA.Domain
                     IsActive = eventViewModel.IsActive,
                     IsDeleted = eventViewModel.IsDeleted,
                     BoardId = eventViewModel.BoardId
+
                 };
 
                 _context.tblEvents.Add(newEvent);
