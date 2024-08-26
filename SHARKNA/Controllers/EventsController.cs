@@ -1,152 +1,143 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SHARKNA.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using SHARKNA.Models;
 
 namespace SHARKNA.Controllers
 {
     public class EventsController : Controller
     {
-        private readonly EventDomain _EventDomain;
+        private readonly EventDomain _eventDomain;
+        private readonly SHARKNAContext _context;
 
-        public EventsController(EventDomain EventDomain)
+        public EventsController(EventDomain eventDomain, SHARKNAContext context)
         {
-            _EventDomain = EventDomain;
+            _eventDomain = eventDomain;
+            _context = context;
         }
 
-        public IActionResult Index(string Successful = "", string Falied = "" )
+        public IActionResult Index(string Successful = "", string Falied = "")
         {
-            if (Successful != "")
+            if (!string.IsNullOrEmpty(Successful))
                 ViewData["Successful"] = Successful;
-
-            else if (Falied != "")
+            else if (!string.IsNullOrEmpty(Falied))
                 ViewData["Falied"] = Falied;
 
-            var Events = _EventDomain.GettblEvents();
-            return View(Events);
-
+            var events = _eventDomain.GettblEvents();
+            return View(events);
         }
-
 
         public IActionResult Create()
         {
+            ViewBag.BoardsList = new SelectList(_context.tblBoards.ToList(), "Id", "NameAr");
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EventViewModel Event)
+        public IActionResult Create(EventViewModel eventViewModel)
         {
-
-
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
+                    if (eventViewModel.EventStartDate <= eventViewModel.EventEndtDate && eventViewModel.EventStartDate.TimeOfDay < eventViewModel.EventEndtDate.TimeOfDay)
                     {
-                        Event.Id = Guid.NewGuid();
-                        int check = _EventDomain.AddEvent(Event);
+                        eventViewModel.Id = Guid.NewGuid();
+                        int check = _eventDomain.AddEvent(eventViewModel);
 
                         if (check == 1)
                         {
                             ViewData["Successful"] = "تم إضافة الحدث بنجاح";
+                            return RedirectToAction(nameof(Index), new { Successful = ViewData["Successful"] });
                         }
                         else
                         {
-                            ViewData["Falied"] = "حدث خطأ بالإضافة";
+                            ViewData["Falied"] = "حدث خطأ أثناء الإضافة";
                         }
                     }
                     else
                     {
-                        if (Event.EventStartDate > Event.EventEndtDate)
+                        if (eventViewModel.EventStartDate > eventViewModel.EventEndtDate)
                         {
                             ViewData["Falied"] = "تأكد من تاريخ الحدث";
                         }
-                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        else if (eventViewModel.EventStartDate.TimeOfDay >= eventViewModel.EventEndtDate.TimeOfDay)
                         {
                             ViewData["Falied"] = "تأكد من الساعة";
                         }
-                        return View(Event);
+                        return View(eventViewModel);
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ViewData["Falied"] = "حدث خطأ أثناء إضافة الحدث";
             }
 
-            return View(Event);
-
+            ViewBag.BoardsList = new SelectList(_context.tblBoards.ToList(), "Id", "NameAr");
+            return View(eventViewModel);
         }
-
 
         public IActionResult Edit(Guid id)
         {
-
-            var Event = _EventDomain.GetTblEventsById(id);
-            if (Event == null)
+            ViewBag.BoardsList = new SelectList(_context.tblBoards.ToList(), "Id", "NameAr");
+            var eventViewModel = _eventDomain.GetTblEventsById(id);
+            if (eventViewModel == null)
             {
                 return NotFound();
             }
-            return View(Event);
-
+            return View(eventViewModel);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EventViewModel Event)
+        public IActionResult Edit(EventViewModel eventViewModel)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (Event.EventStartDate <= Event.EventEndtDate && Event.Time < Event.EndRegTime.TimeOfDay)
+                    if (eventViewModel.EventStartDate <= eventViewModel.EventEndtDate && eventViewModel.EventStartDate.TimeOfDay < eventViewModel.EventEndtDate.TimeOfDay)
                     {
-                        Event.Id = Guid.NewGuid();
-                        int check = _EventDomain.AddEvent(Event);
+                        int check = _eventDomain.UpdateEvent(eventViewModel);
 
                         if (check == 1)
                         {
-                            ViewData["Successful"] = "تم تعدل الحدث بنجاح";
+                            ViewData["Successful"] = "تم تعديل الحدث بنجاح";
+                            return RedirectToAction(nameof(Index), new { Successful = ViewData["Successful"] });
                         }
                         else
                         {
-                            ViewData["Falied"] = "حدث خطأ تعديل";
+                            ViewData["Falied"] = "حدث خطأ أثناء التعديل";
                         }
                     }
                     else
                     {
-                        if (Event.EventStartDate > Event.EventEndtDate)
+                        if (eventViewModel.EventStartDate > eventViewModel.EventEndtDate)
                         {
                             ViewData["Falied"] = "تأكد من تاريخ الحدث";
                         }
-                        else if (Event.Time >= Event.EndRegTime.TimeOfDay)
+                        else if (eventViewModel.EventStartDate.TimeOfDay >= eventViewModel.EventEndtDate.TimeOfDay)
                         {
                             ViewData["Falied"] = "تأكد من الساعة";
                         }
-                        _EventDomain.UpdateEvent(Event);
-                        return View(Event);
-
+                        return View(eventViewModel);
                     }
-
                 }
             }
-
-            catch (Exception ex)
+            catch (Exception)
             {
-                ViewData["Falied"] = "حدث خطأ في أثناء التعديل";
+                ViewData["Falied"] = "حدث خطأ أثناء التعديل";
             }
-            return View(Event);
+
+            ViewBag.BoardsList = new SelectList(_context.tblBoards.ToList(), "Id", "NameAr");
+            return View(eventViewModel);
         }
-        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -156,35 +147,21 @@ namespace SHARKNA.Controllers
             string Falied = "";
             try
             {
-
-
-                int check = _EventDomain.DeleteEvent(id);
+                int check = _eventDomain.DeleteEvent(id);
                 if (check == 1)
                 {
                     Successful = "تم حذف الحدث بنجاح";
                 }
-
                 else
                 {
-                    Falied = "حدث خطأ";
-
-
+                    Falied = "حدث خطأ أثناء الحذف";
                 }
-                
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Falied = "حدث خطأ";
-
+                Falied = "حدث خطأ أثناء الحذف";
             }
             return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
-        
-        
         }
-
-
     }
 }
-
-    

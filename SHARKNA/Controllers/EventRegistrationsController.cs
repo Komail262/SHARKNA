@@ -34,7 +34,7 @@ namespace SHARKNA.Controllers
             // Fetch detailed event information
             var eventDetails = eventRegs.Select(reg =>
             {
-                var eventDetail = _EventDomain.GetEventById(reg.EventId);
+                var eventDetail = _EventDomain.GetTblEventsById(reg.EventId);
                 return new
                 {
                     EventReg = reg,
