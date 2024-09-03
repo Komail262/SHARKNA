@@ -60,8 +60,9 @@ namespace SHARKNA.Domain
 
 
 
-        public int AddBoardReq(BoardRequestsViewModel BoardReq)
+        public int AddBoardReq(BoardRequestsViewModel BoardReq, string UserName)
         {
+           
             try
             {
                 tblBoardRequests VBoardReq = new tblBoardRequests();
@@ -75,7 +76,19 @@ namespace SHARKNA.Domain
                 VBoardReq.MobileNumber = BoardReq.MobileNumber;
 
                 _context.Add(VBoardReq);
+
                 _context.SaveChanges();
+                
+                //    tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                //    bLogs.Id = Guid.NewGuid() ;
+                //    bLogs.OpType = "Add";
+                //    bLogs.OpDateTime = DateTime.Now;
+                //    bLogs.CreatedBy = UserName;
+                //    bLogs.ReqId = VBoardReq.Id;
+                //    bLogs.AdditionalInfo = $"تم إضافة لجنة {VBoardReq.FullNameAr} بواسطة هذا المستخدم";
+                //    _context.tblBoardRequestLogs.Add(bLogs);
+                
+                //_context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
@@ -121,6 +134,7 @@ namespace SHARKNA.Domain
             if (BoardRequest != null)
             {
                 BoardRequest.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"); // تعيين الحالة "مقبول"
+               
                 await _context.SaveChangesAsync();
                 tblBoardMembers member = new tblBoardMembers()
                 {
@@ -130,7 +144,7 @@ namespace SHARKNA.Domain
                     FullNameAr = BoardRequest.FullNameAr,
                     FullNameEn = BoardRequest.FullNameEn,
                     IsDeleted = false,
-                    IsActive = false,
+                    IsActive = true,
                     MobileNumber = BoardRequest.MobileNumber,
                     UserName = BoardRequest.UserName,
                 };
@@ -148,6 +162,16 @@ namespace SHARKNA.Domain
                 BoardRequest.RejectionReasons = rejectionReason;
                 _context.SaveChanges();
             }
+        }
+
+        public bool CheckRequestExists(string email, Guid boardId)
+        {
+            Guid Cancel = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
+            Guid Accept = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
+
+            return _context.tblBoardRequests
+                .Any(r => r.Email == email && r.BoardId == boardId &&
+                          (r.RequestStatusId == Cancel || r.RequestStatusId == Accept));
         }
 
 

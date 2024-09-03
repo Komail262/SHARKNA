@@ -29,25 +29,24 @@ namespace SHARKNA.ViewModels
 
 
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [DisplayName("اسم الأعضاء بالفعالية")]
-        public Guid EventMemId { get; set; }
-
-        //public string EventMemName { get; set; }  //هنا عشان يعرض اسم الأعضاء بالفعالية 
-
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("اسم الأعضاء بالفعالية")]
         public Guid EventsRegId { get; set; }
 
-        public string Email { get; set; }
-        public DateTime RegDate { get; set; }
-        public string RegDateString => RegDate.ToString("yyyy-MM-dd HH:mm:ss");
 
-        public string FullNameAr { get; set; }
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("البريد الإلكتروني")]
+        public string EEmail { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("وقت التسجيل")]
+        public DateTime RRegDate { get; set; }
+        
 
-
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("الإسم بالعربي")]
+        public string NameAr { get; set; }
 
 
         public bool IsAttend { get; set; }

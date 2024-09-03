@@ -18,6 +18,7 @@ namespace SHARKNA.Models
         public string LocationAr { get; set; }
         public string LocationEn { get; set; }
         public int MaxAttendence { get; set; }
+        public bool? Gender { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
         public tblBoards Board { get; set; }

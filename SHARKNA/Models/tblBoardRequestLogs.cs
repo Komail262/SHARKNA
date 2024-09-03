@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
 
-        public int ReqId { get; set; }
+        public Guid ReqId { get; set; }
 
         public string OpType { get; set; }
 

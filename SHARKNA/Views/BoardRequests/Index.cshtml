@@ -25,13 +25,9 @@
                 <div class="block-body">
                     <table class="table table-hover js-dataTable">
                         <thead>
-                            <tr>
+                            <tr >
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
-                                @* <th>@Html.DisplayNameFor(m => m.UserName)</th>
-                                <th>@Html.DisplayNameFor(m => m.Email)</th> *@
                                 <th>@Html.DisplayNameFor(m => m.BoardId)</th>
-                                @* <th>@Html.DisplayNameFor(m => m.MobileNumber)</th> *@
-                                @* <th>@Html.DisplayNameFor(m => m.FullNameEn)</th> *@
                                 <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
                                 <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
                                 <th>الإجراءات</th>
@@ -43,11 +39,7 @@
                             {
                                 <tr>
                                     <td>@user.FullNameAr</td>
-                                    @* <td>@user.UserName</td>
-                                <td>@user.Email</td> *@
                                     <td>@user.BoardName</td>
-                                    @* <td>@user.MobileNumber</td> *@
-                                    @* <td>@user.FullNameEn</td> *@
                                     <td>@user.RequestStatusName</td>
                                     <td>@user.RejectionReasons</td>
                                     <td>
@@ -61,6 +53,7 @@
                                             </form>
 
                                         }
+                                       
                                     </td>
                                 </tr>
                             }
@@ -69,13 +62,8 @@
                 </div>
             </div>
         </div>
-    </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
-    <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
-            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
-        </p>
-    </footer><!-- End Footer -->
+    </section>
+  
 
 </body>
 </html>

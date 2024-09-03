@@ -32,10 +32,11 @@
                         <tbody>
                             @foreach (var request in Model)
                             {
-                                <tr>
+                                <tr >
+                                    
                                     <td>@request.FullNameAr</td>
                                     <td>@request.BoardName</td>
-                                    <td>@request.RequestStatusName</td>
+                                    <td style="@(request.RequestStatusId == Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152") ? "background-color: rgb(15, 181, 21); color: white; border-radius: 15px; padding: 10px; text-align: center;" : "padding: 10px; text-align: center;")">@request.RequestStatusName</td>
                                     <td>@request.RejectionReasons</td>
                                     <td>
                                         <form asp-action="Details">

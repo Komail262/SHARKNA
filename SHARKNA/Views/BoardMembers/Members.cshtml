@@ -16,9 +16,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        <div>
-                            @*  <a asp-action="Create" class="btn btn-primary">التسجيل في نادي </a> *@
-                        </div>
+                      
                     </div>
                 </div>
                 <div class="block-body">
@@ -26,12 +24,10 @@
                         <thead>
                             <tr>
 
-                                <th>@Html.DisplayNameFor(m => m.UserName)</th>
-                                <th>@Html.DisplayNameFor(m => m.Email)</th>
-                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
+                               
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.FullNameEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.BoardRoleName)</th>
+                                <th>الإجراءات</th>
                             </tr>
 
                         </thead>
@@ -39,12 +35,18 @@
                             @foreach (var member in Model)
                             {
                                 <tr>
-                                    <td>@member.UserName</td>
-                                    <td>@member.Email</td>
-                                    <td>@member.MobileNumber</td>
+                                    
                                     <td>@member.FullNameAr</td>
-                                    <td>@member.FullNameEn</td>
                                     <td>@member.BoardRoleName</td>
+                                    <td>
+                                    <form asp-action="Details">
+                                        <input type="hidden" name="id" value="@member.Id" />
+                                        <button type="submit" class="btn" style="background-color: rgb(15, 113, 121); color: white;">التفاصيل </button> |
+                                            <a asp-action="Delete" asp-route-id="@member.Id" class="btn btn-danger">حذف</a>
+
+                                    </form>
+
+                                    </td>
                                 </tr>
                             }
                         </tbody>
@@ -52,13 +54,7 @@
                 </div>
             </div>
         </div>
-    </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
-    <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
-            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
-        </p>
-    </footer><!-- End Footer -->
-
+    </section>
+   
 </body>
 </html>

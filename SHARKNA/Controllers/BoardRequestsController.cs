@@ -4,6 +4,7 @@ using SHARKNA.Domain;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace SHARKNA.Controllers
 {
@@ -13,13 +14,15 @@ namespace SHARKNA.Controllers
         private readonly BoardDomain _BoardDomain;
         private readonly RequestStatusDomain _RequestStatusDomain;
         private readonly BoardMembersDomain _BoardMembersDomain;
+        private readonly UserDomain _UserDomain;
 
-        public BoardRequestsController(BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain)
+        public BoardRequestsController(BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain , UserDomain userDomain)
         {
             _boardRequestsDomain = boardRequestsDomain;
             _BoardDomain = BoardDomain;
             _RequestStatusDomain = requestStatusDomain;
             _BoardMembersDomain = boardMembersDomain;
+            _UserDomain = userDomain;   
         }
         public IActionResult Index()
         {
@@ -34,9 +37,21 @@ namespace SHARKNA.Controllers
         }
         public IActionResult Create()
         {
+            var username = User.FindFirst(ClaimTypes.Name)?.Value; 
+            var user = _UserDomain.GetUserFER(username);
+
+            var model = new BoardRequestsViewModel
+            {
+                UserName = username,
+                Email = user.Email,
+                MobileNumber = user.MobileNumber,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn
+            };
 
             ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-            return View();
+
+            return View(model); 
         }
 
         public IActionResult Details(Guid id)
@@ -50,29 +65,42 @@ namespace SHARKNA.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public IActionResult Create(BoardRequestsViewModel BoardReq)
+        public IActionResult Create(BoardRequestsViewModel BoardReq ,string UserName)
         {
             try
             {
+                var username = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = _UserDomain.GetUserFER(username);
+
+                
+                bool requestExists = _boardRequestsDomain.CheckRequestExists(user.Email, BoardReq.BoardId);
+                if (requestExists)
+                {
+                    ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
+                    ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+                    return View(BoardReq);
+                }
+
                 ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
                 if (ModelState.IsValid)
                 {
-                    if (_boardRequestsDomain.IsEmailDuplicate(BoardReq.Email))
-                    {
-                        ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
-                        return View(BoardReq);
-                    }
-
                     BoardReq.Id = Guid.NewGuid();
+                    BoardReq.UserName = username;
+                    BoardReq.Email = user.Email;
+                    BoardReq.MobileNumber = user.MobileNumber;
+                    BoardReq.FullNameAr = user.FullNameAr;
+                    BoardReq.FullNameEn = user.FullNameEn;
 
-                    int check = _boardRequestsDomain.AddBoardReq(BoardReq);
+                    int check = _boardRequestsDomain.AddBoardReq(BoardReq , UserName);
                     if (check == 1)
+                    {
                         ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+                    }
                     else
+                    {
                         ViewData["Falied"] = "حدث خطأ";
+                    }
                     return View(BoardReq);
-
                 }
             }
             catch (Exception ex)
@@ -113,7 +141,8 @@ namespace SHARKNA.Controllers
             }
             catch (Exception)
             {
-                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+                ViewBag.Falied = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+
             }
 
             return RedirectToAction(nameof(Admin));
@@ -127,15 +156,18 @@ namespace SHARKNA.Controllers
             try
             {
                 _boardRequestsDomain.Reject(id, rejectionReason);
-                ViewData["Successful"] = "تم قبول الطلب بنجاح.";
+                ViewData["Successful"] = "تم رفض الطلب بنجاح.";
             }
             catch (Exception)
             {
-                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+                ViewBag["Falied"] = "حدث خطأ أثناء محاولة رفض الطلب.";
             }
 
             return RedirectToAction(nameof(Admin));
         }
+
+
+
     }
 
 

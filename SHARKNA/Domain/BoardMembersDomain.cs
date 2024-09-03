@@ -7,145 +7,162 @@ namespace SHARKNA.Domain
     {
         private readonly SHARKNAContext _context;
         private readonly BoardRequestsDomain _boardRequestsDomain;
+
         public BoardMembersDomain(SHARKNAContext context, BoardRequestsDomain boardRequestsDomain)
         {
             _context = context;
             _boardRequestsDomain = boardRequestsDomain;
         }
 
-
-        public IEnumerable<BoardMembersViewModel> GetBoardMembersById()
+        public async Task<BoardMembersViewModel> GetBoardMemberByIdAsync(Guid id)
         {
-            return _context.tblBoardMembers
-
-               .Select(x => new BoardMembersViewModel
-               {
-                   Id = x.Id,
-                   UserName = x.UserName,
-                   Email = x.Email,
-                   MobileNumber = x.MobileNumber,
-                   FullNameAr = x.FullNameAr,
-                   FullNameEn = x.FullNameEn,
-                   BoardId = x.BoardId,
-                   BoardRoleId = x.BoardRoleId,
-                   BoardRoleName = x.BoardRole.NameAr,
-                   BoardName = x.Board.NameAr,
-
-               }).ToList();
+            return await _context.tblBoardMembers
+                .Where(x => x.Id == id)
+                .Select(x => new BoardMembersViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email = x.Email,
+                    MobileNumber = x.MobileNumber,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    BoardId = x.BoardId,
+                    BoardRoleId = x.BoardRoleId,
+                    BoardRoleName = x.BoardRole.NameAr,
+                    BoardName = x.Board.NameAr,
+                }).FirstOrDefaultAsync();
         }
+
+
+
+        //public async Task<IEnumerable<BoardMembersViewModel>> GetBoardMembersById(Guid id)
+        //{
+        //    return await _context.tblBoardMembers
+
+        //       .Select(x => new BoardMembersViewModel
+        //       {
+        //           Id = x.Id,
+        //           UserName = x.UserName,
+        //           Email = x.Email,
+        //           MobileNumber = x.MobileNumber,
+        //           FullNameAr = x.FullNameAr,
+        //           FullNameEn = x.FullNameEn,
+        //           BoardId = x.BoardId,
+        //           BoardRoleId = x.BoardRoleId,
+        //           BoardRoleName = x.BoardRole.NameAr,
+        //           BoardName = x.Board.NameAr,
+
+        //       }).ToListAsync();
+        //}
 
         public async Task<IEnumerable<BoardMembersViewModel>> GetBoardMembersByBoardId(Guid boardId)
         {
 
-            return await _context.tblBoardMembers.Include(b => b.Board).Include(br => br.BoardRole).Where(x => x.BoardId == boardId).Select(r => new BoardMembersViewModel
-            {
-                Id = r.Id,
-                BoardId = r.BoardId,
-                BoardName = r.Board.NameAr,
-                UserName = r.UserName,
-                Email = r.Email,
-                MobileNumber = r.MobileNumber,
-                FullNameAr = r.FullNameAr,
-                FullNameEn = r.FullNameEn,
-                BoardRoleId = r.BoardRoleId,
-                BoardRoleName = r.BoardRole.NameAr,
-                IsActive = r.IsActive,
-                IsDeleted = r.IsDeleted,
-            }).ToListAsync();
+            return await _context.tblBoardMembers
+                .Include(b => b.Board)
+                .Include(br => br.BoardRole)
+                .Where(x => x.BoardId == boardId && x.IsDeleted == false)
+                .Select(r => new BoardMembersViewModel
+                {
+                    Id = r.Id,
+                    BoardId = r.BoardId,
+                    BoardName = r.Board.NameAr,
+                    UserName = r.UserName,
+                    Email = r.Email,
+                    MobileNumber = r.MobileNumber,
+                    FullNameAr = r.FullNameAr,
+                    FullNameEn = r.FullNameEn,
+                    BoardRoleId = r.BoardRoleId,
+                    BoardRoleName = r.BoardRole.NameAr,
+                    IsActive = r.IsActive,
+                    IsDeleted = r.IsDeleted,
+                }).ToListAsync();
         }
-
-        //public IEnumerable<BoardMembersViewModel> GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardRequests
-
-
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-        //        .Select(x => new BoardMembersViewModel
-        //        {
-        //            Id = x.Id,
-        //            UserName = x.UserName,
-        //            Email = x.Email,
-        //            MobileNumber = x.MobileNumber,
-        //            FullNameAr = x.FullNameAr,
-        //            FullNameEn = x.FullNameEn,
-        //            BoardId = boardId, 
-        //            BoardRoleId = Guid.Parse("7D67185D-81BD-4738-A6C5-2106E441EEA1"), 
-        //           // BoardRoleName = x.,
-        //           // IsActive = true,
-        //           // IsDeleted = false ,
-
-        //        })
-        //        .ToList();
-        //}
-
-
-        public IEnumerable<BoardViewModel> GetTblBoards()
+        public int UpdateBoardMembersAsync(tblBoardMembers MemR)
         {
-            return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
+            try
             {
-                Id = x.Id,
-                NameAr = x.NameAr,
-                NameEn = x.NameEn,
-                DescriptionAr = x.DescriptionAr,
-                DescriptionEn = x.DescriptionEn,
-                IsDeleted = x.IsDeleted,
-                IsActive = x.IsActive
-            }).ToList();
+                tblBoardMembers MemByUsername = _context.tblBoardMembers.AsNoTracking().SingleOrDefault(A => A.UserName == MemR.UserName);
+                //if (MemByUsername != null && MemByUsername.Id != MemR.Id)
+                //    return 3; // This User is already there
+
+                MemR.BoardRoleId = MemByUsername.BoardRoleId;
+
+                _context.Update(MemR);
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+            //public async Task<int> UpdateBoardMembersAsync(Guid id)
+            //{
+            //    try
+            //    {
+            //        var Mem = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
+            //        if (Mem != null)
+            //        {
+            //            Mem.BoardRoleId = id;
+            //            _context.Update(Mem);
+            //            await _context.SaveChangesAsync();
+
+            //            return 1;
+            //        }
+            //        else
+            //            return 0;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return 0;
+            //    }
+
+            //}
+
+            public IEnumerable<BoardViewModel> GetTblBoards()
+            {
+                return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
+                {
+                    Id = x.Id,
+                    NameAr = x.NameAr,
+                    NameEn = x.NameEn,
+                    DescriptionAr = x.DescriptionAr,
+                    DescriptionEn = x.DescriptionEn,
+                    IsDeleted = x.IsDeleted,
+                    IsActive = x.IsActive
+                }).ToList();
+
+            }
+
+
+            public async Task<int> DeleteBoardMembersAsync(Guid id)
+            {
+                try
+                {
+                    var board = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
+                    if (board != null)
+                    {
+                        board.IsDeleted = true;
+                        board.IsActive = false;
+                        _context.Update(board);
+                        await _context.SaveChangesAsync();
+
+                        return 1;
+                    }
+                    else
+                        return 0;
+                }
+                catch (Exception ex)
+                {
+                    return 0;
+                }
+
+            }
+
+
+
 
         }
 
-
-
-
-        //public IEnumerable<BoardMembersViewModel> GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardRequests
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-        //        .Join(_context.tblBoardMembers,
-        //              request => request.Id,  
-        //              member => member.Id,              
-        //              (request, member) => new BoardMembersViewModel
-        //              {
-        //                  Id = member.Id,
-        //                  UserName = member.UserName,
-        //                  Email = member.Email,
-        //                  MobileNumber = member.MobileNumber,
-        //                  FullNameAr = member.FullNameAr,
-        //                  FullNameEn = member.FullNameEn,
-        //                  BoardId = request.BoardId,
-        //                  BoardName = request.Board.NameAr,
-        //                  BoardRoleId = Guid.Parse("7D67185D-81BD-4738-A6C5-2106E441EEA1"),
-        //                  BoardRoleName = member.BoardRole.NameAr,
-        //                  IsActive = true ,
-        //                  IsDeleted = false ,
-
-        //              })
-        //        .ToList();
-        //}
-
-
-        //public BoardMembersViewModel GetBoardMembersByBoardId(Guid boardId, Guid acceptedStatusId)
-        //{
-        //    return _context.tblBoardMembers
-        //        .Include(x => x.tblBoardRequests)
-        //        .Where(x => x.BoardId == boardId && x.RequestStatusId == acceptedStatusId)
-
-
-        //        .Select(x => new BoardRequestsViewModel
-        //        {
-        //            Id = x.Id,
-        //            FullNameAr = x.FullNameAr,
-        //            UserName = x.UserName,
-        //            Email = x.Email,
-        //            MobileNumber = x.MobileNumber,
-        //            BoardName = x.Board.NameAr,
-        //            RequestStatusId = x.RequestStatusId,
-        //            RequestStatusName = x.RequestStatus.RequestStatusAr,
-        //            RejectionReasons = x.RejectionReasons
-        //        })
-        //        .FirstOrDefault();
-        //}
     }
-
-}
 
