@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace SHARKNA.ViewModels
 {
@@ -30,6 +31,10 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DisplayName("الجنس")]
+        public bool? Gender { get; set; }
 
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]

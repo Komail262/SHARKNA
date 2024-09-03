@@ -23,6 +23,7 @@ namespace SHARKNA.Domain
                 NameEn = x.NameEn,
                 DescriptionAr = x.DescriptionAr,
                 DescriptionEn = x.DescriptionEn,
+                Gender = x.Gender,
                 IsDeleted = x.IsDeleted,
                 IsActive = x.IsActive
             }).ToList();
@@ -38,6 +39,7 @@ namespace SHARKNA.Domain
             bb.NameEn = Fboard.NameEn;
             bb.DescriptionAr = Fboard.DescriptionAr;
             bb.DescriptionEn = Fboard.DescriptionEn;
+            bb.Gender = Fboard.Gender;
             bb.IsDeleted = Fboard.IsDeleted;
             bb.IsActive = Fboard.IsActive;
             return bb;
@@ -56,11 +58,26 @@ namespace SHARKNA.Domain
                 Aboard.NameEn = board.NameEn;
                 Aboard.DescriptionAr = board.DescriptionAr;
                 Aboard.DescriptionEn = board.DescriptionEn;
+                Aboard.Gender = board.Gender;
                 Aboard.IsDeleted = false;
                 Aboard.IsActive = true;
 
                await _context.tblBoards.AddAsync(Aboard);
-               await _context.SaveChangesAsync();
+
+                //if (_context.SaveChanges() > 0)
+                //{
+                //    tblBoardLogs bLogs = new tblBoardLogs();
+                //    bLogs.Id = Aboard.Id;
+                //    bLogs.OpType = "Add";
+                //    bLogs.OpDateTime = DateTime.Now;
+                //    bLogs.CreatedBy = "000";
+                //    bLogs.CreatedTo = Aboard.NameAr;
+                //    bLogs.AdditionalInfo = $"تم إضافة لجنة {Aboard.NameAr} بواسطة هذا المستخدم";
+                //    _context.Boardlogs.Add(bLogs);
+                //}
+
+
+                await _context.SaveChangesAsync();
                 return 1;
             }
             catch (Exception ex)
@@ -86,10 +103,26 @@ namespace SHARKNA.Domain
                 Aboard.NameEn = board.NameEn;
                 Aboard.DescriptionAr = board.DescriptionAr;
                 Aboard.DescriptionEn = board.DescriptionEn;
+                Aboard.Gender = board.Gender;
                 Aboard.IsDeleted = false;
                 Aboard.IsActive = true;
 
                 _context.tblBoards.Update(Aboard);
+
+
+                //if (_context.SaveChanges() > 0)
+                //{
+                //    tblBoardLogs bLogs = new tblBoardLogs();
+                //    bLogs.Id = Aboard.Id;
+                //    bLogs.OpType = "Update";
+                //    bLogs.OpDateTime = DateTime.Now;
+                //    bLogs.CreatedBy = "000";
+                //    bLogs.CreatedTo = Aboard.NameAr;
+                //    bLogs.AdditionalInfo = $"تم تعديل لجنة {Aboard.NameAr} بواسطة هذا المستخدم";
+                //    _context.Boardlogs.Update(bLogs);
+                //}
+
+
                 await _context.SaveChangesAsync();
                 return 1;
             }
@@ -119,6 +152,19 @@ namespace SHARKNA.Domain
                     board.IsDeleted = true;
                     board.IsActive = false;
                     _context.Update(board);
+
+                    //if (_context.SaveChanges() > 0)
+                    //{
+                    //    tblBoardLogs bLogs = new tblBoardLogs();
+                    //    bLogs.Id = board.Id;
+                    //    bLogs.OpType = "Delete";
+                    //    bLogs.OpDateTime = DateTime.Now;
+                    //    bLogs.CreatedBy = "000";
+                    //    bLogs.CreatedTo = board.NameAr;
+                    //    bLogs.AdditionalInfo = $"تم حذف لجنة {board.NameAr} بواسطة هذا المستخدم";
+                    //    _context.Boardlogs.update(bLogs);
+                    //}
+
                     await _context.SaveChangesAsync();
 
                     return 1;
