@@ -1,7 +1,7 @@
 ﻿@model SHARKNA.ViewModels.EventViewModel
 
 @{
-    ViewData["Title"] = "Event Details";
+    ViewData["Title"] = "My Event Details";
 }
 
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5>تفاصيل صاحب الطلب</h5>
+                    <h5>تفاصيل الفعالية</h5>
                     <p><strong>الاسم:</strong> @User.FindFirst(ClaimTypes.GivenName)?.Value</p>
                     <p><strong>البريد الالكتروني:</strong> @User.FindFirst(ClaimTypes.Email)?.Value</p>
                     <p><strong>رقم الجوال:</strong> @User.FindFirst(ClaimTypes.MobilePhone)?.Value</p>
@@ -30,54 +30,15 @@
                             <p class="card-text"><strong>المتحدث:</strong> @Model.SpeakersAr</p>
                             <p class="card-text"><strong>الموضوع:</strong> @Model.TopicAr</p>
                             <p class="card-text"><strong>الوصف:</strong> @Model.DescriptionAr</p>
-
-                            @if (ViewData["Message"] != null)
-                            {
-                                <div class="alert alert-success">
-                                    @ViewData["Message"]
-                                </div>
-                            }
-
-                            @if (ViewData["Failed"] != null)
-                            {
-                                <div class="alert alert-danger">
-                                    @ViewData["Failed"]
-                                </div>
-                            }
-                        </div>
-                        <div class="card-footer">
-                            <form asp-action="Register" method="post">
-                                <input type="hidden" name="EventId" value="@Model.Id" />
-                                <button type="submit" class="btn btn-primary w-100">تسجيل</button>
-                            </form>
                         </div>
                     </div>
+                </div>
+                <a href="@Url.Action("MyEventRegistrations", "EventRegistrations")" class="btn btn-secondary mt-3">العودة</a>
+            </div>
+        </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <script>
-        @{
-            if (ViewData["Message"] != null)
-            {
-                <text>
-                                    var result = '@Html.Raw(ViewData["Message"])';
-                Swal.fire(result, '', 'success')
-                    .then(function () {
-                        // Optionally, you can redirect the user or refresh the page
-                        // window.location.href = '@Url.Action("MyEventRegistrations", "EventRegistrations")';
-                    });
-                </text>
-            }
-            else if (ViewData["Failed"] != null)
-            {
-                <text>
-                                    var result = '@Html.Raw(ViewData["Failed"])';
-                Swal.fire(result, '', 'error');
-                </text>
-            }
-        }
-    </script>
 </body>
 </html>

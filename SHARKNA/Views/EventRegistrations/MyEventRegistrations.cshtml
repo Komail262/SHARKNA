@@ -12,7 +12,7 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">الفعاليات المسجل بها </h5>
+                    <h5 class="m-0">الفعاليات المسجل بها</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
@@ -29,10 +29,7 @@
                                     <th scope="col">تاريخ النهاية</th>
                                     <th scope="col">الوقت</th>
                                     <th scope="col">الموقع</th>
-                                    <th scope="col">المتحدث</th>
-                                    <th scope="col">الموضوع</th>
-                                    <th scope="col">الوصف</th>
-                                    <th scope="col">وقت التسجيل</th>
+                                    <th scope="col">تفاصيل</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,10 +41,12 @@
                                         <td>@item.EventDetail.EventEndtDate.ToString("yyyy-MM-dd")</td>
                                         <td>@item.EventDetail.Time.ToString(@"hh\:mm")</td>
                                         <td>@item.EventDetail.LocationAr</td>
-                                        <td>@item.EventDetail.SpeakersAr</td>
-                                        <td>@item.EventDetail.TopicAr</td>
-                                        <td>@item.EventDetail.DescriptionAr</td>
-                                        <td>@item.EventReg.RegDate.ToString("yyyy-MM-dd")</td>
+                                        <td>
+                                            <form asp-action="MyEventDetails" method="get">
+                                                <input type="hidden" name="EventId" value="@item.EventDetail.Id" />
+                                                <button type="submit" class="btn btn-primary">تفاصيل</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 }
                             </tbody>

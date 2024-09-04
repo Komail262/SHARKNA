@@ -38,12 +38,12 @@ namespace SHARKNA.Controllers
             return View(eventDays);
         }
 
-        public IActionResult Members(Guid id)
+        public IActionResult Members(Guid id, Guid eventRegId)
         {
 
 
 
-            var Ereg = _eventattendenceDomain.GetTblEventattendence(id);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            var Ereg = _eventattendenceDomain.GetTblEventattendence(id, eventRegId);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
             return View(Ereg);
         }
 
@@ -82,7 +82,7 @@ namespace SHARKNA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Members(FormCollection forms, Guid id)
+        public IActionResult Members(FormCollection forms, Guid id, Guid eventRegId)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace SHARKNA.Controllers
 
 
 
-                    var Ereg = _eventattendenceDomain.GetTblEventattendence(id);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                    var Ereg = _eventattendenceDomain.GetTblEventattendence(id, eventRegId);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
                   //return View(Ereg);
 
                     if (count == 1)

@@ -183,10 +183,13 @@ namespace SHARKNA.Domain
                     LocationAr = e.LocationAr,
                     SpeakersAr = e.SpeakersAr,
                     TopicAr = e.TopicAr,
-                    DescriptionAr = e.DescriptionAr
+                    DescriptionAr = e.DescriptionAr,
+                    MaxAttendence = e.MaxAttendence // Ensure this is included
                 })
                 .FirstOrDefault();
         }
+
+
 
     }
 }

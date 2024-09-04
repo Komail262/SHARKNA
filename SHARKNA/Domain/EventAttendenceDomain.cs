@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Xml;
@@ -117,9 +118,11 @@ namespace SHARKNA.Domain
         //    }).ToList();
         //}
 
-        public IEnumerable<EEventAttendenceViewModel> GetTblEventattendence(Guid eventId)
+        public IEnumerable<EEventAttendenceViewModel> GetTblEventattendence(Guid eventId, Guid eventRegId)
         {
-            return _context.tblEventAttendence.Where(x => x.EventstId == eventId).Select(x => new EEventAttendenceViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return _context.tblEventAttendence.Include(R => R.EventsReg)
+                
+                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
 

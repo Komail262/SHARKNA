@@ -29,7 +29,7 @@ namespace SHARKNA.Controllers
             else if (Falied != "")
                 ViewData["Falied"] = Falied;
 
-             Successful == "20.0" ? "Cold." : "Perfect!";
+
 
             var boards = _boardDomain.GetTblBoards();
             return View(boards);

@@ -58,15 +58,6 @@ namespace SHARKNA.Domain
         {
             var events = _context.tblEvents
                 .Where(e => !e.IsDeleted && e.IsActive)
-                .ToList();
-
-            var registeredEventIds = _context.tblEventRegistrations
-                .Where(reg => reg.UserName == username)
-                .Select(reg => reg.EventsId)
-                .ToList();
-
-            var availableEvents = events
-                .Where(e => !registeredEventIds.Contains(e.Id))
                 .Select(e => new EventViewModel
                 {
                     Id = e.Id,
@@ -77,12 +68,14 @@ namespace SHARKNA.Domain
                     LocationAr = e.LocationAr,
                     SpeakersAr = e.SpeakersAr,
                     TopicAr = e.TopicAr,
-                    DescriptionAr = e.DescriptionAr
+                    DescriptionAr = e.DescriptionAr,
+                 
                 })
                 .ToList();
 
-            return availableEvents;
+            return events;
         }
+
 
         public EventViewModel GetEventById(Guid eventId)
         {
@@ -103,6 +96,17 @@ namespace SHARKNA.Domain
                 .FirstOrDefault();
         }
 
+        public int GetEventRegistrationsCount(Guid eventId)
+        {
+            return _context.tblEventRegistrations
+                           .Count(reg => reg.EventsId == eventId);
+        }
+
+
         
+
+
+
+
     }
 }
