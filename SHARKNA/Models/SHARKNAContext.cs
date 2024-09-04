@@ -21,11 +21,11 @@ namespace SHARKNA.Models
         public DbSet<tblBoardRequests> tblBoardRequests { get; set; }
         public DbSet<tblBoardRoles> tblBoardRoles { get; set; }
         public DbSet<tblBoards> tblBoards { get; set; }
+        public DbSet<tblBoardLogs> tblBoardLogs { get; set; }
         public DbSet<tblBoardTalRequestLogs> tblBoardTalRequestLogs { get; set; }
         public DbSet<tblBoardTalRequests> tblBoardTalRequests { get; set; }
         public DbSet<tblEventAttendence> tblEventAttendence { get; set; }
         public DbSet<tblEventLogs> tblEventLogs { get; set; }
-        public DbSet<tblEventMembers> tblEventMembers { get; set; }
         public DbSet<tblEventRegistrations> tblEventRegistrations { get; set; }
         public DbSet<tblEventRegLogs> tblEventRegLogs { get; set; }
         public DbSet<tblEventRequestLogs> tblEventRequestLogs { get; set; }

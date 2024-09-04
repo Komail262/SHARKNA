@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace SHARKNA.ViewModels
 {
@@ -31,6 +32,10 @@ namespace SHARKNA.ViewModels
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
 
+       
+        [DisplayName("الجنس")]
+        public bool? Gender { get; set; }
+
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         
@@ -42,5 +47,8 @@ namespace SHARKNA.ViewModels
         
         [DisplayName("نشط؟")]
         public bool IsActive { get; set; }
+
+
+
     }
 }

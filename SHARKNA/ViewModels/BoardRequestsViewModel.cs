@@ -37,7 +37,7 @@ namespace SHARKNA.ViewModels
         public string Email { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(15)]
+        [StringLength(13)]
         [DisplayName("رقم الجوال")]
         public string MobileNumber { get; set; }
 

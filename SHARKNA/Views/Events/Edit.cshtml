@@ -9,7 +9,7 @@
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                                var result = '@Html.Raw(ViewData["Successful"])';
+                                            var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -21,7 +21,7 @@
         else if (@ViewData["Falied"] != null)
         {
             <Text>
-                                var result = '@Html.Raw(ViewData["Falied"])';
+                                            var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
@@ -43,7 +43,7 @@
                     <div class="col-md-8">
                         <form asp-action="Edit" method="post">
                             <input hidden asp-for="Id">
-                            
+
                             <div class="row">
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
@@ -64,33 +64,17 @@
 
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="EventStartDate" class="mb-1">تاريخ بداية الحدث</label>
-                                        <input asp-for="EventStartDate" type="date" class="form-control text-start">
+                                        <label asp-for="EventStartDate" class="mb-1">تاريخ بداية الحدث</label>
+                                        <input asp-for="EventStartDate" type="datetime-local" class="form-control text-start">
                                         <span asp-validation-for="EventStartDate" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
 
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="EventEndtDate" class="mb-1">تاريخ نهاية الحدث</label>
-                                        <input asp-for="EventEndtDate" type="date" class="form-control text-start">
+                                        <label asp-for="EventEndtDate" class="mb-1">تاريخ نهاية الحدث</label>
+                                        <input asp-for="EventEndtDate" type="datetime-local" class="form-control text-start">
                                         <span asp-validation-for="EventEndtDate" class="text-danger"></span>
-                                    </div>
-                                </div><!-- END ITEM -->
-
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label for="Time" class="mb-1">بداية الساعة الحدث</label>
-                                        <input asp-for="Time" type="time" placeholder="الساعة " class="form-control">
-                                        <span asp-validation-for="Time" class="text-danger"></span>
-                                    </div>
-                                </div><!-- END ITEM -->
-
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label for="EndRegTime" class="mb-1">نهاية الساعة الحدث</label>
-                                        <input asp-for="EndRegTime" type="time" placeholder="الساعة " class="form-control">
-                                        <span asp-validation-for="EndRegTime" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
 
@@ -165,7 +149,7 @@
                                         <span asp-validation-for="MaxAttendence" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
-                                
+
                             </div>
                             <div class="d-flex justify-content-end">
                                 <button type="submit" value="Create" class="btn btn-primary px-5" title="save">حفظ</button>

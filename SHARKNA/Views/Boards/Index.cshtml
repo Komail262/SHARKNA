@@ -68,8 +68,7 @@
                                 <th>@Html.DisplayNameFor(m => m.NameEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsDeleted)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsActive)</th>
+                                <th>@Html.DisplayNameFor(m => m.Gender)</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
@@ -81,14 +80,25 @@
                                     <td>@board.NameEn</td>
                                     <td>@board.DescriptionAr</td>
                                     <td>@board.DescriptionEn</td>
-                                    <td>@board.IsDeleted</td>
-                                    <td>@board.IsActive</td>
-                                    @* <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
-                                            <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-sm btn-danger" >حذف</a>
-                                        </div>
-                                    </td> *@
+                                    <td>
+                                        @if (board.Gender.HasValue)
+                                        {
+                                            @if (board.Gender == true)
+                                            {
+                                                @:طلاب
+                                            }
+                                            else 
+                                            {
+                                                @:طالبات
+                                            }
+                                        }
+                                        else 
+                                        {
+                                            @: طلاب وطالبات
+                                        }
+                                    </td>
+
+                                  
                                     <td>
                                         <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-primary">تعديل</a> |
                                         <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a>
@@ -102,12 +112,7 @@
             </div>
         </div>
     </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
-    <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
-            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
-        </p>
-    </footer><!-- End Footer -->
+ 
 
 </body>
 </html>

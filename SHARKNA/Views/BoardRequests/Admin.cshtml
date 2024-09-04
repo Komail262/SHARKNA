@@ -1,8 +1,4 @@
-﻿@model SHARKNA.ViewModels.EventViewModel
-
-@{
-    ViewData["Title"] = "Event Details";
-}
+﻿    @model IEnumerable<BoardRequestsViewModel>
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
@@ -21,63 +17,41 @@
                         <div class="card-header">
                             <h5 class="m-0">تفاصيل الفعالية</h5>
                         </div>
-                        <div class="card-body">
-                            <h5 class="card-title">@Model.EventTitleAr</h5>
-                            <p class="card-text"><strong>تاريخ البداية:</strong> @Model.EventStartDate.ToString("dd-MM-yyyy")</p>
-                            <p class="card-text"><strong>تاريخ النهاية:</strong> @Model.EventEndtDate.ToString("dd-MM-yyyy")</p>
-                            <p class="card-text"><strong>الوقت:</strong> @Model.Time.ToString(@"hh\:mm")</p>
-                            <p class="card-text"><strong>الموقع:</strong> @Model.LocationAr</p>
-                            <p class="card-text"><strong>المتحدث:</strong> @Model.SpeakersAr</p>
-                            <p class="card-text"><strong>الموضوع:</strong> @Model.TopicAr</p>
-                            <p class="card-text"><strong>الوصف:</strong> @Model.DescriptionAr</p>
-
-                            @if (ViewData["Message"] != null)
-                            {
-                                <div class="alert alert-success">
-                                    @ViewData["Message"]
-                                </div>
-                            }
-
-                            @if (ViewData["Failed"] != null)
-                            {
-                                <div class="alert alert-danger">
-                                    @ViewData["Failed"]
-                                </div>
-                            }
-                        </div>
-                        <div class="card-footer">
-                            <form asp-action="Register" method="post">
-                                <input type="hidden" name="EventId" value="@Model.Id" />
-                                <button type="submit" class="btn btn-primary w-100">تسجيل</button>
-                            </form>
-                        </div>
                     </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.BoardId)</th>
+                                <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
+                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var request in Model)
+                            {
+                                <tr >
+                                    
+                                    <td>@request.FullNameAr</td>
+                                    <td>@request.BoardName</td>
+                                    <td style="@(request.RequestStatusId == Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152") ? "background-color: rgb(15, 181, 21); color: white; border-radius: 15px; padding: 10px; text-align: center;" : "padding: 10px; text-align: center;")">@request.RequestStatusName</td>
+                                    <td>@request.RejectionReasons</td>
+                                    <td>
+                                        <form asp-action="Details">
+                                            <input type="hidden" name="id" value="@request.Id" />
+                                            <button type="submit" class="btn" style="background-color: rgb(15, 113, 121); color: white;">تفاصيل الطلب</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </section>
-
-    <script>
-        @{
-            if (ViewData["Message"] != null)
-            {
-                <text>
-                                    var result = '@Html.Raw(ViewData["Message"])';
-                Swal.fire(result, '', 'success')
-                    .then(function () {
-                        // Optionally, you can redirect the user or refresh the page
-                        // window.location.href = '@Url.Action("MyEventRegistrations", "EventRegistrations")';
-                    });
-                </text>
-            }
-            else if (ViewData["Failed"] != null)
-            {
-                <text>
-                                    var result = '@Html.Raw(ViewData["Failed"])';
-                Swal.fire(result, '', 'error');
-                </text>
-            }
-        }
-    </script>
+    </section><!-- End Page Wrap -->
 </body>
 </html>

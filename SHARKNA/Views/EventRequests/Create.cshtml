@@ -9,7 +9,7 @@
         if (@ViewData["Successful"] != null)
         {
             <text>
-                            var result = '@Html.Raw(ViewData["Successful"])';
+                                        var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -21,14 +21,14 @@
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
         {
             <text>
-                            var result = '@Html.Raw(ViewData["Falied"])';
+                                        var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
         {
             <text>
-                            var result = '@Html.Raw(ViewData["Falied"])';
+                                        var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </text>
         }
@@ -97,4 +97,3 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-

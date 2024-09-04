@@ -9,7 +9,7 @@
         public String CreatedBy { get; set; }
         public String AdditionalInfo { get; set; }
 
-        public int ReqId { get; set; }
+        public Guid ReqId { get; set; }
 
     }
 }

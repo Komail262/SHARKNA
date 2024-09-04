@@ -11,6 +11,6 @@
 
         public string AdditionalInfo { get; set; }
 
-        public int ReqId { get; set; }
+        public Guid ReqId { get; set; }
     }
 }

@@ -13,17 +13,15 @@ namespace SHARKNA.Domain
         {
             _context = context;
         }
-        public IEnumerable<EventViewModel> GetTblEvents()
+        public async Task<IEnumerable<EventViewModel>> GetTblEventsAsync()
         {
-            return _context.tblEvents.Select(x => new EventViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return await _context.tblEvents.Select(x => new EventViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
                 EventTitleAr = x.EventTitleAr,
                 EventTitleEn = x.EventTitleEn,
                 EventStartDate = x.EventStartDate,
                 EventEndtDate = x.EventEndtDate,
-                Time = x.Time,
-                EndRegTime = x.EndRegTime,
                 SpeakersAr = x.SpeakersAr,
                 SpeakersEn = x.SpeakersEn,
                 TopicAr = x.TopicAr,
@@ -34,14 +32,16 @@ namespace SHARKNA.Domain
                 LocationEn = x.LocationEn,
                 IsActive = x.IsActive,
                 IsDeleted = x.IsDeleted
-            }).ToList();
+            }).ToListAsync();
         }
 
 
 
-        public IEnumerable<EEventAttendenceViewModel> GetEventDaysByEventId(Guid eventId)
+
+
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetEventDaysByEventIdAsync(Guid eventId)
         {
-            var EE = _context.tblEvents.FirstOrDefault(e => e.Id == eventId); // نسترجع بيانات الفعاليات  من الداتابيس عن طريق الايفنت أي دي
+            var EE = await _context.tblEvents.FirstOrDefaultAsync(e => e.Id == eventId); // نسترجع بيانات الفعاليات  من الداتابيس عن طريق الايفنت أي دي
             if (EE == null) // اذا الفعالية غير موجودة عطني غير موجودة
             {
                 return null;
@@ -70,96 +70,51 @@ namespace SHARKNA.Domain
         }
 
 
-
-
-        // new list
-
-
-        //public IEnumerable<EventRegistrationsViewModel> GetTblEventRegistrations(Guid eventId , Guid Accepted)
-        //{
-        //    return _context.tblEventRegistrations
-        //        .Where(x => x.EventsId == eventId && x.EventStatusId == Accepted)
-        //        .Select(x => new EventRegistrationsViewModel //استرجع جميع قيم المسجلين من الداتابيس واحطهم في الايفنت فيو موديل
-
-        //    {
-        //        Id = x.Id,
-        //        RegDate = x.RegDate,
-        //        RejectionReasons = x.RejectionReasons,
-        //        UserName = x.UserName,
-        //        Email = x.Email,
-        //        MobileNumber = x.MobileNumber,
-        //        FullNameAr = x.FullNameAr,
-        //        FullNameEn = x.FullNameEn,
-        //        EventId = x.EventsId,
-        //        RequestStatusId = x.EventStatusId
-
-        //    }).ToList();
-
-        //}
-
-
-
-        //correct retriever
-        //public IEnumerable<EventRegistrationsViewModel> GetTblEventreg(Guid eventId)
-        //{
-        //    return _context.tblEventRegistrations.Where(x => x.EventsId == eventId).Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
-        //    {
-        //        Id = x.Id,
-        //        RegDate = x.RegDate,
-        //        RejectionReasons = x.RejectionReasons,
-        //        UserName = x.UserName,
-        //        Email = x.Email,
-        //        MobileNumber = x.MobileNumber,
-        //        FullNameAr = x.FullNameAr,
-        //        FullNameEn = x.FullNameEn,
-        //        EventId = x.EventsId,
-        //        RequestStatusId = x.EventStatusId
-
-        //    }).ToList();
-        //}
-
-        public IEnumerable<EEventAttendenceViewModel> GetTblEventattendence(Guid eventId, Guid eventRegId)
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventattendenceAsync(Guid eventId, Guid eventRegId)
         {
-            return _context.tblEventAttendence.Include(R => R.EventsReg)
-                
-                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
-            {
-                Id = x.Id,
 
-                EventsRegId = x.EventsRegId,
-                FullNameAr = x.EventsReg.FullNameAr,
-                RegDate = x.EventsReg.RegDate,
-                Email = x.EventsReg.Email,
-                IsAttend=x.IsAttend
+            return await _context.tblEventAttendence.Include(R => R.EventsReg)
 
-            }).ToList();
+                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel 
+                {
+                    Id = x.Id,
+                    EventDate = x.EventDate,
+                    Day = x.Day,
+                    EventstId = x.EventstId,
+                    EventsRegId = x.EventsRegId,
+                    NameAr = x.EventsReg.FullNameAr,
+                    RRegDate = x.EventsReg.RegDate,
+                    EEmail = x.EventsReg.Email,
+                    IsAttend = x.IsAttend
+
+                }).ToListAsync();
         }
-
-
-
-        //public int AddEventAttend(EEventAttendenceViewModel eventatten)
+        //public EEventAttendenceViewModel GetTblEventattendenceByIdAsync(Guid id)
         //{
-        //    try
-        //    {
-        //        var At = new tblEventAttendence
+        //    return _context.tblEventAttendence
+        //        .Where(x => x.Id == id)
+        //        .Include(x => x.EventsRegId)
+        //        .Include(x => x.EventstId)
+        //        .Select(x => new EEventAttendenceViewModel
         //        {
-        //            Id = eventatten.Id,
-        //            EventMemId = eventatten.EventMemId,
-        //            EventstId = Guid.Parse(" "),
-        //            EventDate = eventatten.EventDate,
-        //            Day = eventatten.Day,
-        //            IsAttend = eventatten.IsAttend
-        //        };
+        //            Id = x.Id,
+        //            EventDate = x.EventDate,
+        //            Day = x.Day,
+        //            EventstId = x.EventstId,
+        //            EventsRegId = x.EventsRegId,
+        //            NameAr = x.EventsReg.FullNameAr,
+        //            RRegDate = x.EventsReg.RegDate,
+        //            EEmail = x.EventsReg.Email,
+        //            IsAttend = x.IsAttend
 
-        //        _context.tblEventAttendence.Add(At);
-        //        _context.SaveChanges();
-        //        return 1;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return 0;
-        //    }
+        //        })
+        //        .FirstOrDefault();
         //}
+
+
+
+
+
 
 
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
@@ -8,6 +9,7 @@ namespace SHARKNA.Domain
     public class EventDomain
     {
         private readonly SHARKNAContext _context;
+
         public EventDomain(SHARKNAContext context)
         {
             _context = context;
@@ -15,132 +17,128 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventViewModel> GettblEvents()
         {
-            return _context.tblEvents.Where(i => i.IsDeleted == false).Select(E => new EventViewModel
-            {
-
-                Id = E.Id,
-                EventTitleAr = E.EventTitleAr,
-                EventTitleEn = E.EventTitleEn,
-                EventStartDate = E.EventStartDate,
-                EventEndtDate = E.EventEndtDate,
-                Time = E.Time,
-                EndRegTime = E.EndRegTime,
-                SpeakersAr = E.SpeakersAr,
-                SpeakersEn = E.SpeakersEn,
-                TopicAr = E.TopicAr,
-                TopicEn = E.TopicEn,
-                DescriptionAr = E.DescriptionAr,
-                DescriptionEn = E.DescriptionEn,
-                LocationAr = E.LocationAr,
-                LocationEn = E.LocationEn,
-                MaxAttendence = E.MaxAttendence,
-                IsActive = E.IsActive,
-                IsDeleted = E.IsDeleted,
-
-
-            }).ToList();
+            return _context.tblEvents
+                .Where(e => !e.IsDeleted)
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventTitleEn = e.EventTitleEn,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    SpeakersAr = e.SpeakersAr,
+                    SpeakersEn = e.SpeakersEn,
+                    TopicAr = e.TopicAr,
+                    TopicEn = e.TopicEn,
+                    DescriptionAr = e.DescriptionAr,
+                    DescriptionEn = e.DescriptionEn,
+                    LocationAr = e.LocationAr,
+                    LocationEn = e.LocationEn,
+                    MaxAttendence = e.MaxAttendence,
+                    IsActive = e.IsActive,
+                    IsDeleted = e.IsDeleted,
+                    BoardId = e.BoardId,
+                    BoardName = e.Board.NameAr
+                })
+                .ToList();
         }
 
         public EventViewModel GetTblEventsById(Guid id)
         {
-            var Tuser = _context.tblEvents.FirstOrDefault(u => u.Id == id);
-            EventViewModel uu = new EventViewModel();
-            uu.Id = id;
-            uu.EventTitleAr = Tuser.EventTitleAr;
-            uu.EventTitleEn = Tuser.EventTitleEn;
-            uu.EventStartDate = Tuser.EventStartDate;
-            uu.EventEndtDate = Tuser.EventEndtDate;
-            uu.Time = Tuser.Time;
-            uu.EndRegTime = Tuser.EndRegTime;
-            uu.SpeakersAr = Tuser.SpeakersAr;
-            uu.SpeakersEn = Tuser.SpeakersEn;
-            uu.TopicAr = Tuser.TopicAr;
-            uu.TopicEn = Tuser.TopicEn;
-            uu.DescriptionAr = Tuser.DescriptionAr;
-            uu.DescriptionEn = Tuser.DescriptionEn;
-            uu.LocationAr = Tuser.LocationAr;
-            uu.LocationEn = Tuser.LocationEn;
-            uu.LocationEn = Tuser.LocationEn;
-            uu.MaxAttendence = Tuser.MaxAttendence;
-            uu.IsActive = Tuser.IsActive;
-            uu.IsDeleted = Tuser.IsDeleted;
-            return uu;
+            var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == id);
+            if (existingEvent == null)
+                return null;
 
+            return new EventViewModel
+            {
+                Id = existingEvent.Id,
+                EventTitleAr = existingEvent.EventTitleAr,
+                EventTitleEn = existingEvent.EventTitleEn,
+                EventStartDate = existingEvent.EventStartDate,
+                EventEndtDate = existingEvent.EventEndtDate,
+                SpeakersAr = existingEvent.SpeakersAr,
+                SpeakersEn = existingEvent.SpeakersEn,
+                TopicAr = existingEvent.TopicAr,
+                TopicEn = existingEvent.TopicEn,
+                DescriptionAr = existingEvent.DescriptionAr,
+                DescriptionEn = existingEvent.DescriptionEn,
+                LocationAr = existingEvent.LocationAr,
+                LocationEn = existingEvent.LocationEn,
+                MaxAttendence = existingEvent.MaxAttendence,
+                IsActive = existingEvent.IsActive,
+                IsDeleted = existingEvent.IsDeleted,
+                BoardId = existingEvent.BoardId,
+                BoardName = existingEvent.Board.NameAr,
+
+            };
         }
 
-        public int AddEvent(EventViewModel Event)
+        public int AddEvent(EventViewModel eventViewModel)
         {
             try
             {
-                tblEvents VEvent = new tblEvents();
+                var newEvent = new tblEvents
+                {
+                    Id = eventViewModel.Id,
+                    EventTitleAr = eventViewModel.EventTitleAr,
+                    EventTitleEn = eventViewModel.EventTitleEn,
+                    EventStartDate = eventViewModel.EventStartDate,
+                    EventEndtDate = eventViewModel.EventEndtDate,
+                    SpeakersAr = eventViewModel.SpeakersAr,
+                    SpeakersEn = eventViewModel.SpeakersEn,
+                    TopicAr = eventViewModel.TopicAr,
+                    TopicEn = eventViewModel.TopicEn,
+                    DescriptionAr = eventViewModel.DescriptionAr,
+                    DescriptionEn = eventViewModel.DescriptionEn,
+                    LocationAr = eventViewModel.LocationAr,
+                    LocationEn = eventViewModel.LocationEn,
+                    MaxAttendence = eventViewModel.MaxAttendence,
+                    IsActive = eventViewModel.IsActive,
+                    IsDeleted = eventViewModel.IsDeleted,
+                    BoardId = eventViewModel.BoardId
 
-                VEvent.Id = Event.Id;
-                VEvent.EventTitleAr = Event.EventTitleAr;
-                VEvent.EventTitleEn = Event.EventTitleEn;
-                VEvent.EventStartDate = Event.EventStartDate;
-                VEvent.EventEndtDate = Event.EventEndtDate;
-                VEvent.Time = Event.Time;
-                VEvent.EndRegTime = Event.EndRegTime;
-                VEvent.SpeakersAr = Event.SpeakersAr;
-                VEvent.SpeakersEn = Event.SpeakersEn;
-                VEvent.TopicAr = Event.TopicAr;
-                VEvent.TopicEn = Event.TopicEn;
-                VEvent.DescriptionAr = Event.DescriptionAr;
-                VEvent.DescriptionEn = Event.DescriptionEn;
-                VEvent.LocationAr = Event.LocationAr;
-                VEvent.LocationEn = Event.LocationEn;
-                VEvent.MaxAttendence = Event.MaxAttendence;
-                VEvent.IsActive = Event.IsActive;
-                VEvent.IsDeleted = Event.IsDeleted;
+                };
 
-                _context.tblEvents.Add(VEvent);
+                _context.tblEvents.Add(newEvent);
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
-
             }
-
-
-            
         }
 
-        public int UpdateEvent(EventViewModel Event)
+        public int UpdateEvent(EventViewModel eventViewModel)
         {
             try
             {
-                var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == Event.Id);
+                var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == eventViewModel.Id);
                 if (existingEvent == null)
-                {
                     return 0;
-                }
 
-                existingEvent.EventTitleAr = Event.EventTitleAr;
-                existingEvent.EventTitleEn = Event.EventTitleEn;
-                existingEvent.EventStartDate = Event.EventStartDate;
-                existingEvent.EventEndtDate = Event.EventEndtDate;
-                existingEvent.Time = Event.Time;
-                existingEvent.EndRegTime = Event.EndRegTime;
-                existingEvent.SpeakersAr = Event.SpeakersAr;
-                existingEvent.SpeakersEn = Event.SpeakersEn;
-                existingEvent.TopicAr = Event.TopicAr;
-                existingEvent.TopicEn = Event.TopicEn;
-                existingEvent.DescriptionAr = Event.DescriptionAr;
-                existingEvent.DescriptionEn = Event.DescriptionEn;
-                existingEvent.LocationAr = Event.LocationAr;
-                existingEvent.LocationEn = Event.LocationEn;
-                existingEvent.MaxAttendence = Event.MaxAttendence;
-                existingEvent.IsDeleted = false;
-                existingEvent.IsActive = true;
+                existingEvent.EventTitleAr = eventViewModel.EventTitleAr;
+                existingEvent.EventTitleEn = eventViewModel.EventTitleEn;
+                existingEvent.EventStartDate = eventViewModel.EventStartDate;
+                existingEvent.EventEndtDate = eventViewModel.EventEndtDate;
+                existingEvent.SpeakersAr = eventViewModel.SpeakersAr;
+                existingEvent.SpeakersEn = eventViewModel.SpeakersEn;
+                existingEvent.TopicAr = eventViewModel.TopicAr;
+                existingEvent.TopicEn = eventViewModel.TopicEn;
+                existingEvent.DescriptionAr = eventViewModel.DescriptionAr;
+                existingEvent.DescriptionEn = eventViewModel.DescriptionEn;
+                existingEvent.LocationAr = eventViewModel.LocationAr;
+                existingEvent.LocationEn = eventViewModel.LocationEn;
+                existingEvent.MaxAttendence = eventViewModel.MaxAttendence;
+                existingEvent.IsDeleted = eventViewModel.IsDeleted;
+                existingEvent.IsActive = eventViewModel.IsActive;
+                existingEvent.BoardId = eventViewModel.BoardId;
 
                 _context.SaveChanges();
                 return 1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                 
                 return 0;
             }
         }
@@ -149,47 +147,21 @@ namespace SHARKNA.Domain
         {
             try
             {
-                var DEvent = _context.tblEvents.FirstOrDefault(b => b.Id == id);
-                if (DEvent != null)
-                {
-                    DEvent.IsDeleted = true;
-                    DEvent.IsActive = false;
-                    _context.Update(DEvent);
-                    _context.SaveChanges();
-
-                    return 1;
-                }
-                else
+                var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == id);
+                if (existingEvent == null)
                     return 0;
+
+                existingEvent.IsDeleted = true;
+                existingEvent.IsActive = false;
+
+                _context.Update(existingEvent);
+                _context.SaveChanges();
+                return 1;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return 0;
             }
-            
         }
-
-        public EventViewModel GetEventById(Guid eventId)
-        {
-            return _context.tblEvents
-                .Where(e => e.Id == eventId)
-                .Select(e => new EventViewModel
-                {
-                    Id = e.Id,
-                    EventTitleAr = e.EventTitleAr,
-                    EventStartDate = e.EventStartDate,
-                    EventEndtDate = e.EventEndtDate,
-                    Time = e.Time,
-                    LocationAr = e.LocationAr,
-                    SpeakersAr = e.SpeakersAr,
-                    TopicAr = e.TopicAr,
-                    DescriptionAr = e.DescriptionAr,
-                    MaxAttendence = e.MaxAttendence // Ensure this is included
-                })
-                .FirstOrDefault();
-        }
-
-
-
     }
 }
