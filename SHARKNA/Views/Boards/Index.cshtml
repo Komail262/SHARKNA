@@ -69,7 +69,6 @@
                                 <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.Gender)</th>
-                                <th>@Html.DisplayNameFor(m => m.IsActive)</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
@@ -88,18 +87,17 @@
                                             {
                                                 @:طلاب
                                             }
-                                            else if (board.Gender == false)
+                                            else 
                                             {
                                                 @:طالبات
                                             }
                                         }
-                                        else
+                                        else 
                                         {
                                             @: طلاب وطالبات
                                         }
                                     </td>
 
-                                    <td>@board.IsActive</td>
                                   
                                     <td>
                                         <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-primary">تعديل</a> |

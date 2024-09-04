@@ -75,7 +75,7 @@ namespace SHARKNA.Domain
 
             return await _context.tblEventAttendence.Include(R => R.EventsReg)
 
-                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel 
                 {
                     Id = x.Id,
                     EventDate = x.EventDate,

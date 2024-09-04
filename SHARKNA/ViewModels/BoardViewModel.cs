@@ -32,7 +32,7 @@ namespace SHARKNA.ViewModels
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+       
         [DisplayName("الجنس")]
         public bool? Gender { get; set; }
 
@@ -47,5 +47,8 @@ namespace SHARKNA.ViewModels
         
         [DisplayName("نشط؟")]
         public bool IsActive { get; set; }
+
+
+
     }
 }
