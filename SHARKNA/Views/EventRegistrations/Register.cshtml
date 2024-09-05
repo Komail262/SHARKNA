@@ -39,8 +39,9 @@
                                             {
                                                 <tr>
                                                     <td class="event-title">@eventItem.EventTitleAr</td>
-                                                    <td>@eventItem.EventStartDate.ToString("dd-MM-yyyy")</td>
-                                                    <td>@eventItem.EventEndtDate.ToString("dd-MM-yyyy")</td>
+                                                    <td>@(eventItem.EventStartDate != null ? eventItem.EventStartDate?.ToString("dd-MM-yyyy") : "N/A")</td>
+                                                    <td>@(eventItem.EventEndtDate != null ? eventItem.EventEndtDate?.ToString("dd-MM-yyyy") : "N/A")</td>
+
                                                     @* <td>@eventItem.Time.ToString(@"hh\:mm")</td> *@
                                                     <td>@eventItem.LocationAr</td>
                                                     <td>

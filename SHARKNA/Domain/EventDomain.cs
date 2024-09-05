@@ -38,6 +38,7 @@ namespace SHARKNA.Domain
                     IsActive = e.IsActive,
                     IsDeleted = e.IsDeleted,
                     BoardId = e.BoardId,
+                    Gender = e.Gender,
                     BoardName = e.Board.NameAr
                 })
                 .ToList();
@@ -54,8 +55,8 @@ namespace SHARKNA.Domain
                 Id = existingEvent.Id,
                 EventTitleAr = existingEvent.EventTitleAr,
                 EventTitleEn = existingEvent.EventTitleEn,
-                EventStartDate = existingEvent.EventStartDate,
-                EventEndtDate = existingEvent.EventEndtDate,
+                EventStartDate = (existingEvent.EventStartDate.Year >= 1900 && existingEvent.EventStartDate.Year <= 2077) ? existingEvent.EventStartDate : (DateTime?)null,
+                EventEndtDate = (existingEvent.EventEndtDate.Year >= 1900 && existingEvent.EventEndtDate.Year <= 2077) ? existingEvent.EventEndtDate : (DateTime?)null,
                 SpeakersAr = existingEvent.SpeakersAr,
                 SpeakersEn = existingEvent.SpeakersEn,
                 TopicAr = existingEvent.TopicAr,
@@ -68,22 +69,30 @@ namespace SHARKNA.Domain
                 IsActive = existingEvent.IsActive,
                 IsDeleted = existingEvent.IsDeleted,
                 BoardId = existingEvent.BoardId,
+                Gender = existingEvent.Gender,
                 BoardName = existingEvent.Board.NameAr,
-
             };
         }
+
 
         public int AddEvent(EventViewModel eventViewModel)
         {
             try
             {
+                // التحقق من وجود قيم لتواريخ البداية والنهاية
+                if (!eventViewModel.EventStartDate.HasValue || !eventViewModel.EventEndtDate.HasValue)
+                {
+                    // إذا لم تكن هناك قيم صالحة، نعيد 0 أو أي كود خطأ مناسب
+                    return 0;
+                }
+
                 var newEvent = new tblEvents
                 {
                     Id = eventViewModel.Id,
                     EventTitleAr = eventViewModel.EventTitleAr,
                     EventTitleEn = eventViewModel.EventTitleEn,
-                    EventStartDate = eventViewModel.EventStartDate,
-                    EventEndtDate = eventViewModel.EventEndtDate,
+                    EventStartDate = eventViewModel.EventStartDate.Value, // استخدام .Value بعد التحقق من أنها ليست فارغة
+                    EventEndtDate = eventViewModel.EventEndtDate.Value, // استخدام .Value بعد التحقق من أنها ليست فارغة
                     SpeakersAr = eventViewModel.SpeakersAr,
                     SpeakersEn = eventViewModel.SpeakersEn,
                     TopicAr = eventViewModel.TopicAr,
@@ -92,11 +101,11 @@ namespace SHARKNA.Domain
                     DescriptionEn = eventViewModel.DescriptionEn,
                     LocationAr = eventViewModel.LocationAr,
                     LocationEn = eventViewModel.LocationEn,
+                    Gender = eventViewModel.Gender,
                     MaxAttendence = eventViewModel.MaxAttendence,
-                    IsActive = eventViewModel.IsActive,
-                    IsDeleted = eventViewModel.IsDeleted,
+                    IsActive = true,
+                    IsDeleted = false,
                     BoardId = eventViewModel.BoardId
-
                 };
 
                 _context.tblEvents.Add(newEvent);
@@ -119,8 +128,22 @@ namespace SHARKNA.Domain
 
                 existingEvent.EventTitleAr = eventViewModel.EventTitleAr;
                 existingEvent.EventTitleEn = eventViewModel.EventTitleEn;
-                existingEvent.EventStartDate = eventViewModel.EventStartDate;
-                existingEvent.EventEndtDate = eventViewModel.EventEndtDate;
+
+                // التحقق من صحة تاريخ البدء والنهاية
+                if (eventViewModel.EventStartDate.HasValue &&
+                    eventViewModel.EventStartDate.Value.Year >= 1900 &&
+                    eventViewModel.EventStartDate.Value.Year <= 2077)
+                {
+                    existingEvent.EventStartDate = eventViewModel.EventStartDate.Value;
+                }
+
+                if (eventViewModel.EventEndtDate.HasValue &&
+                    eventViewModel.EventEndtDate.Value.Year >= 1900 &&
+                    eventViewModel.EventEndtDate.Value.Year <= 2077)
+                {
+                    existingEvent.EventEndtDate = eventViewModel.EventEndtDate.Value;
+                }
+
                 existingEvent.SpeakersAr = eventViewModel.SpeakersAr;
                 existingEvent.SpeakersEn = eventViewModel.SpeakersEn;
                 existingEvent.TopicAr = eventViewModel.TopicAr;
@@ -130,8 +153,9 @@ namespace SHARKNA.Domain
                 existingEvent.LocationAr = eventViewModel.LocationAr;
                 existingEvent.LocationEn = eventViewModel.LocationEn;
                 existingEvent.MaxAttendence = eventViewModel.MaxAttendence;
-                existingEvent.IsDeleted = eventViewModel.IsDeleted;
-                existingEvent.IsActive = eventViewModel.IsActive;
+                existingEvent.Gender = eventViewModel.Gender;
+                existingEvent.IsDeleted = false;
+                existingEvent.IsActive = true;
                 existingEvent.BoardId = eventViewModel.BoardId;
 
                 _context.SaveChanges();
@@ -141,27 +165,29 @@ namespace SHARKNA.Domain
             {
                 return 0;
             }
-        }
+        } 
 
-        public int DeleteEvent(Guid id)
-        {
-            try
-            {
-                var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == id);
-                if (existingEvent == null)
-                    return 0;
 
-                existingEvent.IsDeleted = true;
-                existingEvent.IsActive = false;
 
-                _context.Update(existingEvent);
-                _context.SaveChanges();
-                return 1;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
+        //public int DeleteEvent(Guid id)
+        //{
+        //    try
+        //    {
+        //        var existingEvent = _context.tblEvents.FirstOrDefault(e => e.Id == id);
+        //        if (existingEvent == null)
+        //            return 0;
+
+        //        existingEvent.IsDeleted = true;
+        //        existingEvent.IsActive = false;
+
+        //        _context.Update(existingEvent);
+        //        _context.SaveChanges();
+        //        return 1;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return 0;
+        //    }
+        //}
     }
 }

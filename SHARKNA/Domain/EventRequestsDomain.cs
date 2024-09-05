@@ -58,6 +58,7 @@ namespace SHARKNA.Domain
                     SpeakersAr = request.Event.SpeakersAr,
                     RequestStatusId = request.RequestStatusId,
                     RequestStatusName = request.RequestStatus.RequestStatusAr,
+                    Gender = request.Event.Gender,
                     BoardId = request.BoardId,
                     BoardName = request.Board.NameAr,
                     BoardDescriptionAr = request.Board.DescriptionAr // وصف اللجنة
@@ -87,14 +88,16 @@ namespace SHARKNA.Domain
             var request = _context.tblEventRequests.FirstOrDefault(r => r.Id == id);
             if (request != null)
             {
-                var canceledStatus = _context.tblRequestStatus.FirstOrDefault(s => s.Id == Guid.Parse("E2D4F6A8-B2C3-4E5D-8A9F-0B1C2D3E4F5A"));
+                // تأكد من استخدام الـ ID الصحيح لحالة "تم الإلغاء"
+                var canceledStatus = _context.tblRequestStatus.FirstOrDefault(s => s.Id == Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"));
                 if (canceledStatus != null)
                 {
                     request.RequestStatusId = canceledStatus.Id;
-                    _context.SaveChanges();
+                    _context.SaveChanges(); // تأكد من حفظ التغييرات في قاعدة البيانات
                 }
             }
         }
+
 
         public List<tblBoards> GetTblBoards()
         {
@@ -105,6 +108,51 @@ namespace SHARKNA.Domain
         {
             return _context.tblEvents.Where(e => !e.IsDeleted && e.IsActive).ToList();
         }
+        public void UpdateEventRequestBoard(Guid eventId, Guid newBoardId)
+        {
+            // جلب جميع الطلبات المرتبطة بالحدث
+            var eventRequests = _context.tblEventRequests.Where(r => r.EventId == eventId).ToList();
+
+            // تحديث BoardId في كل طلب
+            foreach (var request in eventRequests)
+            {
+                request.BoardId = newBoardId;
+            }
+
+            // حفظ التغييرات في قاعدة البيانات
+            _context.SaveChanges();
+        }
+
+
+        public async Task AcceptRequest(Guid requestId)
+        {
+            var request = _context.tblEventRequests.FirstOrDefault(r => r.Id == requestId);
+            if (request != null)
+            {
+                var acceptedStatus = _context.tblRequestStatus.FirstOrDefault(s => s.RequestStatusAr == "مقبول");
+                if (acceptedStatus != null)
+                {
+                    request.RequestStatusId = acceptedStatus.Id;
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+
+        public void RejectRequest(Guid requestId, string rejectionReason)
+        {
+            var request = _context.tblEventRequests.FirstOrDefault(r => r.Id == requestId);
+            if (request != null)
+            {
+                var rejectedStatus = _context.tblRequestStatus.FirstOrDefault(s => s.RequestStatusAr == "مرفوض");
+                if (rejectedStatus != null)
+                {
+                    request.RequestStatusId = rejectedStatus.Id;
+                    request.RejectionReasons = rejectionReason;
+                    _context.SaveChanges();
+                }
+            }
+        }
+
 
         public List<tblRequestStatus> GetTblRequestStatus()
         {
@@ -116,10 +164,10 @@ namespace SHARKNA.Domain
             var request = _context.tblEventRequests.FirstOrDefault(r => r.Id == requestId);
             if (request != null)
             {
-                request.RequestStatusId = requestStatusId;
+                request.RequestStatusId = requestStatusId; // تحديث حالة الطلب
 
+                // إذا كانت الحالة "مرفوض"، قم بتحديث أسباب الرفض
                 var selectedStatus = _context.tblRequestStatus.FirstOrDefault(rs => rs.Id == requestStatusId)?.RequestStatusAr;
-
                 if (selectedStatus == "مرفوض")
                 {
                     request.RejectionReasons = rejectionReasons;
@@ -129,10 +177,15 @@ namespace SHARKNA.Domain
                     request.RejectionReasons = null;
                 }
 
-                _context.SaveChanges();
+                _context.SaveChanges(); // حفظ التغييرات في قاعدة البيانات
                 return 1; // ناجح
             }
             return 0; // فشل
         }
+
     }
 }
+
+
+
+
