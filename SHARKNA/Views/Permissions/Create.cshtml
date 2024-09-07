@@ -7,22 +7,22 @@
     @{
         if (@ViewData["Successful"] != null)
         {
-            <Text>
-                                            var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Permissions")';
-                    }
-                );
-            </Text>
+                    <Text>
+                                                    var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result, '', 'success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Permissions")';
+                            }
+                        );
+                    </Text>
         }
         else if (@ViewData["Falied"] != null)
         {
-            <Text>
-                                            var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
+                    <Text>
+                                                    var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
+                    </Text>
         }
     }
 </script>
@@ -39,13 +39,14 @@
             <div class="block-body py-5">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
+                        <label id="lblError" d style="color:red; display:none">هذا المستخدم غير موجود في قاعدة البيانات</label>
                         <form asp-action="Create" method="post">
                             <div class="row">
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">اسم المستخدم</label>
-                                        <input asp-for="UserName" type="text" placeholder="اسم المستخدم" class="form-control">
+                                        <input asp-for="UserName" type="text" placeholder="اسم المستخدم" class="form-control"  id="UserName">
                                         <span asp-validation-for="UserName" class="text-danger"></span>
 
                                     </div>
@@ -54,7 +55,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">الاسم كامل</label>
-                                        <input asp-for="FullNameAr" type="text" placeholder="الاسم " class="form-control">
+                                        <input id="FullNameAr" readonly asp-for="FullNameAr" type="text" placeholder="الاسم " class="form-control">
                                         <span asp-validation-for="FullNameAr" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
@@ -62,7 +63,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">Full Name</label>
-                                        <input asp-for="FullNameEn" type="text" placeholder="Name" class="form-control">
+                                        <input id="FullNameEn" readonly asp-for="FullNameEn" type="text" placeholder="Name" class="form-control">
                                         <span asp-validation-for="FullNameEn" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
@@ -98,4 +99,30 @@
 </section><!-- End Page Wrap -->
 <div>
     <a asp-action="Index">Back to List</a>
+
 </div>
+
+<script>
+
+    $("#UserName").on("change", function () {
+        showValue($(this).val());
+    });
+
+    function showValue(val) {
+        $.getJSON('@Url.Action("GetUserInfo", "Permissions")/' + val, function (result) {
+            console.log(result);
+            $("#FullNameAr").val("");
+            $("#FullNameEn").val("");
+            if (result != null) {
+                $("#FullNameAr").val(result.fullNameAr);
+                $("#FullNameEn").val(result.fullNameEn);
+                $("#lblError").toggle(false);
+            }
+            else {
+                $("#FullNameAr").val("");
+                $("#FullNameEn").val("");
+                $("#lblError").toggle(true);
+            }
+        });
+    }
+</script>
