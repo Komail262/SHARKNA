@@ -8,7 +8,7 @@
         public string CreatedBy { get; set; }
         public string CreatedTo { get; set; }
         public string AdditionalInfo { get; set; }
-        public int EvId { get; set; }
+        public Guid EvId { get; set; }
 
     }
 }

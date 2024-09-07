@@ -1,0 +1,60 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "My Event Registrations";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <!-- Start Page Wrap -->
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">الفعاليات المسجل بها</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                    </div>
+                </div>
+                <div class="block-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover js-dataTable">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">عنوان الفعالية</th>
+                                    <th scope="col">تاريخ البداية</th>
+                                    <th scope="col">تاريخ النهاية</th>
+                                    <th scope="col">الوقت</th>
+                                    <th scope="col">الموقع</th>
+                                    <th scope="col">تفاصيل</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.EventDetail.EventTitleAr</td>
+                                        <td>@item.EventDetail.EventStartDate.ToString("yyyy-MM-dd")</td>
+                                        <td>@item.EventDetail.EventEndtDate.ToString("yyyy-MM-dd")</td>
+                                        <td>@item.EventDetail.Time.ToString(@"hh\:mm")</td>
+                                        <td>@item.EventDetail.LocationAr</td>
+                                        <td>
+                                            <form asp-action="MyEventDetails" method="get">
+                                                <input type="hidden" name="EventId" value="@item.EventDetail.Id" />
+                                                <button type="submit" class="btn btn-primary">تفاصيل</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

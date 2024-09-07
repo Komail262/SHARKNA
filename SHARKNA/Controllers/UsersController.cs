@@ -51,6 +51,7 @@ namespace SHARKNA.Controllers
         }
 
         [HttpPost]
+         [Authorize(Roles = "SuperAdmin")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(UserViewModel user)
         {
@@ -145,7 +146,9 @@ namespace SHARKNA.Controllers
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.Role, userPermissions.RoleName),
                 new Claim(ClaimTypes.NameIdentifier, userPermissions.Id.ToString()),
-                new Claim(ClaimTypes.GivenName, userPermissions.FullNameAr)
+                new Claim(ClaimTypes.GivenName, userPermissions.FullNameAr),
+                new Claim(ClaimTypes.Email, userRecord.Email),
+                new Claim(ClaimTypes.MobilePhone, userRecord.MobileNumber)
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);

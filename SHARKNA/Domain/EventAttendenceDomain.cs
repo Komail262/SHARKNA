@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Xml;
@@ -12,17 +13,15 @@ namespace SHARKNA.Domain
         {
             _context = context;
         }
-        public IEnumerable<EventViewModel> GetTblEvents()
+        public async Task<IEnumerable<EventViewModel>> GetTblEventsAsync()
         {
-            return _context.tblEvents.Select(x => new EventViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
+            return await _context.tblEvents.Select(x => new EventViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
             {
                 Id = x.Id,
                 EventTitleAr = x.EventTitleAr,
                 EventTitleEn = x.EventTitleEn,
                 EventStartDate = x.EventStartDate,
                 EventEndtDate = x.EventEndtDate,
-                Time = x.Time,
-                EndRegTime = x.EndRegTime,
                 SpeakersAr = x.SpeakersAr,
                 SpeakersEn = x.SpeakersEn,
                 TopicAr = x.TopicAr,
@@ -33,14 +32,16 @@ namespace SHARKNA.Domain
                 LocationEn = x.LocationEn,
                 IsActive = x.IsActive,
                 IsDeleted = x.IsDeleted
-            }).ToList();
+            }).ToListAsync();
         }
 
 
 
-        public IEnumerable<EEventAttendenceViewModel> GetEventDaysByEventId(Guid eventId)
+
+
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetEventDaysByEventIdAsync(Guid eventId)
         {
-            var EE = _context.tblEvents.FirstOrDefault(e => e.Id == eventId); // نسترجع بيانات الفعاليات  من الداتابيس عن طريق الايفنت أي دي
+            var EE = await _context.tblEvents.FirstOrDefaultAsync(e => e.Id == eventId); // نسترجع بيانات الفعاليات  من الداتابيس عن طريق الايفنت أي دي
             if (EE == null) // اذا الفعالية غير موجودة عطني غير موجودة
             {
                 return null;
@@ -69,77 +70,51 @@ namespace SHARKNA.Domain
         }
 
 
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventattendenceAsync(Guid eventId, Guid eventRegId)
+        {
 
+            return await _context.tblEventAttendence.Include(R => R.EventsReg)
 
-        // new list
+                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel 
+                {
+                    Id = x.Id,
+                    EventDate = x.EventDate,
+                    Day = x.Day,
+                    EventstId = x.EventstId,
+                    EventsRegId = x.EventsRegId,
+                    NameAr = x.EventsReg.FullNameAr,
+                    RRegDate = x.EventsReg.RegDate,
+                    EEmail = x.EventsReg.Email,
+                    IsAttend = x.IsAttend
 
-
-        //public IEnumerable<EventRegistrationsViewModel> GetTblEventRegistrations(Guid eventId , Guid Accepted)
+                }).ToListAsync();
+        }
+        //public EEventAttendenceViewModel GetTblEventattendenceByIdAsync(Guid id)
         //{
-        //    return _context.tblEventRegistrations
-        //        .Where(x => x.EventsId == eventId && x.EventStatusId == Accepted)
-        //        .Select(x => new EventRegistrationsViewModel //استرجع جميع قيم المسجلين من الداتابيس واحطهم في الايفنت فيو موديل
+        //    return _context.tblEventAttendence
+        //        .Where(x => x.Id == id)
+        //        .Include(x => x.EventsRegId)
+        //        .Include(x => x.EventstId)
+        //        .Select(x => new EEventAttendenceViewModel
+        //        {
+        //            Id = x.Id,
+        //            EventDate = x.EventDate,
+        //            Day = x.Day,
+        //            EventstId = x.EventstId,
+        //            EventsRegId = x.EventsRegId,
+        //            NameAr = x.EventsReg.FullNameAr,
+        //            RRegDate = x.EventsReg.RegDate,
+        //            EEmail = x.EventsReg.Email,
+        //            IsAttend = x.IsAttend
 
-        //    {
-        //        Id = x.Id,
-        //        RegDate = x.RegDate,
-        //        RejectionReasons = x.RejectionReasons,
-        //        UserName = x.UserName,
-        //        Email = x.Email,
-        //        MobileNumber = x.MobileNumber,
-        //        FullNameAr = x.FullNameAr,
-        //        FullNameEn = x.FullNameEn,
-        //        EventId = x.EventsId,
-        //        RequestStatusId = x.EventStatusId
-
-        //    }).ToList();
-
+        //        })
+        //        .FirstOrDefault();
         //}
 
 
-        public IEnumerable<EventRegistrationsViewModel> GetTblEventreg()
-        {
-            return _context.tblEventRegistrations.Select(x => new EventRegistrationsViewModel //استرجع جميع قيم الفعاليات من الداتابيس واحطهم في الايفنت فيو موديل
-            {
-                Id = x.Id,
-                RegDate = x.RegDate,
-                RejectionReasons = x.RejectionReasons,
-                UserName = x.UserName,
-                Email = x.Email,
-                MobileNumber = x.MobileNumber,
-                FullNameAr = x.FullNameAr,
-                FullNameEn = x.FullNameEn,
-                EventId = x.EventsId,
-                RequestStatusId = x.EventStatusId
-
-            }).ToList();
-        }
 
 
 
-        public int AddEventAttend(EEventAttendenceViewModel eventatten)
-        {
-            try
-            {
-                var At = new tblEventAttendence
-                {
-                    Id = eventatten.Id,
-                    EventMemId = eventatten.EventMemId,
-                    EventstId = Guid.Parse(" "),
-                    EventDate = eventatten.EventDate,
-                    Day = eventatten.Day,
-                    IsAttend = eventatten.IsAttend
-                };
-
-                _context.tblEventAttendence.Add(At);
-                _context.SaveChanges();
-                return 1;
-            }
-            catch (Exception)
-            {
-                return 0;
-            }
-        }
 
 
     }

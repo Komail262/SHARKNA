@@ -9,7 +9,10 @@
 
         public string DescriptionAr { get; set; }
         public string DescriptionEn { get; set; }
-        
+
+        public bool? Gender { get; set; }
+
+
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 
@@ -17,7 +20,7 @@
         public ICollection<tblBoardTalRequests> BoardTalRequests { get; set; }
         public ICollection<tblBoardRequests> BoardRequests { get; set; }
         public ICollection<tblEventRequests> EventRequests { get; set; }
-        //public ICollection<tblEvents> Events { get; set; }
+        public ICollection<tblEvents> Events { get; set; }
 
 
 

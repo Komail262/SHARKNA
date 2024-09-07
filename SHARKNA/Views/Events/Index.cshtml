@@ -1,120 +1,106 @@
-﻿@model IEnumerable<EventViewModel>
+﻿@model IEnumerable<SHARKNA.ViewModels.EventViewModel>
 
 @{
     ViewData["Title"] = "Events List";
 }
+
 <script>
     @{
         if (@ViewData["Successful"] != null)
         {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Successful"])';
+            <text>
+                                        var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Events")';
-                    }
-                );
-            </Text>
+                .then(function () {
+                    window.location.href = '@Url.Action("Index", "Events")';
+                });
+            </text>
         }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        else if (@ViewData["Falied"] != null)
         {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
+            <text>
+                                        var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
+            </text>
         }
     }
 </script>
 
-<!DOCTYPE html>
-<html lang="en" dir="rtl" data-theme="light">
-<body>
-    <!-- Start Page Wrap -->
-    <section class="page_wrap">
-        <div class="page_content">
-            <div class="block mb-4">
-                <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">ادارة الفعاليات</h5>
-                    <div class="d-flex gap-2">
-                        <div class="form-group">
-                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
-                        </div>
-                        <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة الحدث</a>
-                        </div>
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-3">
+                <h5 class="m-0">إدارة الفعاليات</h5>
+                <div class="d-flex gap-2">
+                    <div class="form-group">
+                        <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                    </div>
+                    <div>
+                        <a asp-action="Create" class="btn btn-primary">إضافة الحدث</a>
                     </div>
                 </div>
-                <div class="block-body">
-                    <table class="table table-hover js-dataTable">
-                        <thead>
+            </div>
+            <div class="block-body">
+                <table class="table table-hover js-dataTable">
+                    <thead>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
+                            <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
+                            <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
+                            <th>وقت بداية الحدث</th>
+                            <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
+                            <th>وقت نهاية الحدث</th>
+                            <th>@Html.DisplayNameFor(m => m.SpeakersAr)</th>
+                            <th>@Html.DisplayNameFor(m => m.SpeakersEn)</th>
+                            <th>@Html.DisplayNameFor(m => m.TopicAr)</th>
+                            <th>@Html.DisplayNameFor(m => m.TopicEn)</th>
+                            <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
+                            <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
+                            <th>@Html.DisplayNameFor(m => m.LocationAr)</th>
+                            <th>@Html.DisplayNameFor(m => m.LocationEn)</th>
+                            <th>@Html.DisplayNameFor(m => m.MaxAttendence)</th>
+                            <th>@Html.DisplayNameFor(m => m.BoardId)</th>
+
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Event in Model)
+                        {
                             <tr>
-                                <th>@Html.DisplayNameFor(m => m.EventTitleAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.EventTitleEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.EventStartDate)</th>
-                                <th>@Html.DisplayNameFor(m => m.EventEndtDate)</th>
-                                <th>@Html.DisplayNameFor(m => m.Time)</th>
-                                <th>@Html.DisplayNameFor(m => m.EndRegTime)</th>
-                                <th>@Html.DisplayNameFor(m => m.SpeakersAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.SpeakersEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.TopicAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.TopicEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.LocationAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.LocationEn)</th>
-                                <th>@Html.DisplayNameFor(m => m.MaxAttendence)</th>
-                                <th>الإجراءات</th>
+                                <td>@Event.EventTitleAr</td>
+                                <td>@Event.EventTitleEn</td>
+                                <td>@Event.EventStartDate.ToString("yyyy/MM/dd HH:mm")</td>
+                                <td>@Event.EventStartDate.ToString("HH:mm")</td>
+                                <td>@Event.EventEndtDate.ToString("yyyy/MM/dd HH:mm")</td>
+                                <td>@Event.EventEndtDate.ToString("HH:mm")</td>
+                                <td>@Event.SpeakersAr</td>
+                                <td>@Event.SpeakersEn</td>
+                                <td>@Event.TopicAr</td>
+                                <td>@Event.TopicEn</td>
+                                <td>@Event.DescriptionAr</td>
+                                <td>@Event.DescriptionEn</td>
+                                <td>@Event.LocationAr</td>
+                                <td>@Event.LocationEn</td>
+                                <td>@Event.MaxAttendence</td>
+                                <td>@Event.BoardName</td>
+                                <td class="action_td text-end">
+                                    <div class="d-flex gap-2">
+                                        <a asp-action="Edit" asp-route-id="@Event.Id" class="btn btn-sm btn-success">تعديل</a>
+                                        <form asp-action="Delete" asp-route-id="@Event.Id" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger" onclick="return functionConfirm(this)">حذف</button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var Event in Model)
-                            {
-                                <tr>
-                                    <td>@Event.EventTitleAr</td>
-                                    <td>@Event.EventTitleEn</td>
-                                    <td>@Event.EventStartDate.ToString("MM/dd/yyyy")</td>
-                                    <td>@Event.EventEndtDate.ToString("MM/dd/yyyy")</td>
-                                    <td>@Event.Time</td>
-                                    <td>@Event.EndRegTime.ToString("HH:mm:ss")</td>
-                                    <td>@Event.SpeakersAr</td>
-                                    <td>@Event.SpeakersEn</td>
-                                    <td>@Event.TopicAr</td>
-                                    <td>@Event.TopicEn</td>
-                                    <td>@Event.DescriptionAr</td>
-                                    <td>@Event.DescriptionEn</td>
-                                    <td>@Event.LocationAr</td>
-                                    <td>@Event.LocationEn</td>
-                                    <td>@Event.MaxAttendence</td>
-                                    <td class="action_td text-end">
-                                        <div class="d-flex gap-2">
-                                            <a asp-action="Edit" asp-route-id="@Event.Id" class="btn btn-sm btn-success">تعديل</a>
-                                            <form asp-action="Delete" asp-route-id="@Event.Id" method="post" style="display:inline;">
-                                                <button type="submit" class="btn btn-danger" onclick="return functionConfirm(this)">حذف</button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
-    </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
-    <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
-            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
-        </p>
-    </footer><!-- End Footer -->
+    </div>
+</section>
 
-</body>
-</html>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

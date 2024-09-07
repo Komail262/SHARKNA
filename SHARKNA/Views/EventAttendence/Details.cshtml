@@ -88,7 +88,11 @@
 @*                                     <td>@attendence.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
  *@
                                     <td>
-                                        <a asp-action="Members" asp-route-id="@attendence.Id" class="btn btn-primary"> التحضير </a> 
+                                       
+                                            <a asp-action="Members" asp-route-id="@attendence.EventstId" class="btn btn-primary"> التحضير </a>
+
+
+                                        
 
                                     </td>
                                 </tr>
@@ -99,12 +103,7 @@
             </div>
         </div>
     </section><!-- End Page Wrap -->
-    <!-- Start Footer -->
-    <footer class="d-flex justify-content-center align-items-center">
-        <p class="m-0 d-flex justify-content-center">
-            جميع الحقوق محفوظة لجامعة الملك فيصل 2024 © | تصميم وتطوير عمادة التعلم الإلكتروني وتقنية المعلومات
-        </p>
-    </footer><!-- End Footer -->
+ 
 
 </body>
 </html>

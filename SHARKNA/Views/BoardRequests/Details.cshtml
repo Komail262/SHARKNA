@@ -1,0 +1,111 @@
+﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
+
+<h2>تفاصيل الطلب</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">تفاصيل الطلب</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form>
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="UserName" class="mb-1">اسم المستخدم</label>
+                                        <input type="text" id="UserName" class="form-control" value="@Model.UserName" disabled />
+                                    </div>
+                                </div>
+                              
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="BoardName" class="mb-1">النادي</label>
+                                        <input type="text" id="BoardName" class="form-control" value="@Model.BoardName" disabled />
+                                    </div>
+                                </div>
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="Email" class="mb-1">البريد الإلكتروني</label>
+                                        <input type="email" id="Email" class="form-control" value="@Model.Email" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="MobileNumber" class="mb-1">رقم الجوال</label>
+                                        <input type="tel" id="MobileNumber" class="form-control"  value="@Model.MobileNumber" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameAr" class="mb-1">الاسم بالعربي</label>
+                                        <input type="text" id="FullNameAr" class="form-control" value="@Model.FullNameAr" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameEn" class="mb-1">الاسم بالانجليزي</label>
+                                        <input type="text" id="FullNameEn" class="form-control" value="@Model.FullNameEn" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="RequestStatusName" class="mb-1">حالة الطلب</label>
+                                        <input type="text" id="RequestStatusName" class="form-control" value="@Model.RequestStatusName" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="RejectionReasons" class="mb-1">سبب الرفض</label>
+                                        <input type="text" id="RejectionReasons" class="form-control" value="@Model.RejectionReasons" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                            </div>
+
+                            @if (Model.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
+                            {
+                                <div class="text-center mt-4">
+                                    <a asp-action="Accept" asp-route-id="@Model.Id" class="btn btn-success px-5" >قبول</a>
+                                    <a href="javascript:void(0);" class="btn btn-danger px-5" data-bs-toggle="modal" data-bs-target="#rejectModal">رفض</a>
+                                    @* <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">رفض</button> *@
+                                </div>
+                            }
+                        </form> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title" id="rejectModalLabel">:سبب الرفض</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            
+            
+                <form asp-action="Reject" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="form-group">
+                        @* <label for="rejectionReason">سبب الرفض:</label> *@
+                        <textarea name="rejectionReason" id="rejectionReason" class="form-control" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-danger">تأكيد الرفض</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

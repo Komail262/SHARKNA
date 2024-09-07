@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SHARKNA.Domain;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace SHARKNA.Controllers
 {
@@ -12,23 +14,36 @@ namespace SHARKNA.Controllers
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
         private readonly EventRegistrationsDomain _EventRegistrations;
+        private readonly UserDomain _UserDomain;
 
 
-        public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain)
+        public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain, UserDomain userDomain)
         {
             _eventattendenceDomain = eventAttendenceDomain;
             _EventRegistrations = eventRegDomain;
+            _UserDomain = userDomain;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var events = _eventattendenceDomain.GetTblEvents();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+            var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
+            var user = _UserDomain.GetUserFER(username); // Fetch user details from the database
+
+            var model = new BoardRequestsViewModel
+            {
+                UserName = username,
+                Email = user.Email,
+                MobileNumber = user.MobileNumber,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn
+            };
+            var events = await _eventattendenceDomain.GetTblEventsAsync();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
             return View(events);
         }
 
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            var eventDays = _eventattendenceDomain.GetEventDaysByEventId(id);//نطلع معلومات الفعالية عن طريق اليوم بشكل مقسم فنستدعي الايدي الموجود بالدومين ليعرض الايام لي
+            var eventDays = await _eventattendenceDomain.GetEventDaysByEventIdAsync(id);//نطلع معلومات الفعالية عن طريق اليوم بشكل مقسم فنستدعي الايدي الموجود بالدومين ليعرض الايام لي
             if (eventDays == null)
             {
                 return NotFound();
@@ -37,13 +52,12 @@ namespace SHARKNA.Controllers
             return View(eventDays);
         }
 
-        public IActionResult Members()
+        public async Task<IActionResult> Members(Guid id, Guid EventsRegId)
         {
+            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, EventsRegId);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
 
-
-
-            var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
             return View(Ereg);
+
         }
 
 
@@ -52,59 +66,36 @@ namespace SHARKNA.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Details(EEventAttendenceViewModel atten)
+        public async Task<IActionResult> Members(FormCollection forms, Guid id, Guid eventRegId)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    atten.Id = Guid.NewGuid();
-
-                    int check = _eventattendenceDomain.AddEventAttend(atten);
-                    if (check == 1)
-                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
-                    else
-                        ViewData["Falied"] = "حدث خطأ";
-                    return View(atten);
-
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewData["Falied"] = "حدث خطأ";
-            }
-
-            return View(atten);
-        }
+                    //var eventId = new Guid(forms["eventId"]);
+                    var username = User.FindFirst(ClaimTypes.Name)?.Value;
+                    var user = _UserDomain.GetUserFER(username);
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-
-        public IActionResult Members(FormCollection forms)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
                     var count = forms["attendanceStatus"].Count;
 
 
 
-                    var Ereg = _eventattendenceDomain.GetTblEventreg();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-                                                                       //return View(Ereg);
+                    var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, eventRegId);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                                                                                                       //return View(Ereg);
 
                     if (count == 1)
-                    ViewData["Successful"] = "تم تسجيل الحضور بنجاح";
+                        ViewData["Successful"] = "تم تسجيل الحضور بنجاح";
                     else
                         ViewData["Falied"] = "حدث خطأ";
 
                     return RedirectToAction("Index");
 
                 }
-            } 
-            
-            catch (Exception ex) {
+            }
+
+            catch (Exception ex)
+            {
                 ViewData["Falied"] = "حدث خطأ";
             }
 
@@ -112,6 +103,6 @@ namespace SHARKNA.Controllers
 
         }
 
-     
+
     }
 }

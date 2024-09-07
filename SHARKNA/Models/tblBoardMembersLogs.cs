@@ -11,7 +11,7 @@
 
         public string AdditionalInfo { get; set; }
 
-        public string BoMeId { get; set; }
+        public Guid BoMeId { get; set; }
 
     }
 }

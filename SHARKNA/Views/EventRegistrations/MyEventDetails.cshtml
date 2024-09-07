@@ -1,0 +1,44 @@
+﻿@model SHARKNA.ViewModels.EventViewModel
+
+@{
+    ViewData["Title"] = "My Event Details";
+}
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5>تفاصيل الفعالية</h5>
+                    <p><strong>الاسم:</strong> @User.FindFirst(ClaimTypes.GivenName)?.Value</p>
+                    <p><strong>البريد الالكتروني:</strong> @User.FindFirst(ClaimTypes.Email)?.Value</p>
+                    <p><strong>رقم الجوال:</strong> @User.FindFirst(ClaimTypes.MobilePhone)?.Value</p>
+                </div>
+                <div class="block-body py-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="m-0">تفاصيل الفعالية</h5>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@Model.EventTitleAr</h5>
+                            <p class="card-text"><strong>تاريخ البداية:</strong> @Model.EventStartDate.ToString("dd-MM-yyyy")</p>
+                            <p class="card-text"><strong>تاريخ النهاية:</strong> @Model.EventEndtDate.ToString("dd-MM-yyyy")</p>
+                            <p class="card-text"><strong>الوقت:</strong> @Model.Time.ToString(@"hh\:mm")</p>
+                            <p class="card-text"><strong>الموقع:</strong> @Model.LocationAr</p>
+                            <p class="card-text"><strong>المتحدث:</strong> @Model.SpeakersAr</p>
+                            <p class="card-text"><strong>الموضوع:</strong> @Model.TopicAr</p>
+                            <p class="card-text"><strong>الوصف:</strong> @Model.DescriptionAr</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="@Url.Action("MyEventRegistrations", "EventRegistrations")" class="btn btn-secondary mt-3">العودة</a>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
