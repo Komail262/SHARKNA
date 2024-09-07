@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace SHARKNA.Controllers
 {
@@ -22,56 +23,109 @@ namespace SHARKNA.Controllers
             _UserDomain = userDomain;
         }
 
-
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult MyEventRegistrations()
+        public async Task<IActionResult> MyEventRegistrations()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-            // Fetch the user's registration information
             var eventRegs = _EventRegistrations.GetUserRegisteredEvents(username);
 
-            // Fetch detailed event information
-            var eventDetails = eventRegs.Select(reg =>
+            var eventDetails = new List<dynamic>();
+
+            foreach (var reg in eventRegs)
             {
-                var eventDetail = _EventDomain.GetTblEventsById(reg.EventId);
-                return new
+                var eventDetail = await _EventDomain.GetTblEventsByIdAsync(reg.EventId);
+                eventDetails.Add(new
                 {
                     EventReg = reg,
                     EventDetail = eventDetail
-                };
-            }).ToList();
+                });
+            }
 
             return View(eventDetails);
         }
 
-
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public async Task<IActionResult> MyEventDetails(Guid eventId)
+        {
+            var eventDetail = await _EventDomain.GetTblEventsByIdAsync(eventId);
+            return View(eventDetail);
+        }
 
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-            var events = _EventRegistrations.GetEventsForUser(username);
+            var events = await Task.Run(() => _EventRegistrations.GetEventsForUser(username));
             return View(events);
+        }
+
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
+        public async Task<IActionResult> EventDetails(Guid eventId)
+        {
+            var eventDetail = await _EventDomain.GetTblEventsByIdAsync(eventId);
+
+            if (eventDetail == null)
+            {
+                return NotFound();
+            }
+
+            var userId = User.Identity.Name;
+
+            var isUserRegistered = _EventRegistrations.GetUserRegisteredEvents(userId)
+                .Any(r => r.EventId == eventId);
+
+            var currentRegistrations = await Task.Run(() => _EventRegistrations.GetEventRegistrationsCount(eventId));
+
+            var maxAttendance = eventDetail.MaxAttendence;
+
+            var canRegister = !isUserRegistered && currentRegistrations < maxAttendance;
+
+            ViewBag.IsUserRegistered = isUserRegistered;
+            ViewBag.CanRegister = canRegister;
+            ViewBag.CurrentRegistrations = currentRegistrations;
+            ViewBag.MaxAttendance = maxAttendance;
+
+            return View(eventDetail);
         }
 
         [HttpPost]
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
-        public IActionResult Register(Guid EventId)
+        public async Task<IActionResult> Register(Guid eventId)
         {
             try
             {
                 var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                var user = _UserDomain.GetUserFER(username);
 
-                var EventReg = new EventRegistrationsViewModel
+                var userRegisteredEvents = await Task.Run(() => _EventRegistrations.GetUserRegisteredEvents(username));
+                var isAlreadyRegistered = userRegisteredEvents.Any(reg => reg.EventId == eventId);
+
+                if (isAlreadyRegistered)
+                {
+                    ViewData["Failed"] = "أنت مسجل بالفعل في هذه الفعالية.";
+                    var eventDetail = await _EventDomain.GetTblEventsByIdAsync(eventId);
+                    return View("EventDetails", eventDetail);
+                }
+
+                var eventInfo = await _EventDomain.GetTblEventsByIdAsync(eventId);
+                var currentRegistrationsCount = await Task.Run(() => _EventRegistrations.GetEventRegistrationsCount(eventId));
+
+                if (currentRegistrationsCount >= eventInfo.MaxAttendence)
+                {
+                    ViewData["Failed"] = "لقد تم الوصول إلى الحد الأقصى للحضور.";
+                    return View("EventDetails", eventInfo);
+                }
+
+                var user = await Task.Run(() => _UserDomain.GetUserFER(username));
+
+                var eventReg = new EventRegistrationsViewModel
                 {
                     Id = Guid.NewGuid(),
                     RegDate = DateTime.Now,
                     RejectionReasons = "b674955e60fd",
-                    EventId = EventId,
+                    EventId = eventId,
                     UserName = username,
                     Email = user.Email,
                     MobileNumber = user.MobileNumber,
@@ -79,15 +133,18 @@ namespace SHARKNA.Controllers
                     FullNameEn = user.FullNameEn
                 };
 
-                _EventRegistrations.AddEventReg(EventReg);
-                
-            }
-            catch (Exception)
-            {
-                ViewData["Failed"] = "هناك خطأ في النظام";
-            }
+                await Task.Run(() => _EventRegistrations.AddEventReg(eventReg));
+                ViewData["Success"] = "تم التسجيل بنجاح!";
 
-            return RedirectToAction("Register");
+                var eventDetailsFinal = await _EventDomain.GetTblEventsByIdAsync(eventId);
+                return View("EventDetails", eventDetailsFinal);
+            }
+            catch (Exception ex)
+            {
+                ViewData["Failed"] = "حدث خطأ غير متوقع في النظام.";
+                var eventDetails = await _EventDomain.GetTblEventsByIdAsync(eventId);
+                return View("EventDetails", eventDetails);
+            }
         }
     }
 }

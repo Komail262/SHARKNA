@@ -61,7 +61,6 @@
                                 <tr>
 
                                     <th>@Html.DisplayNameFor(model => model.NameAr)</th>
-                                    <th>@Html.DisplayNameFor(m => m.RRegDate)</th>
                                     <th>@Html.DisplayNameFor(m => m.EEmail)</th>
 
                                     <th>
@@ -77,11 +76,9 @@
 
 
                                         <td>@member.NameAr</td>
-                                        <td>@member.RRegDate.ToString("yyyy-MM-dd")</td>
                                         <td>@member.EEmail</td>
                                         <td>
-                                            <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@{
-                                            member.IsAttend = true ? true: false;
+                                            <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@{member.IsAttend = true ? true: false;
 } " />
 
                                             @*                                       <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@(member.IsAttend ? "checked" : "")" />

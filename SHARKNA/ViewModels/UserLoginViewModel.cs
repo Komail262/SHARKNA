@@ -19,5 +19,7 @@ namespace SHARKNA.ViewModels
         [StringLength(100)]
         [DisplayName("كلمة المرور")]
         public string Password { get; set; }
+
+     
     }
 }

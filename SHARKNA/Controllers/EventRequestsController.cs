@@ -4,7 +4,7 @@ using SHARKNA.Domain;
 using SHARKNA.ViewModels;
 using System;
 using System.Globalization;
-using System.Threading;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SHARKNA.Controllers
@@ -13,78 +13,68 @@ namespace SHARKNA.Controllers
     {
         private readonly EventRequestsDomain _eventRequestDomain;
         private readonly EventDomain _eventDomain;
+        private readonly UserDomain _UserDomain;
 
-        public EventRequestsController(EventRequestsDomain eventRequestDomain, EventDomain eventDomain)
+        public EventRequestsController(EventRequestsDomain eventRequestDomain, EventDomain eventDomain, UserDomain userDomain)
         {
             _eventRequestDomain = eventRequestDomain;
             _eventDomain = eventDomain;
+            _UserDomain = userDomain;
         }
 
-        public IActionResult Index(string Successful = "", string Falied = "")
+        public async Task<IActionResult> Index(string Successful = "", string Falied = "")
         {
             if (!string.IsNullOrEmpty(Successful))
                 ViewData["Successful"] = Successful;
             else if (!string.IsNullOrEmpty(Falied))
                 ViewData["Falied"] = Falied;
 
-            var eventRequests = _eventRequestDomain.GetTblEventRequests(); 
+            var eventRequests = await _eventRequestDomain.GetTblEventRequestsAsync();
             return View(eventRequests);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(EventViewModel eventViewModel)
+        public async Task<IActionResult> Create(EventViewModel eventViewModel)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr", eventViewModel.BoardId);
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
                     return View(eventViewModel);
                 }
 
-                // تحقق من أن العدد الأقصى للحضور قيمة موجبة
                 if (eventViewModel.MaxAttendence <= 0)
                 {
                     ViewData["Falied"] = "الحد الأقصى للحضور يجب أن يكون قيمة موجبة.";
-                    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr", eventViewModel.BoardId);
-                    return View(eventViewModel); // عرض النموذج مع رسالة الخطأ
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
+                    return View(eventViewModel);
                 }
 
-                // تحقق من أن تاريخ البداية ليس أكبر من تاريخ النهاية
                 if (eventViewModel.EventStartDate >= eventViewModel.EventEndtDate)
                 {
                     ViewData["Falied"] = "تاريخ البداية يجب أن يكون أصغر من أو يساوي تاريخ النهاية.";
-                    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr", eventViewModel.BoardId);
-                    return View(eventViewModel); // عرض النموذج مع رسالة الخطأ
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
+                    return View(eventViewModel);
                 }
 
-                // تحقق من أن تاريخ النهاية ليس في الماضي
                 if (eventViewModel.EventEndtDate < DateTime.Now)
                 {
                     ViewData["Falied"] = "تاريخ النهاية يجب أن يكون في المستقبل.";
-                    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr", eventViewModel.BoardId);
-                    return View(eventViewModel); // عرض النموذج مع رسالة الخطأ
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
+                    return View(eventViewModel);
                 }
 
-                //// تحقق من أن الوقت ليس متساويًا في نفس اليوم
-                //if (eventViewModel.EventStartDate.Date == eventViewModel.EventEndtDate.Date && eventViewModel.EventStartDate.TimeOfDay == eventViewModel.EventEndtDate.TimeOfDay)
-                //{
-                //    ViewData["Falied"] = "لا يمكن أن يكون وقت البداية ووقت النهاية متساويين في نفس اليوم.";
-                //    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr", eventViewModel.BoardId);
-                //    return View(eventViewModel); // عرض النموذج مع رسالة الخطأ
-                //}
-
-                // إضافة الحدث إذا كانت التحققات صحيحة
                 eventViewModel.Id = Guid.NewGuid();
-                int check = _eventDomain.AddEvent(eventViewModel);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                int check = await _eventDomain.AddEventAsync(eventViewModel, username);
 
                 if (check == 1)
                 {
@@ -97,7 +87,7 @@ namespace SHARKNA.Controllers
                         RejectionReasons = null
                     };
 
-                    _eventRequestDomain.AddEventViewRequest(eventRequestViewModel);
+                    await _eventRequestDomain.AddEventViewRequestAsync(eventRequestViewModel, username);
                     ViewData["Successful"] = "تم إضافة الحدث والطلب بنجاح";
                 }
                 else
@@ -110,16 +100,14 @@ namespace SHARKNA.Controllers
                 ViewData["Falied"] = $"حدث خطأ: {ex.Message}";
             }
 
-            ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
             return View(eventViewModel);
         }
 
-
-
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-            var eventViewModel = _eventDomain.GetTblEventsById(id);
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+            var eventViewModel = await _eventDomain.GetTblEventsByIdAsync(id);
             if (eventViewModel == null)
             {
                 return NotFound();
@@ -127,10 +115,9 @@ namespace SHARKNA.Controllers
             return View(eventViewModel);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EventViewModel Event)
+        public async Task<IActionResult> Edit(EventViewModel Event)
         {
             try
             {
@@ -139,33 +126,26 @@ namespace SHARKNA.Controllers
                     if (Event.MaxAttendence <= 0)
                     {
                         ViewData["Falied"] = "الحد الأقصى للحضور يجب أن يكون قيمة موجبة.";
-                        ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-                        return View(Event); // عرض النموذج مع رسالة الخطأ
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(Event);
                     }
-                    // تحقق من أن تاريخ البداية ليس أكبر من تاريخ النهاية
+
                     if (Event.EventStartDate >= Event.EventEndtDate)
                     {
                         ViewData["Falied"] = "تاريخ البداية يجب أن يكون أصغر من أو يساوي تاريخ النهاية.";
-                        ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-                        return View(Event); // عرض النموذج مع رسالة الخطأ
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(Event);
                     }
 
-                    // تحقق من أن تاريخ النهاية ليس في الماضي
                     if (Event.EventEndtDate < DateTime.Now)
                     {
                         ViewData["Falied"] = "تاريخ النهاية يجب أن يكون في المستقبل.";
-                        ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-                        return View(Event); // عرض النموذج مع رسالة الخطأ
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(Event);
                     }
 
-                    //if (Event.EventStartDate.Date == Event.EventEndtDate.Date && Event.EventStartDate.TimeOfDay == Event.EventEndtDate.TimeOfDay)
-                    //{
-                    //    ViewData["Falied"] = "لا يمكن أن يكون وقت البداية ووقت النهاية متساويين في نفس اليوم.";
-                    //    ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-                    //    return View(Event); // عرض النموذج مع رسالة الخطأ
-                    //}
-
-                    int check = _eventDomain.UpdateEvent(Event); // استخدام UpdateEvent بدلاً من AddEvent لتعديل الحدث الحالي
+                    string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                    int check = await _eventDomain.UpdateEventAsync(Event, username);
 
                     if (check == 1)
                     {
@@ -181,22 +161,19 @@ namespace SHARKNA.Controllers
             {
                 ViewData["Falied"] = "حدث خطأ أثناء التعديل";
             }
-            ViewBag.BoardsList = new SelectList(_eventRequestDomain.GetTblBoards(), "Id", "NameAr");
-            return View(Event); // عرض النموذج مرة أخرى مع رسائل الخطأ أو النجاح
 
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+            return View(Event);
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Cancel(Guid id)
+        public async Task<IActionResult> Cancel(Guid id)
         {
             try
             {
-                // قم بتحديث حالة الطلب إلى "تم الإلغاء"
-                _eventRequestDomain.CancelEventRequest(id);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                await _eventRequestDomain.CancelEventRequestAsync(id, username);
                 ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
             catch (Exception)
@@ -204,20 +181,17 @@ namespace SHARKNA.Controllers
                 ViewData["Falied"] = "حدث خطأ أثناء إلغاء الطلب.";
             }
 
-            // قم بجلب البيانات المحدثة بعد الإلغاء
-            var eventRequests = _eventRequestDomain.GetTblEventRequests();
-            return View("Index", eventRequests); // عرض View Index بعد التحديث
+            var eventRequests = await _eventRequestDomain.GetTblEventRequestsAsync();
+            return View("Index", eventRequests);
         }
-
-
-
 
         [HttpGet]
         public async Task<IActionResult> Accept(Guid id)
         {
             try
             {
-                await _eventRequestDomain.AcceptRequest(id);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                await _eventRequestDomain.AcceptRequestAsync(id, username);
                 return RedirectToAction(nameof(Index), new { Successful = "تم قبول الطلب بنجاح." });
             }
             catch (Exception)
@@ -226,46 +200,69 @@ namespace SHARKNA.Controllers
             }
         }
 
-        // Details Action
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            var eventRequest = _eventRequestDomain.GetEventRequestById(id);
+            var eventRequest = await _eventRequestDomain.GetEventRequestByIdAsync(id);
             if (eventRequest == null)
             {
                 return NotFound();
             }
-            ViewBag.RequestStatusList = new SelectList(_eventRequestDomain.GetTblRequestStatus(), "Id", "RequestStatusAr", eventRequest.RequestStatusId);
+            ViewBag.RequestStatusList = new SelectList(await _eventRequestDomain.GetTblRequestStatusAsync(), "Id", "RequestStatusAr", eventRequest.RequestStatusId);
             return View(eventRequest);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Reject(Guid id, string rejectionReason)
+        public async Task<IActionResult> Reject(Guid id, string rejectionReason)
         {
             try
             {
-                _eventRequestDomain.RejectRequest(id, rejectionReason);
-                return RedirectToAction(nameof(Index), new { Successful = "تم رفض الطلب بنجاح." });
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                if (username != null)
+                {
+                    await _eventRequestDomain.RejectRequestAsync(id, rejectionReason, username);
+                    return RedirectToAction(nameof(Index), new { Successful = "تم رفض الطلب بنجاح." });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index), new { Failed = "فشل في الحصول على اسم المستخدم." });
+                }
             }
             catch (Exception)
             {
-                return RedirectToAction(nameof(Index), new { Falied = "حدث خطأ أثناء رفض الطلب." });
+                return RedirectToAction(nameof(Index), new { Failed = "حدث خطأ أثناء رفض الطلب." });
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult UpdateRequestStatus(Guid id, Guid RequestStatusId, string RejectionReasons)
+        public async Task<IActionResult> UpdateRequestStatus(Guid id, Guid RequestStatusId, string RejectionReasons)
         {
-            int result = _eventRequestDomain.UpdateRequestStatus(id, RequestStatusId, RejectionReasons);
-            if (result == 1)
+            try
             {
-                return RedirectToAction(nameof(Index), new { Successful = "تم تحديث حالة الطلب بنجاح." });
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                if (username != null)
+                {
+                    int result = await _eventRequestDomain.UpdateRequestStatusAsync(id, RequestStatusId, RejectionReasons, username);
+                    if (result == 1)
+                    {
+                        return RedirectToAction(nameof(Index), new { Successful = "تم تحديث حالة الطلب بنجاح." });
+                    }
+                    else
+                    {
+                        return RedirectToAction(nameof(Index), new { Failed = "فشل في تحديث حالة الطلب." });
+                    }
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Index), new { Failed = "فشل في الحصول على اسم المستخدم." });
+                }
             }
-            else
+            catch (Exception)
             {
-                return RedirectToAction(nameof(Index), new { Falied = "فشل في تحديث حالة الطلب." });
+                return RedirectToAction(nameof(Index), new { Failed = "حدث خطأ أثناء تحديث حالة الطلب." });
             }
         }
     }
 }
+    

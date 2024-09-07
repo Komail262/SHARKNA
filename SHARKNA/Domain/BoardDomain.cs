@@ -9,9 +9,18 @@ namespace SHARKNA.Domain
     public class BoardDomain
     {
         private readonly SHARKNAContext _context;
-        public BoardDomain(SHARKNAContext context)
+        private readonly UserDomain _userDomain;
+
+        public BoardDomain(SHARKNAContext context, UserDomain userDomain)
         {
             _context = context;
+            _userDomain = userDomain;
+        }
+
+        public async Task<string> GetFullNameArByUsernameAsync(string username)
+        {
+            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == username);
+            return user?.FullNameAr;
         }
 
         public IEnumerable<BoardViewModel> GetTblBoards()
@@ -47,7 +56,7 @@ namespace SHARKNA.Domain
             //BoardViewModel IBoard = new BoardViewModel();
         }
 
-        public async Task<int> AddBoardAsync(BoardViewModel board)
+        public async Task<int> AddBoardAsync(BoardViewModel board, string username)
         {
             try
             {
@@ -62,20 +71,20 @@ namespace SHARKNA.Domain
                 Aboard.IsDeleted = false;
                 Aboard.IsActive = true;
 
-               await _context.tblBoards.AddAsync(Aboard);
 
-                //if (_context.SaveChanges() > 0)
-                //{
-                //    tblBoardLogs bLogs = new tblBoardLogs();
-                //    bLogs.Id = Aboard.Id;
-                //    bLogs.OpType = "Add";
-                //    bLogs.OpDateTime = DateTime.Now;
-                //    bLogs.CreatedBy = "000";
-                //    bLogs.CreatedTo = Aboard.NameAr;
-                //    bLogs.AdditionalInfo = $"تم إضافة لجنة {Aboard.NameAr} بواسطة هذا المستخدم";
-                //    _context.Boardlogs.Add(bLogs);
-                //}
-
+                await _context.tblBoards.AddAsync(Aboard);
+                await _context.SaveChangesAsync(); // Save the board first
+               
+                
+                tblBoardLogs blogs = new tblBoardLogs();
+                blogs.Id = Guid.NewGuid();
+                blogs.BrdId = Aboard.Id;
+                blogs.OpType = "إضافة";
+                blogs.OpDateTime = DateTime.Now;
+                blogs.CreatedBy = username;
+                blogs.CreatedTo = Aboard.NameAr;
+                blogs.AdditionalInfo = $"تم إضافة لجنة {Aboard.NameAr} بواسطة هذا المستخدم {username}";
+                _context.tblBoardLogs.Add(blogs);
 
                 await _context.SaveChangesAsync();
                 return 1;
@@ -88,7 +97,7 @@ namespace SHARKNA.Domain
         }
         //changeing here for Update
 
-        public async Task<int> UpdateBoardAsync(BoardViewModel board)
+        public async Task<int> UpdateBoardAsync(BoardViewModel board, string username)
         {
             try
             {
@@ -108,20 +117,18 @@ namespace SHARKNA.Domain
                 Aboard.IsActive = true;
 
                 _context.tblBoards.Update(Aboard);
+                await _context.SaveChangesAsync();
 
-
-                //if (_context.SaveChanges() > 0)
-                //{
-                //    tblBoardLogs bLogs = new tblBoardLogs();
-                //    bLogs.Id = Aboard.Id;
-                //    bLogs.OpType = "Update";
-                //    bLogs.OpDateTime = DateTime.Now;
-                //    bLogs.CreatedBy = "000";
-                //    bLogs.CreatedTo = Aboard.NameAr;
-                //    bLogs.AdditionalInfo = $"تم تعديل لجنة {Aboard.NameAr} بواسطة هذا المستخدم";
-                //    _context.Boardlogs.Update(bLogs);
-                //}
-
+               
+                tblBoardLogs blogs = new tblBoardLogs();
+                blogs.Id = Guid.NewGuid();
+                blogs.BrdId = Aboard.Id;
+                blogs.OpType = "تعديل";
+                blogs.OpDateTime = DateTime.Now;
+                blogs.CreatedBy = username;
+                blogs.CreatedTo = Aboard.NameAr;
+                blogs.AdditionalInfo = $"تم تعديل لجنة {Aboard.NameAr} بواسطة هذا المستخدم {username}";
+                _context.tblBoardLogs.Add(blogs);
 
                 await _context.SaveChangesAsync();
                 return 1;
@@ -142,7 +149,7 @@ namespace SHARKNA.Domain
 
 
 
-        public async Task<int> DeleteBoardAsync(Guid id)
+        public async Task<int> DeleteBoardAsync(Guid id, string username)
         {
             try
             {
@@ -152,18 +159,18 @@ namespace SHARKNA.Domain
                     board.IsDeleted = true;
                     board.IsActive = false;
                     _context.Update(board);
+                    await _context.SaveChangesAsync();
 
-                    //if (_context.SaveChanges() > 0)
-                    //{
-                    //    tblBoardLogs bLogs = new tblBoardLogs();
-                    //    bLogs.Id = board.Id;
-                    //    bLogs.OpType = "Delete";
-                    //    bLogs.OpDateTime = DateTime.Now;
-                    //    bLogs.CreatedBy = "000";
-                    //    bLogs.CreatedTo = board.NameAr;
-                    //    bLogs.AdditionalInfo = $"تم حذف لجنة {board.NameAr} بواسطة هذا المستخدم";
-                    //    _context.Boardlogs.update(bLogs);
-                    //}
+
+                    tblBoardLogs blogs = new tblBoardLogs();
+                    blogs.Id = Guid.NewGuid();
+                    blogs.BrdId = board.Id;
+                    blogs.OpType = "حذف";
+                    blogs.OpDateTime = DateTime.Now;
+                    blogs.CreatedBy = username;
+                    blogs.CreatedTo = board.NameAr;
+                    blogs.AdditionalInfo = $"تم حذف لجنة {board.NameAr} بواسطة هذا المستخدم {username}";
+                    _context.tblBoardLogs.Add(blogs);
 
                     await _context.SaveChangesAsync();
 
@@ -182,18 +189,18 @@ namespace SHARKNA.Domain
 
         //if nameAr duplicated
 
-        public async Task<bool> IsBoardNameDuplicateAsync(string name, Guid? Boardn = null)
-        {
-            if (Boardn == null)
-            {
-                return await _context.tblBoards.AnyAsync(u => u.NameEn == name);
+        //public async Task<bool> IsBoardNameDuplicateAsync(string name, Guid? Boardn = null)
+        //{
+        //    if (Boardn == null)
+        //    {
+        //        return await _context.tblBoards.AnyAsync(u => u.NameEn == name);
 
-            }
-            else
-            {
-                return await _context.tblBoards.AnyAsync(u => u.NameEn == name && u.Id != Boardn);
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        return await _context.tblBoards.AnyAsync(u => u.NameEn == name && u.Id != Boardn);
+        //    }
+        //}
 
 
     }
