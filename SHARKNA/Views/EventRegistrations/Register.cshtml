@@ -56,9 +56,9 @@
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <h5 class="card-title">@eventItem.EventTitleAr</h5>
-                                        <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate.ToString("dd-MM-yyyy")</p>
-                                        <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate.ToString("dd-MM-yyyy")</p>
-                                        <p class="card-text"><strong>الوقت:</strong> @eventItem.Time.ToString(@"hh\:mm")</p>
+                                        <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>الوقت:</strong> @eventItem.EventStartDate?.ToString(@"hh\:mm")</p>
                                         <p class="card-text"><strong>الموقع:</strong> @eventItem.LocationAr</p>
                                     </div>
                                     <div class="card-footer">
