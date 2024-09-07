@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -105,9 +106,27 @@ namespace SHARKNA.Domain
             }
         }
 
+        public async Task<UserViewModel> GetTblUserByUserName(string UserName)
+        {
+            var x = await _context.tblUsers.FirstOrDefaultAsync(x => x.UserName == UserName);
+            if (x != null)
+            {
+                return new UserViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Password = x.Password,
+                    Email = x.Email,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    MobileNumber = x.MobileNumber
+                };
+            }
+            else
+                return null;
+        }
 
-
-       public PermissionsViewModel GetUserByUsername(string username)
+        public PermissionsViewModel GetUserByUsername(string username)
 {
     var userWithRole = (from u in _context.tblPermissions
                         join r in _context.tblRoles on u.RoleId equals r.Id

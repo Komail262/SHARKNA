@@ -130,6 +130,8 @@ namespace SHARKNA.Domain
             }
 
         }
+
+
         public bool IsRoleNameDuplicate(string name, Guid? Permissionn = null)
         {
             if (Permissionn == null)
