@@ -17,11 +17,11 @@ namespace SHARKNA.Domain
             _userDomain = userDomain;
         }
 
-        public async Task<string> GetFullNameArByUsernameAsync(string username)
-        {
-            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == username);
-            return user?.FullNameAr;
-        }
+        //public async Task<string> GetFullNameArByUsernameAsync(string username)
+        //{
+        //    var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == username);
+        //    return user?.FullNameAr;
+        //}
 
         public IEnumerable<BoardViewModel> GetTblBoards()
         {
