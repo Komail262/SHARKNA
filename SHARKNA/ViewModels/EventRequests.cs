@@ -8,37 +8,76 @@ namespace SHARKNA.ViewModels
     {
         public Guid Id { get; set; }
 
-        [DisplayName("أسباب الرفض")]
-        [StringLength(500)]
+        [StringLength(500, ErrorMessage = "يجب ألا يتجاوز السبب 500 حرف")]
+        [DisplayName("سبب الرفض")]
         public string RejectionReasons { get; set; }
 
-        [DisplayName("الفعالية")]
         public Guid EventId { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الاسم 100 حرف")]
+        [DisplayName("اسم الفعالية بالعربي")]
         public string EventName { get; set; }
 
-        public string EventDescriptionAr { get; set; } // وصف الفعالية
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الوصف 100 حرف")]
+        [DisplayName("وصف الفعالية")]
+        public string EventDescriptionAr { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الموضوع 100 حرف")]
+        [DisplayName("موضوع الحدث بالعربي")]
         public string TopicAr { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الموقع 100 حرف")]
+        [DisplayName("موقع الحدث بالعربي")]
         public string LocationAr { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [Range(1, int.MaxValue, ErrorMessage = "يرجى إدخال عدد صحيح أكبر من صفر")]
+        [DisplayName("الحضور")]
         public int MaxAttendence { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز اسم المتحدث 100 حرف")]
+        [DisplayName("المتحدث بالعربي")]
         public string SpeakersAr { get; set; }
-        public DateTime EventStartDate { get; set; }
-        public DateTime EventEndtDate { get; set; }
-        public TimeSpan Time { get; set; }
-        public DateTime EndRegTime { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DataType(DataType.DateTime, ErrorMessage = "يرجى إدخال تاريخ صحيح")]
+        [DisplayName("تاريخ بداية الحدث")]
+        public DateTime? EventStartDate { get; set; } // Nullable DateTime
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [DataType(DataType.DateTime, ErrorMessage = "يرجى إدخال تاريخ صحيح")]
+        [DisplayName("تاريخ نهاية الحدث")]
+        public DateTime? EventEndtDate { get; set; } // Nullable DateTime
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("حالة الطلب")]
         public Guid RequestStatusId { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز اسم الحالة 100 حرف")]
+        [DisplayName("اسم حالة الطلب")]
         public string RequestStatusName { get; set; }
 
+        [DisplayName("الجنس")]
+        public bool? Gender { get; set; }
+
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("اللجنة")]
         public Guid BoardId { get; set; }
 
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز اسم اللجنة 100 حرف")]
+        [DisplayName("اسم اللجنة")]
         public string BoardName { get; set; }
 
-        public string BoardDescriptionAr { get; set; } // وصف اللجنة
-
+        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الوصف 100 حرف")]
+        [DisplayName("وصف اللجنة")]
+        public string BoardDescriptionAr { get; set; }
     }
 }

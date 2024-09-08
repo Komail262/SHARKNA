@@ -8,7 +8,7 @@ namespace SHARKNA.Models
     {
         public Guid Id { get; set; }
         public DateTime RegDate { get; set; }
-        public string RegDateString => RegDate.ToString("yyyy-MM-dd HH:mm:ss");
+       // public string RegDateString => RegDate.ToString("yyyy-MM-dd HH:mm:ss");
         public string RejectionReasons { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }

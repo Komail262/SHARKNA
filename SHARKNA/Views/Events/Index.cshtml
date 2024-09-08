@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SHARKNA.ViewModels.EventViewModel>
+﻿@* @model IEnumerable<SHARKNA.ViewModels.EventViewModel>
 
 @{
     ViewData["Title"] = "Events List";
@@ -70,10 +70,11 @@
                             <tr>
                                 <td>@Event.EventTitleAr</td>
                                 <td>@Event.EventTitleEn</td>
-                                <td>@Event.EventStartDate.ToString("yyyy/MM/dd HH:mm")</td>
-                                <td>@Event.EventStartDate.ToString("HH:mm")</td>
-                                <td>@Event.EventEndtDate.ToString("yyyy/MM/dd HH:mm")</td>
-                                <td>@Event.EventEndtDate.ToString("HH:mm")</td>
+                                <td>@(Event.EventStartDate.HasValue ? Event.EventStartDate.Value.ToString("yyyy/MM/dd HH:mm") : "N/A")</td>
+                                <td>@(Event.EventStartDate.HasValue ? Event.EventStartDate.Value.ToString("HH:mm") : "N/A")</td>
+                                <td>@(Event.EventEndtDate.HasValue ? Event.EventEndtDate.Value.ToString("yyyy/MM/dd HH:mm") : "N/A")</td>
+                                <td>@(Event.EventEndtDate.HasValue ? Event.EventEndtDate.Value.ToString("HH:mm") : "N/A")</td>
+
                                 <td>@Event.SpeakersAr</td>
                                 <td>@Event.SpeakersEn</td>
                                 <td>@Event.TopicAr</td>
@@ -104,3 +105,4 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+ *@

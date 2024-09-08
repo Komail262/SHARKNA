@@ -35,8 +35,8 @@
                                 <tr>
                                     <td>@attendence.EventTitleAr</td>
                                     <td>@attendence.EventTitleEn</td>
-                                    <td>@attendence.EventStartDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
-                                    <td>@attendence.EventEndtDate.ToString("yyyy-MM-dd HH:mm")</td> <!-- This formats the date and time correctly -->
+                                    <td>@(attendence.EventStartDate.HasValue ? attendence.EventStartDate.Value.ToString("yyyy-MM-dd HH:mm") : "N/A")</td> <!-- This formats the date and time correctly if not null -->
+                                    <td>@(attendence.EventEndtDate.HasValue ? attendence.EventEndtDate.Value.ToString("yyyy-MM-dd HH:mm") : "N/A")</td> <!-- This formats the date and time correctly if not null -->
                                     <td>
                                         <a asp-action="Details" asp-route-id="@attendence.Id" class="btn btn-primary">سِجل الحضور</a>
                                     </td>

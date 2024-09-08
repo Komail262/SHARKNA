@@ -2,74 +2,89 @@
 
 @{
     ViewData["Title"] = "Register";
+    var registeredEvents = ViewBag.RegisteredEvents as List<Guid>;
+    var eventRegistrations = ViewBag.EventRegistrations as Dictionary<Guid, int>; // This should contain eventId and current registrations
 }
 
-<h2>تسجيل في فعالية</h2>
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">تسجيل طلب حضور فعالية</h5>
+                </div>
+                <div class="block-body py-5">
+                    <script>
+                        @if (ViewData["Success"] != null)
+                        {
+                            <Text>
+                                Swal.fire({
+                                    title: 'تم التسجيل بنجاح!',
+                                    icon: 'success',
+                                    html: '<strong>شكراً لتسجيلك.</strong>',
+                                    confirmButtonText: 'حسنا',
+                                    focusConfirm: true
+                                });
+                            </Text>
+                        }
 
-<section class="page_wrap">
-    <div class="container-fluid">
-        <div class="block mb-4">
-            <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">تسجيل طلب حضور فعالية</h5>
-            </div>
-            <div class="block-body py-5">
-                <div class="row justify-content-center">
-                    <div class="col-lg-10 col-md-12">
-                        <form asp-action="Register" method="post">
-                            @Html.AntiForgeryToken()
+                        @if (ViewData["Failed"] != null)
+                        {
+                            <Text>
+                                Swal.fire({
+                                    title: 'خطأ',
+                                    icon: 'info',
+                                    html: '<strong>أنت مسجل بالفعل في هذه الفعالية.</strong>',
+                                    confirmButtonText: 'حسنا',
+                                    focusConfirm: true
+                                });
+                            </Text>
+                        }
+                    </script>
 
-                            <input type="hidden" name="UserName" value="@User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value" />
+                    <div class="row">
+                        @foreach (var eventItem in Model)
+                        {
+                            var isFull = eventRegistrations != null && eventRegistrations.ContainsKey(eventItem.Id) && eventRegistrations[eventItem.Id] >= eventItem.MaxAttendence;
 
-                            <div class="block-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>عنوان الفعالية</th>
-                                                <th>تاريخ البداية</th>
-                                                <th>تاريخ النهاية</th>
-                                                <th>الوقت</th>
-                                                <th>الموقع</th>
-                                                <th>تفاصيل</th>
-                                                <th>تسجيل</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach (var eventItem in Model)
-                                            {
-                                                <tr>
-                                                    <td class="event-title">@eventItem.EventTitleAr</td>
-                                                    <td>@eventItem.EventStartDate.ToString("dd-MM-yyyy")</td>
-                                                    <td>@eventItem.EventEndtDate.ToString("dd-MM-yyyy")</td>
-                                                    @* <td>@eventItem.Time.ToString(@"hh\:mm")</td> *@
-                                                    <td>@eventItem.LocationAr</td>
-                                                    <td>
-                                                        <button type="button" class="btn btn-secondary" data-bs-toggle="collapse" data-bs-target="#details-@eventItem.Id">المزيد</button>
-                                                        <div id="details-@eventItem.Id" class="collapse mt-2">
-                                                            <div class="card card-body">
-                                                                <p><strong>المتحدث:</strong> @eventItem.SpeakersAr</p>
-                                                                <p><strong>الموضوع:</strong> @eventItem.TopicAr</p>
-                                                                <p><strong>الوصف:</strong> @eventItem.DescriptionAr</p>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <button type="submit" class="btn btn-primary" formaction="@Url.Action("Register", "EventRegistrations")" formmethod="post" name="EventId" value="@eventItem.Id">تسجيل</button>
-                                                    </td>
-                                                </tr>
-                                            }
-                                        </tbody>
-                                    </table>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@eventItem.EventTitleAr</h5>
+                                        <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>الوقت:</strong> @eventItem.EventStartDate?.ToString(@"hh\:mm")</p>
+                                        <p class="card-text"><strong>الموقع:</strong> @eventItem.LocationAr</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        @if (registeredEvents != null && registeredEvents.Contains(eventItem.Id))
+                                        {
+                                            <button class="btn btn-secondary w-100" disabled>تم التسجيل بالفعل</button>
+                                        }
+                                        else if (isFull)
+                                        {
+                                            <button class="btn btn-secondary w-100" disabled>تم الوصول للحد الأقصى</button>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="EventDetails" method="get">
+                                                <input type="hidden" name="EventId" value="@eventItem.Id" />
+                                                <button type="submit" class="btn btn-primary w-100">تفاصيل وتسجيل</button>
+                                            </form>
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                        }
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-
+    </section>
+</body>
+</html>
