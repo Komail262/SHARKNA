@@ -26,16 +26,7 @@ namespace SHARKNA.Controllers
         public async Task<IActionResult> Index()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
-            var user = _UserDomain.GetUserFER(username); // Fetch user details from the database
 
-            var model = new BoardRequestsViewModel
-            {
-                UserName = username,
-                Email = user.Email,
-                MobileNumber = user.MobileNumber,
-                FullNameAr = user.FullNameAr,
-                FullNameEn = user.FullNameEn
-            };
             var events = await _eventattendenceDomain.GetTblEventsAsync();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
             return View(events);
         }
@@ -74,7 +65,7 @@ namespace SHARKNA.Controllers
                 {
                     //var eventId = new Guid(forms["eventId"]);
                     var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                    var user = _UserDomain.GetUserFER(username);
+                    var user = _UserDomain.GetUserFERAsync(username);
 
 
                     var count = forms["attendanceStatus"].Count;

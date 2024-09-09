@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Register";
     var registeredEvents = ViewBag.RegisteredEvents as List<Guid>;
-    var eventRegistrations = ViewBag.EventRegistrations as Dictionary<Guid, int>; // This should contain eventId and current registrations
+    var eventRegistrations = ViewBag.EventRegistrations as Dictionary<Guid, int>;
 }
 
 <!DOCTYPE html>
@@ -74,7 +74,7 @@
                                         {
                                             <form asp-action="EventDetails" method="get">
                                                 <input type="hidden" name="EventId" value="@eventItem.Id" />
-                                                <button type="submit" class="btn btn-primary w-100">تفاصيل وتسجيل</button>
+                                                <button type="submit" class="btn btn-primary w-100">التفاصيل </button>
                                             </form>
                                         }
                                     </div>

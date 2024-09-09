@@ -35,24 +35,24 @@ namespace SHARKNA.Controllers
             var BoardReq = _boardRequestsDomain.GetTblBoardRequests();
             return View(BoardReq);
         }
-        public IActionResult Create()
-        {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value; 
-            var user = _UserDomain.GetUserFER(username);
+        //public IActionResult Create()
+        //{
+        //    var username = User.FindFirst(ClaimTypes.Name)?.Value; 
+        //  //  var user = _UserDomain.GetUserFER(username);
 
-            var model = new BoardRequestsViewModel
-            {
-                UserName = username,
-                Email = user.Email,
-                MobileNumber = user.MobileNumber,
-                FullNameAr = user.FullNameAr,
-                FullNameEn = user.FullNameEn
-            };
+        //    var model = new BoardRequestsViewModel
+        //    {
+        //        UserName = username,
+        //        Email = user.Email,
+        //        MobileNumber = user.MobileNumber,
+        //        FullNameAr = user.FullNameAr,
+        //        FullNameEn = user.FullNameEn
+        //    };
 
-            ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
+        //    ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
 
-            return View(model); 
-        }
+        //    return View(model); 
+        //}
 
         public IActionResult Details(Guid id)
         {
@@ -63,53 +63,53 @@ namespace SHARKNA.Controllers
 
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(BoardRequestsViewModel BoardReq ,string UserName)
-        {
-            try
-            {
-                var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                var user = _UserDomain.GetUserFER(username);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(BoardRequestsViewModel BoardReq ,string UserName)
+        //{
+        //    try
+        //    {
+        //        var username = User.FindFirst(ClaimTypes.Name)?.Value;
+        //     //   var user = _UserDomain.GetUserFER(username);
 
                 
-                bool requestExists = _boardRequestsDomain.CheckRequestExists(user.Email, BoardReq.BoardId);
-                if (requestExists)
-                {
-                    ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
-                    ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
-                    return View(BoardReq);
-                }
+        //        bool requestExists = _boardRequestsDomain.CheckRequestExists(user.Email, BoardReq.BoardId);
+        //        if (requestExists)
+        //        {
+        //            ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
+        //            ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+        //            return View(BoardReq);
+        //        }
 
-                ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
-                if (ModelState.IsValid)
-                {
-                    BoardReq.Id = Guid.NewGuid();
-                    BoardReq.UserName = username;
-                    BoardReq.Email = user.Email;
-                    BoardReq.MobileNumber = user.MobileNumber;
-                    BoardReq.FullNameAr = user.FullNameAr;
-                    BoardReq.FullNameEn = user.FullNameEn;
+        //        ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+        //        if (ModelState.IsValid)
+        //        {
+        //            BoardReq.Id = Guid.NewGuid();
+        //            BoardReq.UserName = username;
+        //            BoardReq.Email = user.Email;
+        //            BoardReq.MobileNumber = user.MobileNumber;
+        //            BoardReq.FullNameAr = user.FullNameAr;
+        //            BoardReq.FullNameEn = user.FullNameEn;
 
-                    int check = _boardRequestsDomain.AddBoardReq(BoardReq , UserName);
-                    if (check == 1)
-                    {
-                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
-                    }
-                    else
-                    {
-                        ViewData["Falied"] = "حدث خطأ";
-                    }
-                    return View(BoardReq);
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewData["Falied"] = "حدث خطأ";
-            }
+        //            int check = _boardRequestsDomain.AddBoardReq(BoardReq , UserName);
+        //            if (check == 1)
+        //            {
+        //                ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+        //            }
+        //            else
+        //            {
+        //                ViewData["Falied"] = "حدث خطأ";
+        //            }
+        //            return View(BoardReq);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewData["Falied"] = "حدث خطأ";
+        //    }
 
-            return View(BoardReq);
-        }
+        //    return View(BoardReq);
+        //}
 
 
 

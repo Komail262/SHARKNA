@@ -5,6 +5,7 @@ using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace SHARKNA.Domain
 {
@@ -192,5 +193,167 @@ namespace SHARKNA.Domain
                 return 0;
             }
         }
+
+        // Section2
+        public async Task<IEnumerable<EventViewModel>> GettblEventsAsync2(string userGender, string username, string nameAr)
+        {
+            
+            var operationLog = new tblEventLogs
+            {
+                Id = Guid.NewGuid(),
+                OpType = "GetEvents",
+                OpDateTime = DateTime.Now,
+                CreatedBy = username, 
+                CreatedTo = nameAr, 
+                AdditionalInfo = $"Starting to retrieve events based on gender filter. UserGender: {userGender}",
+                EvId = Guid.Empty 
+            };
+            _context.tblEventLogs.Add(operationLog);
+            await _context.SaveChangesAsync(); 
+
+            try
+            {
+                
+                var allEvents = await _context.tblEvents
+                    .Where(e => e.IsActive && !e.IsDeleted)
+                    .ToListAsync();
+
+                IEnumerable<EventViewModel> filteredEvents;
+
+                if (userGender == "Male")
+                {
+           
+                    filteredEvents = allEvents
+                        .Where(e => e.Gender == true || e.Gender == null)
+                        .Select(e => new EventViewModel
+                        {
+                            Id = e.Id,
+                            EventTitleAr = e.EventTitleAr,
+                            EventTitleEn = e.EventTitleEn,
+                            EventStartDate = e.EventStartDate,
+                            EventEndtDate = e.EventEndtDate,
+                            SpeakersAr = e.SpeakersAr,
+                            SpeakersEn = e.SpeakersEn,
+                            TopicAr = e.TopicAr,
+                            TopicEn = e.TopicEn,
+                            DescriptionAr = e.DescriptionAr,
+                            DescriptionEn = e.DescriptionEn,
+                            LocationAr = e.LocationAr,
+                            LocationEn = e.LocationEn,
+                            MaxAttendence = e.MaxAttendence,
+                            IsActive = e.IsActive,
+                            IsDeleted = e.IsDeleted
+                        });
+                }
+                else
+                {
+             
+                    filteredEvents = allEvents
+                        .Where(e => e.Gender == false || e.Gender == null)
+                        .Select(e => new EventViewModel
+                        {
+                            Id = e.Id,
+                            EventTitleAr = e.EventTitleAr,
+                            EventTitleEn = e.EventTitleEn,
+                            EventStartDate = e.EventStartDate,
+                            EventEndtDate = e.EventEndtDate,
+                            SpeakersAr = e.SpeakersAr,
+                            SpeakersEn = e.SpeakersEn,
+                            TopicAr = e.TopicAr,
+                            TopicEn = e.TopicEn,
+                            DescriptionAr = e.DescriptionAr,
+                            DescriptionEn = e.DescriptionEn,
+                            LocationAr = e.LocationAr,
+                            LocationEn = e.LocationEn,
+                            MaxAttendence = e.MaxAttendence,
+                            IsActive = e.IsActive,
+                            IsDeleted = e.IsDeleted
+                        });
+                }
+
+            
+                operationLog.AdditionalInfo = "Successfully retrieved events based on gender filter";
+                _context.tblEventLogs.Update(operationLog); 
+                await _context.SaveChangesAsync(); 
+
+                return filteredEvents;
+            }
+            catch
+            {
+               
+                throw; 
+            }
+        }
+
+
+        public async Task<EventViewModel> GetEventByIdAsync2(Guid eventId, string username, string nameAr)
+        {
+ 
+            var operationLog = new tblEventLogs
+            {
+                Id = Guid.NewGuid(),
+                OpType = "GetEventById",
+                OpDateTime = DateTime.Now,
+                CreatedBy = username, 
+                CreatedTo = nameAr, 
+                AdditionalInfo = $"Starting to retrieve event by ID. EventId: {eventId}",
+                EvId = eventId
+            };
+            _context.tblEventLogs.Add(operationLog);
+            await _context.SaveChangesAsync(); 
+
+            try
+            {
+                var eventEntity = await _context.tblEvents
+                    .Where(e => e.Id == eventId)
+                    .Select(e => new EventViewModel
+                    {
+                        Id = e.Id,
+                        EventTitleAr = e.EventTitleAr,
+                        EventStartDate = e.EventStartDate,
+                        EventEndtDate = e.EventEndtDate,
+                        LocationAr = e.LocationAr,
+                        SpeakersAr = e.SpeakersAr,
+                        TopicAr = e.TopicAr,
+                        DescriptionAr = e.DescriptionAr,
+                        MaxAttendence = e.MaxAttendence,
+                        Gender = e.Gender
+                    })
+                    .FirstOrDefaultAsync();
+
+    
+                operationLog.AdditionalInfo = "Successfully retrieved event by ID";
+                _context.tblEventLogs.Update(operationLog); 
+                await _context.SaveChangesAsync(); 
+
+                return eventEntity;
+            }
+            catch
+            {
+               
+                throw; 
+            }
+        }
+
+        public EventViewModel GetEventById(Guid eventId)
+        {
+            return _context.tblEvents
+                .Where(e => e.Id == eventId)
+                .Select(e => new EventViewModel
+                {
+                    Id = e.Id,
+                    EventTitleAr = e.EventTitleAr,
+                    EventStartDate = e.EventStartDate,
+                    EventEndtDate = e.EventEndtDate,
+                    LocationAr = e.LocationAr,
+                    SpeakersAr = e.SpeakersAr,
+                    TopicAr = e.TopicAr,
+                    DescriptionAr = e.DescriptionAr,
+                    MaxAttendence = e.MaxAttendence,
+                    Gender = e.Gender
+                })
+                .FirstOrDefault();
+        }
+
     }
 }

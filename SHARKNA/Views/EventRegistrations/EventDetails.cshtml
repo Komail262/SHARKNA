@@ -1,4 +1,4 @@
-﻿@model SHARKNA.ViewModels.EventViewModel
+﻿@model dynamic
 
 @{
     ViewData["Title"] = "Event Details";
@@ -9,9 +9,53 @@
 }
 
 <!DOCTYPE html>
-<html lang="en" dir="rtl" data-theme="light">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .info-box {
+            border: 1px solid #ccc; 
+            padding: 15px; 
+            border-radius: 8px; 
+            background-color: #f9f9f9; 
+            margin-bottom: 20px; 
+            text-align: right; 
+        }
+
+        .info-item {
+            margin-bottom: 15px; 
+            padding-right: 10px; 
+        }
+
+            .info-item strong, .info-item span {
+                display: inline; 
+            }
+
+        .block-header h5 {
+            margin-top: 30px; 
+            margin-bottom: 20px; 
+        }
+
+        .block-body {
+            margin-top: 20px;
+        }
+
+        .card-body p {
+            margin-bottom: 10px; 
+        }
+
+        .card-footer {
+            margin-top: 20px;
+        }
+
+        .btn {
+            margin-top: 15px; 
+        }
+
+        .info-box-container {
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
     <section class="page_wrap">
@@ -19,10 +63,24 @@
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
                     <h5>تفاصيل صاحب الطلب</h5>
-                    <p><strong>الاسم:</strong> @User.FindFirst(ClaimTypes.GivenName)?.Value</p>
-                    <p><strong>البريد الالكتروني:</strong> @User.FindFirst(ClaimTypes.Email)?.Value</p>
-                    <p><strong>رقم الجوال:</strong> @User.FindFirst(ClaimTypes.MobilePhone)?.Value</p>
                 </div>
+                <div class="info-box-container">
+                    <div class="info-box">
+                        <div class="info-item">
+                            <strong>الاسم:</strong>
+                            <span>@User.FindFirst(ClaimTypes.GivenName)?.Value</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>البريد الالكتروني:</strong>
+                            <span>@User.FindFirst(ClaimTypes.Email)?.Value</span>
+                        </div>
+                        <div class="info-item">
+                            <strong>رقم الجوال:</strong>
+                            <span>@User.FindFirst(ClaimTypes.MobilePhone)?.Value</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="block-body py-5">
                     <script>
                         @if (ViewData["Success"] != null)
@@ -74,7 +132,7 @@
                         <div class="card-body">
                             <h5 class="card-title">@Model.EventTitleAr</h5>
                             <p class="card-text"><strong>تاريخ البداية:</strong> @Model.EventStartDate?.ToString("dd-MM-yyyy")</p>
-                            <p class="card-text"><strong>تاريخ النهاية:</strong> @Model.EventEndtDate.?ToString("dd-MM-yyyy")</p>
+                            <p class="card-text"><strong>تاريخ النهاية:</strong> @Model.EventEndtDate?.ToString("dd-MM-yyyy")</p>
                             <p class="card-text"><strong>الوقت:</strong> @Model.EventStartDate?.ToString(@"hh\:mm")</p>
                             <p class="card-text"><strong>الموقع:</strong> @Model.LocationAr</p>
                             <p class="card-text"><strong>المتحدث:</strong> @Model.SpeakersAr</p>
@@ -84,7 +142,7 @@
                         <div class="card-footer">
                             @if (isUserRegistered)
                             {
-                                <button class="btn btn-secondary w-100" disabled>أنت مسجل بالفعل</button>
+                                <button class="btn btn-secondary w-100" disabled>أنت 5مسجل بالفعل</button>
                             }
                             else if (isFull)
                             {
@@ -105,4 +163,4 @@
         </div>
     </section>
 </body>
-</html>
+</html>63

@@ -119,7 +119,8 @@ namespace SHARKNA.Domain
                     Email = x.Email,
                     FullNameAr = x.FullNameAr,
                     FullNameEn = x.FullNameEn,
-                    MobileNumber = x.MobileNumber
+                    MobileNumber = x.MobileNumber,
+                    Gender = x.Gender
                 };
             }
             else
@@ -164,31 +165,35 @@ namespace SHARKNA.Domain
                 FullNameAr = user.FullNameAr,
                 FullNameEn = user.FullNameEn,
                 Email = user.Email,
-                MobileNumber = user.MobileNumber
+                MobileNumber = user.MobileNumber,
+                 Gender = user.Gender
             };
         }
 
-        public UserViewModel GetUserFER(string username)
+        public async Task<UserViewModel> GetUserFERAsync(string username)
         {
-            // Retrieve the user from the tblUsers table based on the username
-            var user = _context.tblUsers
-                .FirstOrDefault(u => u.UserName == username);
+            
+            var user = await _context.tblUsers
+                .FirstOrDefaultAsync(u => u.UserName == username);
 
-            // If no user is found, return null
+     
             if (user == null)
             {
                 return null;
             }
 
-            // Return the UserViewModel populated with the user details
+     
             return new UserViewModel
             {
+              
+                UserName = user.UserName,
                 Email = user.Email,
                 MobileNumber = user.MobileNumber,
                 FullNameAr = user.FullNameAr,
                 FullNameEn = user.FullNameEn
             };
         }
+
 
 
 
