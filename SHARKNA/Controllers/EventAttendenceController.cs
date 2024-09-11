@@ -65,7 +65,7 @@ namespace SHARKNA.Controllers
                 {
                     //var eventId = new Guid(forms["eventId"]);
                     var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                    var user = _UserDomain.GetUserFERAsync(username);
+                    //var user = _UserDomain.GetUserFER(username);
 
 
                     var count = forms["attendanceStatus"].Count;
@@ -73,10 +73,10 @@ namespace SHARKNA.Controllers
 
 
                     var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-                                                                                                       //return View(Ereg);
+                                                                                                //return View(Ereg);
 
                     if (count == 1)
-                        ViewData["Successful"] = "تم الحضور بنجاح";
+                        ViewData["Successful"] = "تم التحضير بنجاح";
                     else
                         ViewData["Falied"] = "حدث خطأ";
 

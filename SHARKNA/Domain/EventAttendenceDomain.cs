@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Xml;
+
 
 namespace SHARKNA.Domain
 {

@@ -3,42 +3,7 @@
 @{
     ViewData["Title"] = "Event Attendance Details";
 }
-@*
-<script>
-    @{
-        if (@ViewData["Successful"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Boards")';
-                    }
-                );
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
-            </Text>
-        }
-    }
-</script>
 
-<script>
-    function Display
-</script>
- *@
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
@@ -52,23 +17,15 @@
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        @* <div>
-                        <a asp-action="Create" class="btn btn-primary">إضافة عضو للحضور</a>
-                        </div> *@
                     </div>
                 </div>
                 <div class="block-body">
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(m => m.EventName)</th>
-@*                                 <th>@Html.DisplayNameFor(m => m.Day)</th>
-
- *@
+                                <th>@Html.DisplayNameFor(m => m.First().EventName)</th>
                                 <th>يوم</th> <!-- Updated to show the day number -->
-
-                                <th>@Html.DisplayNameFor(m => m.EventDate)</th>
-
+                                <th>@Html.DisplayNameFor(m => m.First().EventDate)</th>
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
@@ -77,23 +34,10 @@
                             {
                                 <tr>
                                     <td>@attendence.EventName</td>
-
-@*                                     <td>@attendence.Day</td>
- *@
                                     <td>يوم @attendence.Day</td> <!-- Display the day number -->
-
-                                    <td>@attendence.EventDate.ToString("dd/MM/yyyy HH:MM")</td>
-
-
-@*                                     <td>@attendence.EventDate.ToString("yyyy-MM-dd HH:mm")</td>
- *@
+                                    <td>@attendence.EventDate.ToString("dd/MM/yyyy HH:mm")</td> <!-- Fixed time format -->
                                     <td>
-
                                         <a asp-action="Members" asp-route-id="@attendence.EventsId" asp-route-day="@attendence.Day" class="btn btn-primary"> التحضير </a>
-
-
-                                        
-
                                     </td>
                                 </tr>
                             }
@@ -103,7 +47,5 @@
             </div>
         </div>
     </section><!-- End Page Wrap -->
- 
-
 </body>
 </html>
