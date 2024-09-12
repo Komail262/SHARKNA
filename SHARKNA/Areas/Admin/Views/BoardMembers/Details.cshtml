@@ -1,7 +1,5 @@
 ﻿@model SHARKNA.ViewModels.BoardMembersViewModel
 
-<h2>تفاصيل الطلب</h2>
-
 <script>
     @{
         if (@ViewData["Successful"] != null)
@@ -11,7 +9,7 @@
                 Swal.fire(result, '', 'success')
                 .then(
                     function () {
-                        window.location.href = '@Url.Action("Members", "BoardMembers")';
+                        window.location.href = '@Url.Action("Members", "BoardMembers" )';
                     }
                 );
             </Text>
@@ -37,12 +35,16 @@
     <div class="page_content">
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">تفاصيل الطلب</h5>
+                <input hidden asp-for="BoardId" />
+                <h4 class="m-1"> @Model.BoardName</h4>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <form asp-action="Details" method="post">
+                            
+                            <input hidden asp-for="BoardId" />
+                            <input hidden asp-for="Id"/>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -50,14 +52,15 @@
                                         <select id="BoardRoleName" class="form-control" asp-for="BoardRoleId" asp-items="ViewBag.BoardRoleOfList">
                                             <option value="">اختيار العضوية...</option>
                                         </select>
-                               @* 
-                                         <select asp-for="BoardRoleId" class="form-control" asp-items="@ViewBag.BoardRoleOfList">
-                                            <option value="">اختيار العضوية...</option>
-                                         </select>
-                                    <span asp-validation-for="BoardRoleId" class="text-danger"></span> *@
                                     </div>
                                 </div>
-                              
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameAr" class="mb-1">الاسم</label>
+
+                                    </div>
+                                </div>
+                                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">حذف</a>
                                     <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
                                
 

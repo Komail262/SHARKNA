@@ -1,21 +1,20 @@
-﻿    @model IEnumerable<BoardRequestsViewModel>
+﻿ @model IEnumerable<BoardRequestsViewModel>
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
+    <!-- Start Page Wrap -->
     <section class="page_wrap">
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5>تفاصيل صاحب الطلب</h5>
-                    <p><strong>الاسم:</strong> @User.FindFirst(ClaimTypes.GivenName)?.Value</p>
-                    <p><strong>البريد الالكتروني:</strong> @User.FindFirst(ClaimTypes.Email)?.Value</p>
-                    <p><strong>رقم الجوال:</strong> @User.FindFirst(ClaimTypes.MobilePhone)?.Value</p>
-                </div>
-                <div class="block-body py-5">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="m-0">تفاصيل الفعالية</h5>
+                    <h5 class="m-0">إدارة طلبات الاندية</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                        <div>
+                            <a asp-action="UserDetails" class="btn btn-primary">التسجيل في نادي </a>
                         </div>
                     </div>
                 </div>
@@ -26,19 +25,26 @@
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.BoardId)</th>
                                 <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
-                                <th>@Html.DisplayNameFor(m => m.RejectionReasons)</th>
+
                                 <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var request in Model)
+                            @foreach (var request in Model.Where(r => r.RequestStatusId != Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2")))
                             {
-                                <tr >
-                                    
+
+
+                                <tr>
                                     <td>@request.FullNameAr</td>
                                     <td>@request.BoardName</td>
-                                    <td style="@(request.RequestStatusId == Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152") ? "background-color: rgb(15, 181, 21); color: white; border-radius: 15px; padding: 10px; text-align: center;" : "padding: 10px; text-align: center;")">@request.RequestStatusName</td>
-                                    <td>@request.RejectionReasons</td>
+                                    <td>
+                                        <span style="@(request.RequestStatusName == "مقبول" ? "background-color: lightgreen; padding: 2px 6px; border: 1px solid green; display: inline-block; border-radius: 5px;" :
+                                                      request.RequestStatusName == "مرفوض" ? "background-color: lightcoral; padding: 2px 6px; border: 1px solid red; display: inline-block; border-radius: 5px;" :
+                                                      request.RequestStatusName == "تم الالغاء" ? "background-color: gray; padding: 2px 6px; border: 1px solid black; display: inline-block; border-radius: 5px;" : "")">
+                                            @request.RequestStatusName
+                                        </span>
+                                    </td>
+
                                     <td>
                                         <form asp-action="Details">
                                             <input type="hidden" name="id" value="@request.Id" />

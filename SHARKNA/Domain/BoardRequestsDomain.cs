@@ -23,6 +23,7 @@ namespace SHARKNA.Domain
                 UserName = x.UserName,
                 BoardId = x.BoardId,
                 BoardName = x.Board.NameAr,
+                BoardDescription = x.Board.DescriptionAr,
                 RejectionReasons = x.RejectionReasons,
                 RequestStatusName = x.RequestStatus.RequestStatusAr,
                 RequestStatusId = x.RequestStatusId,
@@ -39,7 +40,7 @@ namespace SHARKNA.Domain
         {
             return _context.tblBoardRequests
                 .Where(x => x.Id == id)
-                .Include(x => x.Board)
+                .Include(x => x.Board.IsDeleted == false)
                 .Include(x => x.RequestStatus)
                 .Select(x => new BoardRequestsViewModel
                 {
@@ -50,6 +51,7 @@ namespace SHARKNA.Domain
                     Email = x.Email,
                     MobileNumber = x.MobileNumber,
                     BoardName = x.Board.NameAr,
+                    BoardDescription = x.Board.DescriptionAr,
                     RequestStatusId = x.RequestStatusId,
                     RequestStatusName = x.RequestStatus.RequestStatusAr,
                     RejectionReasons = x.RejectionReasons
@@ -57,8 +59,27 @@ namespace SHARKNA.Domain
                 .FirstOrDefault();
         }
 
-
-
+        public IEnumerable<BoardRequestsViewModel> GetTblBoardRequestsByUser(string username)
+        {
+            return _context.tblBoardRequests
+                .Where(x => x.UserName == username)
+                .Select(x => new BoardRequestsViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    BoardId = x.BoardId,
+                    BoardName = x.Board.NameAr,
+                    BoardDescription = x.Board.DescriptionAr,
+                    RejectionReasons = x.RejectionReasons,
+                    RequestStatusName = x.RequestStatus.RequestStatusAr,
+                    RequestStatusId = x.RequestStatusId,
+                    Email = x.Email,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    MobileNumber = x.MobileNumber
+                })
+                .ToList();
+        }
 
         public int AddBoardReq(BoardRequestsViewModel BoardReq, string UserName)
         {
@@ -78,17 +99,17 @@ namespace SHARKNA.Domain
                 _context.Add(VBoardReq);
 
                 _context.SaveChanges();
-                
-                //    tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
-                //    bLogs.Id = Guid.NewGuid() ;
-                //    bLogs.OpType = "Add";
-                //    bLogs.OpDateTime = DateTime.Now;
-                //    bLogs.CreatedBy = UserName;
-                //    bLogs.ReqId = VBoardReq.Id;
-                //    bLogs.AdditionalInfo = $"تم إضافة لجنة {VBoardReq.FullNameAr} بواسطة هذا المستخدم";
-                //    _context.tblBoardRequestLogs.Add(bLogs);
-                
-                //_context.SaveChanges();
+
+                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                bLogs.Id = Guid.NewGuid();
+                bLogs.ReqId = VBoardReq.Id;
+                bLogs.OpType = "اضافة";
+                bLogs.OpDateTime = DateTime.Now;
+                bLogs.CreatedBy = UserName;
+                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
+                _context.tblBoardRequestLogs.Add(bLogs);
+
+                _context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
@@ -98,6 +119,43 @@ namespace SHARKNA.Domain
 
         }
 
+        public int AddBoardReqAdmin(BoardRequestsViewModel BoardReq, string UserName)
+        {
+
+            try
+            {
+                tblBoardRequests VBoardReq = new tblBoardRequests();
+                VBoardReq.Id = BoardReq.Id;
+                VBoardReq.UserName = BoardReq.UserName;
+                VBoardReq.BoardId = BoardReq.BoardId;
+                VBoardReq.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
+                VBoardReq.Email = BoardReq.Email;
+                VBoardReq.FullNameAr = BoardReq.FullNameAr;
+                VBoardReq.FullNameEn = BoardReq.FullNameEn;
+                VBoardReq.MobileNumber = BoardReq.MobileNumber;
+
+                _context.Add(VBoardReq);
+
+                _context.SaveChanges();
+
+                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                bLogs.Id = Guid.NewGuid();
+                bLogs.ReqId = VBoardReq.Id;
+                bLogs.OpType = "اضافة";
+                bLogs.OpDateTime = DateTime.Now;
+                bLogs.CreatedBy = UserName;
+                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
+                _context.tblBoardRequestLogs.Add(bLogs);
+
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
 
 
 
@@ -119,12 +177,33 @@ namespace SHARKNA.Domain
 
         public void CancelRequest(Guid id)
         {
-
-            var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
-            if (BoardRequest != null)
+            try
             {
-                BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
-                _context.SaveChanges();
+
+                var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+
+                if (BoardRequest != null)
+                {
+                    BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
+                    _context.SaveChanges();
+
+                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                    bLogs.Id = id;
+                    bLogs.ReqId = BoardRequest.Id;
+                    bLogs.OpType = "تم الالغاء";
+                    bLogs.OpDateTime = DateTime.Now;
+                    bLogs.CreatedBy = BoardRequest.UserName;
+                    bLogs.AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}";
+                    _context.tblBoardRequestLogs.Add(bLogs);
+                    _context.SaveChanges();
+
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+                
             }
         }
 

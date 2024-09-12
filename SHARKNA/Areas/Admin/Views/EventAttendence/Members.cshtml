@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Event Attendance Members sheets";
+    string eventTitle = ViewBag.EventTitle as string; // Get the event title from the ViewBag
+
 }
 
 <script>
@@ -9,7 +11,7 @@
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                                    var result = '@Html.Raw(ViewData["Successful"])';
+                                                var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -21,14 +23,14 @@
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
         {
             <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
+                                                var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
         {
             <Text>
-                                    var result = '@Html.Raw(ViewData["Falied"])';
+                                                var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
@@ -44,7 +46,7 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">التحضير</h5>
+                    <h5 class="m-0">@eventTitle</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
@@ -71,15 +73,12 @@
                             <tbody>
                                 @foreach (var member in Model)
                                 {
-                                    bool check = false;
+                                    string check = member.IsAttend ? "checked" : "";
                                     <tr>
-
-
                                         <td>@member.NameAr</td>
                                         <td>@member.EEmail</td>
                                         <td>
-                                            <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@{member.IsAttend = true ? true: false;
-} " />
+                                            <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" @check />
 
                                             @*                                       <input type="checkbox" class="attendance-checkbox" name="attendanceStatus[@member.Id]" value="Present" checked="@(member.IsAttend ? "checked" : "")" />
                                         *@
@@ -95,9 +94,9 @@
                                 }
                             </tbody>
                         </table>
-                        @*                     <button type="submit" class="btn btn-success">تأكيد الحضور </button>
-                        *@
-                        <a asp-action="Members" type="submit" class="btn btn-success"> تأكيد الحضور </a>
+                        <button type="submit" class="btn btn-success">تأكيد الحضور </button>
+
+
 
 
                     </div>

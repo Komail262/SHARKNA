@@ -7,8 +7,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Security;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class RolesController : Controller
     {
         private readonly RoleDomain _RoleDomain;

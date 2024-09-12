@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<SHARKNA.ViewModels.BoardMembersViewModel>
 @{
     ViewData["Title"] = "Board Members List";
+    var boardName = Model.FirstOrDefault()?.BoardName ?? "ادارة الاندية";
 }
 
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">ادارة طلبات الاندية</h5>
+                    <h5 class="m-0">@boardName</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
@@ -37,14 +38,14 @@
                                 <tr>
                                     
                                     <td>@member.FullNameAr</td>
+                                    <td>@member.Email</td>
+                                    <td>@member.MobileNumber</td>
                                     <td>@member.BoardRoleName</td>
                                     <td>
-                                    <form asp-action="Details">
-                                        <input type="hidden" name="id" value="@member.Id" />
-                                        <button type="submit" class="btn" style="background-color: rgb(15, 113, 121); color: white;">التفاصيل </button> |
-                                            <a asp-action="Delete" asp-route-id="@member.Id" class="btn btn-danger">حذف</a>
+                                          
+                                        <a asp-action="Details" asp-route-id="@member.Id" class="btn " style=" background-color: rgb(15, 113, 121); color: white;">العضوية</a>
+                                        <a asp-action="Delete" asp-route-id="@member.Id" class="btn btn-danger">حذف</a>
 
-                                    </form>
 
                                     </td>
                                 </tr>

@@ -19,8 +19,10 @@ namespace SHARKNA.ViewModels
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("اسم النادي")]
         public Guid BoardId { get; set; }
-
         public string BoardName { get; set; }
+
+        [DisplayName("الوصف")]
+        public string BoardDescription { get; set; }
 
         
         [DisplayName("حالة الطلب")]
@@ -29,7 +31,6 @@ namespace SHARKNA.ViewModels
         public string RequestStatusName { get; set; }
 
         public ICollection<tblBoards> BoardsOfList { get; set; }
-        //public ICollection<tblRequestStatus> ReqStatusOfList { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
@@ -43,15 +44,15 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("الاسم بالعربي")]
+        [DisplayName("الاسم")]
         public string FullNameAr { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        //[Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
         [DisplayName("الاسم بالانجليزي")]
         public string FullNameEn { get; set; }
 
-        [StringLength(100)]
+        [StringLength(1000)]
         [DisplayName(" سبب الرفض")]
         public string? RejectionReasons { get; set; }
 

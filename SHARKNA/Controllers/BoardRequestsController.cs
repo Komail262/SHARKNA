@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
 using SHARKNA.Models;
@@ -24,21 +25,33 @@ namespace SHARKNA.Controllers
             _BoardMembersDomain = boardMembersDomain;
             _UserDomain = userDomain;   
         }
+
+        [Authorize(Roles = "User")]
         public IActionResult Index()
         {
-            var BoardReq = _boardRequestsDomain.GetTblBoardRequests();
-            return View(BoardReq);
-        }
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var userBoardRequests = _boardRequestsDomain.GetTblBoardRequestsByUser(username);
 
+            return View(userBoardRequests);
+        }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        public IActionResult UserDetails()
+        {
+            var userBoardRequests = _BoardDomain.GetTblBoards();
+            return View(userBoardRequests);
+        }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public IActionResult Admin()
         {
             var BoardReq = _boardRequestsDomain.GetTblBoardRequests();
             return View(BoardReq);
         }
-        public IActionResult Create()
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        public IActionResult Create(Guid boardId)
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value; 
             var user = _UserDomain.GetUserFER(username);
+            var board = _BoardDomain.GetTblBoards().FirstOrDefault(b => b.Id == boardId);
 
             var model = new BoardRequestsViewModel
             {
@@ -46,11 +59,12 @@ namespace SHARKNA.Controllers
                 Email = user.Email,
                 MobileNumber = user.MobileNumber,
                 FullNameAr = user.FullNameAr,
+                BoardId = boardId,
+                BoardName = board.NameAr,
+                BoardDescription = board.DescriptionAr, 
                 FullNameEn = user.FullNameEn
             };
-
-            ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-
+                        
             return View(model); 
         }
 
@@ -62,7 +76,7 @@ namespace SHARKNA.Controllers
 
 
 
-
+        //[Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(BoardRequestsViewModel BoardReq ,string UserName)
@@ -77,11 +91,11 @@ namespace SHARKNA.Controllers
                 if (requestExists)
                 {
                     ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
-                    ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+                   
                     return View(BoardReq);
                 }
 
-                ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
+               // ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", BoardReq.BoardId);
                 if (ModelState.IsValid)
                 {
                     BoardReq.Id = Guid.NewGuid();
@@ -112,7 +126,7 @@ namespace SHARKNA.Controllers
         }
 
 
-
+        //[Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CancelRequest(Guid id)
@@ -122,7 +136,7 @@ namespace SHARKNA.Controllers
                 _boardRequestsDomain.CancelRequest(id);
                 ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
             }

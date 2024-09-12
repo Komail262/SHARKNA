@@ -9,27 +9,27 @@
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("Index", "Boards")';
-                    }
-                );
+                                var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result, '', 'success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Boards")';
+                            }
+                        );
             </Text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
+                                var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
             </Text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
         {
             <Text>
-                        var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
+                                var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
             </Text>
         }
     }
@@ -56,7 +56,7 @@
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
                         <div>
-                            <a asp-action="Create" class="btn btn-primary">إضافة لجنة</a>
+                            <a asp-action="Create"  class="btn btn-primary">إضافة لجنة</a>
                         </div>
                     </div>
                 </div>
@@ -65,9 +65,9 @@
                         <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(m => m.NameAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.NameEn)</th>
+                               @* <th>@Html.DisplayNameFor(m => m.NameEn)</th>
                                 <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
-                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>*@
                                 <th>@Html.DisplayNameFor(m => m.Gender)</th>
                                 <th>الإجراءات</th>
                             </tr>
@@ -77,31 +77,32 @@
                             {
                                 <tr>
                                     <td>@board.NameAr</td>
-                                    <td>@board.NameEn</td>
+                                  @*  <td>@board.NameEn</td>
                                     <td>@board.DescriptionAr</td>
-                                    <td>@board.DescriptionEn</td>
+                                    <td>@board.DescriptionEn</td>*@
                                     <td>
                                         @if (board.Gender.HasValue)
                                         {
                                             @if (board.Gender == true)
                                             {
-                                                @:طلاب
+                                                @:ذكور
                                             }
-                                            else 
+                                            else
                                             {
-                                                @:طالبات
+                                                @:إناث
                                             }
                                         }
-                                        else 
+                                        else
                                         {
-                                            @: طلاب وطالبات
+                                            @:  ذكور وإناث
                                         }
                                     </td>
 
-                                  
+
                                     <td>
-                                        <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-primary">تعديل</a> |
-                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a>
+                                        <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-success">تعديل</a> |
+                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a> |
+                                        <a asp-action="Details" asp-route-id="@board.Id" class="btn btn-primary">عرض التفاصيل</a>
 
                                     </td>
                                 </tr>
@@ -112,7 +113,7 @@
             </div>
         </div>
     </section><!-- End Page Wrap -->
- 
+
 
 </body>
 </html>

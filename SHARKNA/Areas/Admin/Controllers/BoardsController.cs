@@ -7,8 +7,9 @@ using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class BoardsController : Controller
     {
         private readonly BoardDomain _boardDomain;
@@ -22,7 +23,7 @@ namespace SHARKNA.Controllers
         }
 
         //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
-        public IActionResult Index(string Successful = "",string Falied = "")
+        public IActionResult Index(string Successful = "", string Falied = "")
         {
 
             if (Successful != "")
@@ -53,16 +54,26 @@ namespace SHARKNA.Controllers
             return View(board);
         }
 
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var board = await _boardDomain.GetTblBoardByIdAsync(id);
+            if (board == null)
+            {
+                return NotFound();
+            }
+            return View(board);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<IActionResult> Create(BoardViewModel board )
+        public async Task<IActionResult> Create(BoardViewModel board)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    
+
                     //if (await _boardDomain.IsBoardNameDuplicateAsync(board.NameEn))
                     //{
                     //    ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
@@ -92,12 +103,12 @@ namespace SHARKNA.Controllers
             return View(board);
         }
 
-       
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
-        public async  Task<IActionResult> Update(BoardViewModel board)
+        public async Task<IActionResult> Update(BoardViewModel board)
         {
             try
             {
@@ -108,15 +119,15 @@ namespace SHARKNA.Controllers
 
                     var Eboard = await _boardDomain.GetTblBoardByIdAsync(board.Id);//ياخذ بيانات اللجنة الحالموجودة حاليا من الداتابيس باستخدام ID قبل اي تعديل  
 
-                    
+
                     //if (Eboard != null && Eboard.NameEn != board.NameEn && await _boardDomain.IsBoardNameDuplicateAsync(board.NameEn))//new
 
-                        // Eboard != null يتأكد اللجنة موجودة ولا 
-                        //Eboard.NameEn != board.NameEn يتأكد اذا كنت تبي تغير الاسم بالانجليزي وهل اذا غيرته بيكون مختلف اذا مختلف بيكمل 
-                        // _boardDomain.IsBoardNameDuplicate(board.NameEn) يتأكد هل الاسم الجديد موجود بالداتابيس 
+                    // Eboard != null يتأكد اللجنة موجودة ولا 
+                    //Eboard.NameEn != board.NameEn يتأكد اذا كنت تبي تغير الاسم بالانجليزي وهل اذا غيرته بيكون مختلف اذا مختلف بيكمل 
+                    // _boardDomain.IsBoardNameDuplicate(board.NameEn) يتأكد هل الاسم الجديد موجود بالداتابيس 
 
 
-                        //if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
+                    //if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
                     //    {
                     //        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
                     //    return View(board);
@@ -140,7 +151,7 @@ namespace SHARKNA.Controllers
             return View(board);
         }
 
-        
+
 
         [HttpGet]
         // [ValidateAntiForgeryToken]
@@ -158,24 +169,25 @@ namespace SHARKNA.Controllers
                 int check = await _boardDomain.DeleteBoardAsync(id, username);
                 if (check == 1)
                 {
-                     Successful = "تم حذف اللجنة بنجاح";
+                    Successful = "تم حذف اللجنة بنجاح";
                 }
 
                 else
                 {
-                     Falied = "حدث خطأ";
+                    Falied = "حدث خطأ";
 
 
                 }
                 //return View(id);
 
             }
-            catch (Exception ex) {
-                 Falied = "حدث خطأ";
+            catch (Exception ex)
+            {
+                Falied = "حدث خطأ";
 
             }
             //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index),new {Successful = Successful,  Falied = Falied});
+            return RedirectToAction(nameof(Index), new { Successful, Falied });
         }
 
         //end delete

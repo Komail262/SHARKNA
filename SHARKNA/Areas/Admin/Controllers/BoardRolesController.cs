@@ -8,8 +8,9 @@ using SHARKNA.ViewModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class BoardRolesController : Controller
     {
         private readonly BoardRolesDomain _BoardRolesDomain;
@@ -135,7 +136,7 @@ namespace SHARKNA.Controllers
 
             }
             //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
+            return RedirectToAction(nameof(Index), new { Successful, Falied });
 
 
         }

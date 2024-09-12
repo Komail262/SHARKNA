@@ -22,13 +22,13 @@ namespace SHARKNA.ViewModels
 
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(100)]
+        [StringLength(5000)]
         [DisplayName("الوصف بالعربي")]
         public string DescriptionAr { get; set; }
 
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(100)]
+        [StringLength(5000)]
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
 

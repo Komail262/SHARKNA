@@ -6,8 +6,9 @@ using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class PermissionsController : Controller
     {
         private readonly PermissionDomain _PermissionDomain;
@@ -164,7 +165,7 @@ namespace SHARKNA.Controllers
 
             }
             //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
+            return RedirectToAction(nameof(Index), new { Successful, Falied });
         }
 
 

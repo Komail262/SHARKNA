@@ -37,6 +37,11 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.HttpOnly = HttpOnlyPolicy.Always;
     options.Secure = CookieSecurePolicy.None;
 });
+
+
+builder.Services.AddHealthChecks();
+builder.Services.AddRazorPages();
+
 builder.Services.AddScoped<UserDomain>();
 builder.Services.AddScoped<BoardDomain>();
 builder.Services.AddScoped<EventRegistrationsDomain>();
@@ -72,21 +77,20 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseSession();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapControllerRoute(
-//        name: "Admin",
-//        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
-//    endpoints.MapControllerRoute(
-//        name: "default",
-//        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-//    endpoints.MapRazorPages();
-//});
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "Admin",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapRazorPages();
+});
 
 app.Run();
 

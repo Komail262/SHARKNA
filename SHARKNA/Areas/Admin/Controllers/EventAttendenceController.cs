@@ -8,8 +8,9 @@ using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class EventAttendenceController : Controller
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
