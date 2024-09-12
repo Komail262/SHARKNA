@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 
@@ -105,9 +106,28 @@ namespace SHARKNA.Domain
             }
         }
 
+        public async Task<UserViewModel> GetTblUserByUserName(string UserName)
+        {
+            var x = await _context.tblUsers.FirstOrDefaultAsync(x => x.UserName == UserName);
+            if (x != null)
+            {
+                return new UserViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Password = x.Password,
+                    Email = x.Email,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    MobileNumber = x.MobileNumber,
+                    Gender = x.Gender
+                };
+            }
+            else
+                return null;
+        }
 
-
-       public PermissionsViewModel GetUserByUsername(string username)
+        public PermissionsViewModel GetUserByUsername(string username)
 {
     var userWithRole = (from u in _context.tblPermissions
                         join r in _context.tblRoles on u.RoleId equals r.Id
@@ -145,31 +165,35 @@ namespace SHARKNA.Domain
                 FullNameAr = user.FullNameAr,
                 FullNameEn = user.FullNameEn,
                 Email = user.Email,
-                MobileNumber = user.MobileNumber
+                MobileNumber = user.MobileNumber,
+                 Gender = user.Gender
             };
         }
 
-        public UserViewModel GetUserFER(string username)
+        public async Task<UserViewModel> GetUserFERAsync(string username)
         {
-            // Retrieve the user from the tblUsers table based on the username
-            var user = _context.tblUsers
-                .FirstOrDefault(u => u.UserName == username);
+            
+            var user = await _context.tblUsers
+                .FirstOrDefaultAsync(u => u.UserName == username);
 
-            // If no user is found, return null
+     
             if (user == null)
             {
                 return null;
             }
 
-            // Return the UserViewModel populated with the user details
+     
             return new UserViewModel
             {
+              
+                UserName = user.UserName,
                 Email = user.Email,
                 MobileNumber = user.MobileNumber,
                 FullNameAr = user.FullNameAr,
                 FullNameEn = user.FullNameEn
             };
         }
+
 
 
 

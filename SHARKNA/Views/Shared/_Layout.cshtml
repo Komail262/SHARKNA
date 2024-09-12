@@ -30,6 +30,18 @@
 
     <!-- customization -->
     <link rel="stylesheet" href="~/Assets/css/app_rtl.css">
+    <!-- main JS Scripts -->
+    <script src="~/Assets/js/jquery-3.4.1.min.js"></script>
+    <script src="~/Assets/js/popper.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+
+    <!--------- JS Liberaries ---------->
+    <script src="~/Assets/lib/DataTable/js/dataTables.min.js"></script>
+    <script src="~/Assets/lib/quickSearch/jquery.quicksearch.js"></script>
+
+    <!-- customization -->
+    <script src="~/Assets/js/app.js"></script>
+
 </head>
 
 <body>
@@ -169,18 +181,7 @@
         </main><!-- End Content wrapper -->
     </main>
 
-    <!-- main JS Scripts -->
-    <script src="~/Assets/js/jquery-3.4.1.min.js"></script>
-    <script src="~/Assets/js/popper.min.js"></script>
-    <script src="~/Assets/js/bootstrap.min.js"></script>
-
-    <!--------- JS Liberaries ---------->
-    <script src="~/Assets/lib/DataTable/js/dataTables.min.js"></script>
-    <script src="~/Assets/lib/quickSearch/jquery.quicksearch.js"></script>
-
-    <!-- customization -->
-    <script src="~/Assets/js/app.js"></script>
-    <script>
+       <script>
         $("#addSectionBtn").on('click', function () {
             let sections_item_length = $('.sub_sections_wrap').find('.sub_sections_item').length
             $('.sub_sections_wrap').append(`

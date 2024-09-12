@@ -105,25 +105,25 @@ namespace SHARKNA.Controllers
                     BoardReq.FullNameAr = user.FullNameAr;
                     BoardReq.FullNameEn = user.FullNameEn;
 
-                    int check = _boardRequestsDomain.AddBoardReq(BoardReq , UserName);
-                    if (check == 1)
-                    {
-                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
-                    }
-                    else
-                    {
-                        ViewData["Falied"] = "حدث خطأ";
-                    }
-                    return View(BoardReq);
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewData["Falied"] = "حدث خطأ";
-            }
+        //            int check = _boardRequestsDomain.AddBoardReq(BoardReq , UserName);
+        //            if (check == 1)
+        //            {
+        //                ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+        //            }
+        //            else
+        //            {
+        //                ViewData["Falied"] = "حدث خطأ";
+        //            }
+        //            return View(BoardReq);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ViewData["Falied"] = "حدث خطأ";
+        //    }
 
-            return View(BoardReq);
-        }
+        //    return View(BoardReq);
+        //}
 
 
         //[Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]

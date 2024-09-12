@@ -27,16 +27,7 @@ namespace SHARKNA.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
-            var user = _UserDomain.GetUserFER(username); // Fetch user details from the database
 
-            var model = new BoardRequestsViewModel
-            {
-                UserName = username,
-                Email = user.Email,
-                MobileNumber = user.MobileNumber,
-                FullNameAr = user.FullNameAr,
-                FullNameEn = user.FullNameEn
-            };
             var events = await _eventattendenceDomain.GetTblEventsAsync();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
             return View(events);
         }
@@ -53,9 +44,9 @@ namespace SHARKNA.Areas.Admin.Controllers
             return View(eventDays);
         }
 
-        public async Task<IActionResult> Members(Guid id, Guid EventsRegId)
+        public async Task<IActionResult> Members(Guid id, int day)
         {
-            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, EventsRegId);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
 
             return View(Ereg);
 
@@ -67,7 +58,7 @@ namespace SHARKNA.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Members(FormCollection forms, Guid id, Guid eventRegId)
+        public async Task<IActionResult> Members(FormCollection forms, Guid id, int day)
         {
             try
             {
@@ -75,22 +66,22 @@ namespace SHARKNA.Areas.Admin.Controllers
                 {
                     //var eventId = new Guid(forms["eventId"]);
                     var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                    var user = _UserDomain.GetUserFER(username);
+                    //var user = _UserDomain.GetUserFER(username);
 
 
                     var count = forms["attendanceStatus"].Count;
 
 
 
-                    var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, eventRegId);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-                                                                                                       //return View(Ereg);
+                    var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+                                                                                                //return View(Ereg);
 
                     if (count == 1)
-                        ViewData["Successful"] = "تم تسجيل الحضور بنجاح";
+                        ViewData["Successful"] = "تم التحضير بنجاح";
                     else
                         ViewData["Falied"] = "حدث خطأ";
 
-                    return RedirectToAction("Index");
+                    return View(forms);
 
                 }
             }
@@ -100,7 +91,7 @@ namespace SHARKNA.Areas.Admin.Controllers
                 ViewData["Falied"] = "حدث خطأ";
             }
 
-            return RedirectToAction("Index");
+            return View(forms);
 
         }
 

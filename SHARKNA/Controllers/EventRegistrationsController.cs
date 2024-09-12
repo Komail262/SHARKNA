@@ -2,39 +2,43 @@
 using SHARKNA.Domain;
 using SHARKNA.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using SHARKNA.Models;
 
 namespace SHARKNA.Controllers
 {
+    [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor,Club Manager")]
     public class EventRegistrationsController : Controller
     {
-        private readonly EventRegistrationsDomain _EventRegistrations;
-        private readonly EventDomain _EventDomain;
-        private readonly UserDomain _UserDomain;
+        private readonly EventRegistrationsDomain _eventRegistrations;
+        private readonly EventDomain _eventDomain;
+        private readonly UserDomain _userDomain;
+        private readonly SHARKNAContext _context;
 
-        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain, UserDomain userDomain)
+
+        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain, UserDomain userDomain, SHARKNAContext context)
         {
-            _EventRegistrations = eventRegDomain;
-            _EventDomain = eventDomain;
-            _UserDomain = userDomain;
+            _eventRegistrations = eventRegDomain;
+            _eventDomain = eventDomain;
+            _userDomain = userDomain;
+            _context = context;
+
         }
 
-
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         public IActionResult MyEventRegistrations()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
 
-            var eventRegs = _EventRegistrations.GetUserRegisteredEvents(username);
+            var eventRegs = _eventRegistrations.GetUserRegisteredEvents(username);
 
 
             var eventDetails = eventRegs.Select(reg =>
             {
-                var eventDetail = _EventDomain.GetTblEventsById(reg.EventId);
+                var eventDetail = _eventDomain.GetEventById(reg.EventId);
                 return new
                 {
                     EventReg = reg,
@@ -45,42 +49,27 @@ namespace SHARKNA.Controllers
             return View(eventDetails);
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult MyEventDetails(Guid eventId)
-        {
-            var eventDetail = _EventDomain.GetEventById(eventId);
-            return View(eventDetail);
-        }
 
 
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult Register()
+
+
+        public async Task<IActionResult> MyEventDetails(Guid eventId)
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var nameAr = User.FindFirst(ClaimTypes.GivenName)?.Value;
 
-            var events = _EventRegistrations.GetEventsForUser(username);
-            return View(events);
-        }
-
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public IActionResult EventDetails(Guid eventId)
-        {
-            var eventDetail = _EventDomain.GetEventById(eventId);
+            var eventDetail = await _eventDomain.GetEventByIdAsync2(eventId, username, nameAr);
 
             if (eventDetail == null)
             {
                 return NotFound();
             }
 
-            var userId = User.Identity.Name;
+            var userRegisteredEvents = await _eventRegistrations.GetUserRegisteredEventsAsync(username);
+            var isUserRegistered = userRegisteredEvents.Any(r => r.EventId == eventId);
 
-            var isUserRegistered = _EventRegistrations.GetUserRegisteredEvents(userId)
-                .Any(r => r.EventId == eventId);
-
-            var currentRegistrations = _EventRegistrations.GetEventRegistrationsCount(eventId);
-
+            var currentRegistrations = await _eventRegistrations.GetEventRegistrationsCountAsync(eventId);
             var maxAttendance = eventDetail.MaxAttendence;
-
             var canRegister = !isUserRegistered && currentRegistrations < maxAttendance;
 
             ViewBag.IsUserRegistered = isUserRegistered;
@@ -91,34 +80,67 @@ namespace SHARKNA.Controllers
             return View(eventDetail);
         }
 
+        public async Task<IActionResult> Register()
+        {
+           
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var nameAr = User.FindFirst(ClaimTypes.GivenName)?.Value;
+            var userGender = User.FindFirst(ClaimTypes.Gender)?.Value ?? "NotSpecified";
 
+        
+            var events = await _eventDomain.GettblEventsAsync2(userGender, username, nameAr);
 
+         
+            return View(events);
+        }
 
+        public async Task<IActionResult> EventDetails(Guid eventId)
+        {
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var nameAr = User.FindFirst(ClaimTypes.GivenName)?.Value;
 
+            var eventDetail = await _eventDomain.GetEventByIdAsync2(eventId, username, nameAr);
+
+            if (eventDetail == null)
+            {
+                return NotFound();
+            }
+
+            var userRegisteredEvents = await _eventRegistrations.GetUserRegisteredEventsAsync(username);
+            var isUserRegistered = userRegisteredEvents.Any(r => r.EventId == eventId);
+
+            var currentRegistrations = await _eventRegistrations.GetEventRegistrationsCountAsync(eventId);
+            var maxAttendance = eventDetail.MaxAttendence;
+            var canRegister = !isUserRegistered && currentRegistrations < maxAttendance;
+
+            ViewBag.IsUserRegistered = isUserRegistered;
+            ViewBag.CanRegister = canRegister;
+            ViewBag.CurrentRegistrations = currentRegistrations;
+            ViewBag.MaxAttendance = maxAttendance;
+
+            return View(eventDetail);
+        }
 
         [HttpPost]
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(Guid eventId)
         {
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
             try
             {
-                var username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-
-                var userRegisteredEvents = await Task.Run(() => _EventRegistrations.GetUserRegisteredEvents(username));
+                var userRegisteredEvents = await _eventRegistrations.GetUserRegisteredEventsAsync(username);
                 var isAlreadyRegistered = userRegisteredEvents.Any(reg => reg.EventId == eventId);
 
                 if (isAlreadyRegistered)
                 {
                     ViewData["Failed"] = "أنت مسجل بالفعل في هذه الفعالية.";
-                    var eventDetail = await Task.Run(() => _EventDomain.GetEventById(eventId));
+                    var eventDetail = await _eventDomain.GetEventByIdAsync2(eventId, username, null);
                     return View("EventDetails", eventDetail);
                 }
 
-
-                var eventInfo = await Task.Run(() => _EventDomain.GetEventById(eventId));
-                var currentRegistrationsCount = await Task.Run(() => _EventRegistrations.GetEventRegistrationsCount(eventId));
+                var eventInfo = await _eventDomain.GetEventByIdAsync2(eventId, username, null);
+                var currentRegistrationsCount = await _eventRegistrations.GetEventRegistrationsCountAsync(eventId);
 
                 if (currentRegistrationsCount >= eventInfo.MaxAttendence)
                 {
@@ -126,8 +148,7 @@ namespace SHARKNA.Controllers
                     return View("EventDetails", eventInfo);
                 }
 
-
-                var user = await Task.Run(() => _UserDomain.GetUserFER(username));
+                var user = await _userDomain.GetUserFERAsync(username);
 
                 var eventReg = new EventRegistrationsViewModel
                 {
@@ -142,21 +163,18 @@ namespace SHARKNA.Controllers
                     FullNameEn = user.FullNameEn
                 };
 
-                await Task.Run(() => _EventRegistrations.AddEventReg(eventReg));
-                ViewData["Success"] = "تم التسجيل بنجاح!";
+                await _eventRegistrations.AddEventRegAsync(eventReg);
 
-                var eventDetailsFinal = await Task.Run(() => _EventDomain.GetEventById(eventId));
+                ViewData["Success"] = "تم التسجيل بنجاح!";
+                var eventDetailsFinal = await _eventDomain.GetEventByIdAsync2(eventId, username, null);
                 return View("EventDetails", eventDetailsFinal);
             }
-            catch (Exception ex)
+            catch
             {
- 
                 ViewData["Failed"] = "حدث خطأ غير متوقع في النظام.";
-                var eventDetails = _EventDomain.GetEventById(eventId);
+                var eventDetails = await _eventDomain.GetEventByIdAsync2(eventId, username, null);
                 return View("EventDetails", eventDetails);
             }
         }
-
-
     }
 }

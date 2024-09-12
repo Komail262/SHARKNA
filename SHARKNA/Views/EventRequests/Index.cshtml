@@ -3,23 +3,40 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    @if (TempData["Success"] != null)
-    {
-        <text>
-            Swal.fire('نجاح', '@TempData["Success"]', 'success');
-        </text>
+    // إظهار رسائل النجاح أو الفشل باستخدام SweetAlert
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <text>
+                Swal.fire('نجاح', '@Html.Raw(ViewData["Successful"])', 'success');
+            </text>
+        }
+        else if (@ViewData["Falied"] != null)
+        {
+            <text>
+                Swal.fire('خطأ', '@Html.Raw(ViewData["Falied"])', 'error');
+            </text>
+        }
     }
-    else if (TempData["Error"] != null)
-    {
-        <text>
-            Swal.fire('خطأ', '@TempData["Error"]', 'error');
-        </text>
-    }
-</script>
 
-@{
-    ViewData["Title"] = "Event Requests List";
-}
+        // JavaScript لإظهار رسالة تأكيد عند محاولة إلغاء الطلب
+        function confirmCancel(eventId) {
+            Swal.fire({
+                title: 'هل أنت متأكد من إلغاء الطلب؟',
+                text: "لن تتمكن من التراجع عن هذا الإجراء!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، قم بالإلغاء!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // إذا تم تأكيد الإلغاء، قم بإرسال نموذج الإلغاء
+                    document.getElementById('cancelForm-' + eventId).submit();
+                }
+            });
+        }
+</script>
 
 <h2>قائمة طلبات الفعاليات</h2>
 
@@ -63,12 +80,18 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a asp-action="Details" asp-route-id="@request.Id" class="btn btn-primary btn-sm details-btn">عرض التفاصيل</a>
-                                        @if (request.RequestStatusName != "تم الإلغاء")
+                                        <!-- عرض التفاصيل دائماً -->
+                                        <a asp-action="Details" asp-route-id="@request.Id" class="btn btn-primary btn-sm details-btn">عرض التفاصيل</a> 
+
+                                        <!-- عرض الأزرار الأخرى إذا كانت حالة الطلب "تحت الدراسة" -->
+                                        @if (request.RequestStatusId == Guid.Parse("93D729FA-E7FA-4EA6-BB16-038454F8C5C2"))
                                         {
-                                            <form asp-action="Cancel" method="post" style="margin: 0;">
+                                            <a asp-action="Edit" asp-route-id="@request.EventId" class="btn btn-success btn-sm edit-btn"> تعديل</a> 
+
+                                            <!-- استخدام JavaScript لإظهار رسالة تأكيد قبل الإلغاء -->
+                                            <form asp-action="Cancel" method="post" id="cancelForm-@request.Id" style="display:inline;">
                                                 <input type="hidden" name="id" value="@request.Id" />
-                                                <button type="submit" class="btn btn-danger btn-sm">إلغاء الطلب</button>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="confirmCancel('@request.Id')">إلغاء الطلب</button> 
                                             </form>
                                         }
                                     </div>
@@ -81,23 +104,11 @@
         </div>
     </div>
 </section>
-
 <style>
     .btn-group {
-        display: flex;
+        
         gap: 0.5rem; /* Adjust gap between buttons */
     }
 
-    .details-btn {
-        /* Default width for details button */
-    }
 
-    .btn-group form {
-        margin: 0;
-    }
-
-    /* Style for details button when it's the only button in the group */
-    .btn-group:only-child .details-btn {
-        width: 100%; /* Full width when only button */
-    }
 </style>

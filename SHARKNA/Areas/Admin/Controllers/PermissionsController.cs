@@ -13,13 +13,17 @@ namespace SHARKNA.Areas.Admin.Controllers
     {
         private readonly PermissionDomain _PermissionDomain;
         private readonly RoleDomain _RolesDomain;
+        private readonly UserDomain _UserDomain;
 
-        public PermissionsController(PermissionDomain permissionDomain, RoleDomain roleDomain)
+        public PermissionsController(PermissionDomain permissionDomain, RoleDomain roleDomain, UserDomain userDomain)
         {
             _PermissionDomain = permissionDomain;
             _RolesDomain = roleDomain;
+            _UserDomain = userDomain;
 
         }
+
+  
 
         public IActionResult Index(string Successful = "", string Falied = "")
         {
@@ -68,7 +72,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
                     permission.Id = Guid.NewGuid();
                     _PermissionDomain.AddPermission(permission);
-                    ViewData["Successful"] = "Successful";
+                    ViewData["Successful"] = "تم تعيين الصلاحية";
                 }
                 catch (Exception ex)
                 {
@@ -166,6 +170,11 @@ namespace SHARKNA.Areas.Admin.Controllers
             }
             //_boardDomain.DeleteBoard(id);
             return RedirectToAction(nameof(Index), new { Successful, Falied });
+        }
+
+        public async Task<UserViewModel> GetUserInfo(string id)
+        {
+            return await _UserDomain.GetTblUserByUserName(id);
         }
 
 

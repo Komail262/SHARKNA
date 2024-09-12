@@ -10,7 +10,7 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName(" اسم الحدث بالعربي")]
+        [DisplayName("اسم الحدث بالعربي")]
         public string EventTitleAr { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
@@ -21,12 +21,12 @@ namespace SHARKNA.ViewModels
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("تاريخ بداية الحدث")]
-        public DateTime EventStartDate { get; set; }
+        public DateTime? EventStartDate { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DataType(DataType.DateTime, ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("تاريخ نهاية الحدث")]
-        public DateTime EventEndtDate { get; set; }
+        public DateTime? EventEndtDate { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
@@ -72,10 +72,14 @@ namespace SHARKNA.ViewModels
         [DisplayName("الحد الأقصى للحضور")]
         public int MaxAttendence { get; set; }
 
+        [DisplayName("الجنس")]
+        public bool? Gender { get; set; }
+
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("اللجنة")]
         public Guid BoardId { get; set; }
-        public string BoardName { get; set; }   
+
+        public string BoardName { get; set; }
 
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }

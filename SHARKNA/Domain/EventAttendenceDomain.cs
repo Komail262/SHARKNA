@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Xml;
+
 
 namespace SHARKNA.Domain
 {
@@ -56,7 +58,7 @@ namespace SHARKNA.Domain
                 days.Add(new EEventAttendenceViewModel
                 {
                     Id = Guid.NewGuid(), // نعمل اي دي خاص لكل يوم
-                    EventstId = eventId, // نعرف الحدث
+                    EventsId = eventId, // نعرف الحدث
                     EventDate = currentDate, // نعرف التاريخ الحالي
                     Day = dayNumber, // نعرف رقم اليوم
                     EventName = EE.EventTitleAr // نضع عنوان الفعالية
@@ -70,17 +72,17 @@ namespace SHARKNA.Domain
         }
 
 
-        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventattendenceAsync(Guid eventId, Guid eventRegId)
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventattendenceAsync(Guid eventId, int day)
         {
 
             return await _context.tblEventAttendence.Include(R => R.EventsReg)
 
-                .Where(x => x.EventstId == eventId && x.EventsRegId == eventRegId).Select(x => new EEventAttendenceViewModel 
+                .Where(x => x.EventsId == eventId && x.Day == day).Select(x => new EEventAttendenceViewModel 
                 {
                     Id = x.Id,
                     EventDate = x.EventDate,
                     Day = x.Day,
-                    EventstId = x.EventstId,
+                    EventsId = x.EventsId,
                     EventsRegId = x.EventsRegId,
                     NameAr = x.EventsReg.FullNameAr,
                     RRegDate = x.EventsReg.RegDate,
@@ -88,28 +90,10 @@ namespace SHARKNA.Domain
                     IsAttend = x.IsAttend
 
                 }).ToListAsync();
-        }
-        //public EEventAttendenceViewModel GetTblEventattendenceByIdAsync(Guid id)
-        //{
-        //    return _context.tblEventAttendence
-        //        .Where(x => x.Id == id)
-        //        .Include(x => x.EventsRegId)
-        //        .Include(x => x.EventstId)
-        //        .Select(x => new EEventAttendenceViewModel
-        //        {
-        //            Id = x.Id,
-        //            EventDate = x.EventDate,
-        //            Day = x.Day,
-        //            EventstId = x.EventstId,
-        //            EventsRegId = x.EventsRegId,
-        //            NameAr = x.EventsReg.FullNameAr,
-        //            RRegDate = x.EventsReg.RegDate,
-        //            EEmail = x.EventsReg.Email,
-        //            IsAttend = x.IsAttend
 
-        //        })
-        //        .FirstOrDefault();
-        //}
+
+        }
+    
 
 
 

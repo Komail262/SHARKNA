@@ -475,7 +475,6 @@ namespace SHARKNA.Migrations
                     EventDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Day = table.Column<int>(type: "int", nullable: false),
                     EventsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    EventstId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventsRegId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsAttend = table.Column<bool>(type: "bit", nullable: false)
                 },

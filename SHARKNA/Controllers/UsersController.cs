@@ -25,7 +25,7 @@ namespace SHARKNA.Controllers
             _userDomain = userDomain;
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Super Admin")]
         public IActionResult Index()
         {
             var users = _userDomain.GetTblUsers();
@@ -33,13 +33,13 @@ namespace SHARKNA.Controllers
 
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Super Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Super Admin")]
         public IActionResult Edite()
         {
             return View();
@@ -51,7 +51,7 @@ namespace SHARKNA.Controllers
         }
 
         [HttpPost]
-         [Authorize(Roles = "SuperAdmin")]
+         [Authorize(Roles = "Super Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(UserViewModel user)
         {
@@ -77,7 +77,7 @@ namespace SHARKNA.Controllers
             return View(user);
         }
         
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Super Admin")]
         public IActionResult Edit(Guid id)
         {
             var user = _userDomain.GetTblUserById(id);
@@ -90,7 +90,7 @@ namespace SHARKNA.Controllers
 
        
         [HttpPost]
-        [Authorize(Roles = "SuperAdmin")]
+        [Authorize(Roles = "Super Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(UserViewModel user)
         {
@@ -129,8 +129,15 @@ namespace SHARKNA.Controllers
                 {
                     
                     var userPermissions = _userDomain.GetUserByUsername(user.UserName);
+                    string genderClaimValue = userRecord.Gender.HasValue
+                         ? (userRecord.Gender.Value ? "Male" : "Female")
+                            : "NotSpecified"; 
 
-                   
+
+
+
+
+
                     if (userPermissions == null)
                     {
                         userPermissions = new PermissionsViewModel
@@ -148,7 +155,8 @@ namespace SHARKNA.Controllers
                 new Claim(ClaimTypes.NameIdentifier, userPermissions.Id.ToString()),
                 new Claim(ClaimTypes.GivenName, userPermissions.FullNameAr),
                 new Claim(ClaimTypes.Email, userRecord.Email),
-                new Claim(ClaimTypes.MobilePhone, userRecord.MobileNumber)
+                new Claim(ClaimTypes.MobilePhone, userRecord.MobileNumber),
+                new Claim(ClaimTypes.Gender, genderClaimValue)
             }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                     var principal = new ClaimsPrincipal(identity);
@@ -182,16 +190,10 @@ namespace SHARKNA.Controllers
             return RedirectToAction("Login", "Users");
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+      
+      
 
 
 

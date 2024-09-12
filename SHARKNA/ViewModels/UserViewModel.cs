@@ -36,5 +36,8 @@ namespace SHARKNA.ViewModels
         [DisplayName("الاسم بالانجليزي")]
         public string FullNameEn { get; set; }
 
+        [DisplayName("الجنس")]
+        public bool? Gender { get; set; }
+
     }
 }

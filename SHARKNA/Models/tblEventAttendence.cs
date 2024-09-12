@@ -8,7 +8,7 @@
         public int Day { get; set; }
 
         public tblEvents Events { get; set; }
-        public Guid EventstId { get; set; }
+        public Guid EventsId { get; set; }
      
 
         public tblEventRegistrations EventsReg { get; set; }

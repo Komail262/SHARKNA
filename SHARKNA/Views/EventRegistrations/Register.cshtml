@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Register";
     var registeredEvents = ViewBag.RegisteredEvents as List<Guid>;
-    var eventRegistrations = ViewBag.EventRegistrations as Dictionary<Guid, int>; // This should contain eventId and current registrations
+    var eventRegistrations = ViewBag.EventRegistrations as Dictionary<Guid, int>;
 }
 
 <!DOCTYPE html>
@@ -56,9 +56,9 @@
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <h5 class="card-title">@eventItem.EventTitleAr</h5>
-                                        <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate.ToString("dd-MM-yyyy")</p>
-                                        <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate.ToString("dd-MM-yyyy")</p>
-                                        <p class="card-text"><strong>الوقت:</strong> @eventItem.Time.ToString(@"hh\:mm")</p>
+                                        <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate?.ToString("dd-MM-yyyy")</p>
+                                        <p class="card-text"><strong>الوقت:</strong> @eventItem.EventStartDate?.ToString(@"hh\:mm")</p>
                                         <p class="card-text"><strong>الموقع:</strong> @eventItem.LocationAr</p>
                                     </div>
                                     <div class="card-footer">
@@ -74,7 +74,7 @@
                                         {
                                             <form asp-action="EventDetails" method="get">
                                                 <input type="hidden" name="EventId" value="@eventItem.Id" />
-                                                <button type="submit" class="btn btn-primary w-100">تفاصيل وتسجيل</button>
+                                                <button type="submit" class="btn btn-primary w-100">التفاصيل </button>
                                             </form>
                                         }
                                     </div>
