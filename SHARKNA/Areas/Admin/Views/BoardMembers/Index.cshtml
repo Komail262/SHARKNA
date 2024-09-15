@@ -47,7 +47,7 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">ادارة اعضاء الاندية</h5>
+                    <h5 class="m-0">إدارة أعضاء الأندية</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
@@ -60,7 +60,7 @@
                         <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(m => m.NameAr)</th>
-                                <th class="text-end">الإجراءات</th>
+                                <th>الإجراءات</th>
                             </tr>
                         </thead>
 
@@ -72,10 +72,10 @@
                                     <td>@user.NameAr</td>
 
 
-                                    <td class="action_td text-end">
+                                    <td >
                                         <form asp-action="Members" method="get">
                                             <input type="hidden" name="boardId" value="@user.Id" />
-                                            <button type="submit" class="btn" style="background-color: rgb(15, 113, 121); color: white;">الاعضاء</button>
+                                            <button type="submit" class="btn btn-primary col-6" style="background-color: rgb(15, 113, 121); color: white;">الاعضاء</button>
                                         </form>
 
                                     </td>

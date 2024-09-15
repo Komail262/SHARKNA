@@ -80,7 +80,9 @@ namespace SHARKNA.Areas.Admin.Controllers
                 ViewData["Falied"] = "حدث خطأ أثناء معالجتك طلبك الرجاء المحاولة في وقت لاحق";
             }
 
-            return RedirectToAction("Members", new { boardId = MemR.BoardId });
+            //return RedirectToAction("Members", new { boardId = MemR.BoardId });
+            return RedirectToAction("Members", "BoardMembers", new { boardId = MemR.BoardId });
+
         }
 
 

@@ -15,7 +15,7 @@
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
-                        window.location.href = '@Url.Action("Index", "BoardRequests")';
+                        window.location.href = '@Url.Action("UserDetails", "BoardRequests")';
                     }
                 );
             </Text>
@@ -36,7 +36,6 @@
         }
     }
 </script>
-@* <h2> التسجيل في نادي @Model.BoardName</h2> *@
 
 <section class="page_wrap">
     <div class="page_content">
@@ -47,14 +46,16 @@
             </div>
             <div class="block-body py-5">
                 <table class="table table-hover js-dataTable">
-
-                    <form asp-action="Create" method="post">
+                        <label id="lblError" d style="color:red; display:none">هذا المستخدم غير موجود في قاعدة البيانات</label>
+                        <form asp-action="Create" method="post">
+                            
+                               
                         <div class="row">
 
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="" class="mb-1">@Html.DisplayNameFor(m => m.UserName)</label>
-                                    <input asp-for="UserName" type="text" class="form-control" readonly>
+                                        <input asp-for="UserName" type="text" class="form-control" id="UserName">
                                     <span asp-validation-for="UserName" class="text-danger"></span>
 
                                 </div>
@@ -63,7 +64,7 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="" class="mb-1">@Html.DisplayNameFor(m => m.FullNameAr) </label>
-                                    <input asp-for="FullNameAr" type="text" class="form-control" readonly>
+                                    <input asp-for="FullNameAr" type="text" class="form-control" id="FullNameAr">
                                     <span asp-validation-for="FullNameAr" class="text-danger"></span>
                                 </div>
                             </div>
@@ -71,7 +72,7 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="" class="mb-1">@Html.DisplayNameFor(m => m.Email)</label>
-                                    <input asp-for="Email" type="email" class="form-control text-start" readonly>
+                                    <input asp-for="Email" type="email" class="form-control text-start" id="Email">
                                     <span asp-validation-for="Email" class="text-danger"></span>
                                 </div>
                             </div>
@@ -79,7 +80,7 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="" class="mb-1">@Html.DisplayNameFor(m => m.MobileNumber)</label>
-                                    <input asp-for="MobileNumber" type="tel" placeholder=" " class="form-control" maxlength="13" readonly>
+                                    <input asp-for="MobileNumber" type="tel" placeholder=" " class="form-control" id="MobileNumber" maxlength="13">
                                     <span asp-validation-for="MobileNumber" class="text-danger"></span>
                                 </div>
                             </div>
@@ -106,11 +107,10 @@
 
 
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" value="Create" class="btn btn-primary w-100" title="save">تسجيل</button>
+                        <div class=" d-flex justify-content-center">
+                            <a href="@Url.Action("UserDetails", "BoardRequests")" class="btn btn-secondary col-3 mx-2">العودة</a>
+                            <button type="submit" value="Create" class="btn btn-primary col-3 mx-2" title="save">تسجيل</button>
                         </div>
-
-
                     </form>
 
 
@@ -124,5 +124,37 @@
     </div>
 </section>
 
+<script>
+
+        $("#UserName").on("change", function () {
+            var username = $(this).val();
+            showValue(username); // Call the function with the username entered
+        });
+
+    function showValue(val) {
+        // Make the AJAX call to fetch user data
+        $.getJSON('@Url.Action("GetUserInfo", "BoardRequests")', { id: val }, function (result) {
+            if (result != null) {
+                // Populate the form fields with the user data
+                $("#FullNameAr").val(result.FullNameAr);
+                $("#FullNameEn").val(result.FullNameEn);
+                $("#Email").val(result.Email);
+                $("#MobileNumber").val(result.MobileNumber);
+                $("#lblError").hide(); // Hide the error label if the user is found
+            } else {
+                // Clear the fields if no user is found and show the error label
+                $("#FullNameAr").val("");
+                $("#FullNameEn").val("");
+                $("#Email").val("");
+                $("#MobileNumber").val("");
+                $("#lblError").show(); // Show error label if user not found
+            }
+        }).fail(function () {
+            // Handle any errors during the request
+            console.log("Error fetching user info.");
+            $("#lblError").show(); // Show error label in case of a request failure
+        });
+    }
 
 
+</script>

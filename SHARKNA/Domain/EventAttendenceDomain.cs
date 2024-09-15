@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
@@ -77,7 +76,7 @@ namespace SHARKNA.Domain
 
             return await _context.tblEventAttendence.Include(R => R.EventsReg)
 
-                .Where(x => x.EventsId == eventId && x.Day == day).Select(x => new EEventAttendenceViewModel 
+                .Where(x => x.EventsId == eventId && x.Day == day).Select(x => new EEventAttendenceViewModel
                 {
                     Id = x.Id,
                     EventDate = x.EventDate,
@@ -93,7 +92,7 @@ namespace SHARKNA.Domain
 
 
         }
-    
+
 
 
 

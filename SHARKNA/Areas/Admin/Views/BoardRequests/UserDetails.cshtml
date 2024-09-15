@@ -41,12 +41,10 @@
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="row">
                             @foreach (var Item in Model)
                             {
-
-
                                 <div class="col-md-4 mb-4">
                                     <div class="card h-100">
                                         <div class="card-body">
@@ -58,7 +56,6 @@
                                                 <input type="hidden" name="BoardId" value="@Item.Id" />
                                                 <button type="submit" class="btn btn-primary w-100">التفاصيل </button>
                                             </form>
-
 
                                         </div>
                                     </div>

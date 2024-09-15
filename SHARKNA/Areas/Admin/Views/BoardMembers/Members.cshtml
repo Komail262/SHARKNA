@@ -27,6 +27,8 @@
 
                                
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.Email)</th>
+                                <th>@Html.DisplayNameFor(m => m.MobileNumber)</th>
                                 <th>@Html.DisplayNameFor(m => m.BoardRoleName)</th>
                                 <th>الإجراءات</th>
                             </tr>
@@ -43,7 +45,7 @@
                                     <td>@member.BoardRoleName</td>
                                     <td>
                                           
-                                        <a asp-action="Details" asp-route-id="@member.Id" class="btn " style=" background-color: rgb(15, 113, 121); color: white;">العضوية</a>
+                                        <a asp-action="Details" asp-route-id="@member.Id" class="btn " style=" background-color: rgb(15, 113, 121); color: white;">تعديل</a> |
                                         <a asp-action="Delete" asp-route-id="@member.Id" class="btn btn-danger">حذف</a>
 
 
