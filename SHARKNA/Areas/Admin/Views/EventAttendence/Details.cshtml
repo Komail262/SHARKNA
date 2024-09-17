@@ -23,7 +23,9 @@
                     <table class="table table-hover js-dataTable">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(m => m.First().EventName)</th>
+                                <th>@(Model.Any() ? Model.First().EventName : "N/A")</th>
+                                @*                                 <th>@Html.DisplayNameFor(m => m.First().EventName)</th>
+                                *@
                                 <th>يوم</th> <!-- Updated to show the day number -->
                                 <th>@Html.DisplayNameFor(m => m.First().EventDate)</th>
                                 <th>الإجراءات</th>

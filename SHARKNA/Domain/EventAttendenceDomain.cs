@@ -10,9 +10,12 @@ namespace SHARKNA.Domain
     public class EventAttendenceDomain
     {
         private readonly SHARKNAContext _context;
-        public EventAttendenceDomain(SHARKNAContext context)
+        private readonly UserDomain _userDomain;
+
+        public EventAttendenceDomain(SHARKNAContext context, UserDomain userDomain)
         {
             _context = context;
+            _userDomain = userDomain;
         }
         public async Task<IEnumerable<EventViewModel>> GetTblEventsAsync()
         {
@@ -93,6 +96,49 @@ namespace SHARKNA.Domain
 
         }
 
+
+
+
+        //public void IsAtten(Guid id)
+        //{
+        //    var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
+
+        //    if (att == null) 
+        //    {
+        //        att.IsAttend = false;
+        //    }
+        //    else
+        //    {
+        //        att.IsAttend = true;
+        //    }
+
+        //    _context.SaveChanges();
+
+        //}
+
+        public void IsAtten(Guid id)
+        {
+            var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
+
+            if (att != null) // Only update if att is not null
+            {
+                att.IsAttend = !att.IsAttend; // Toggle the IsAttend status
+                _context.tblEventAttendence.Update(att);
+                _context.SaveChanges();
+            }
+        }
+
+        public void SetAttendanceStatus(Guid id, bool isAttending)
+        {
+            var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
+
+            if (att != null)
+            {
+                att.IsAttend = isAttending;
+                _context.tblEventAttendence.Update(att); // Ensure that the entity is marked as modified
+                _context.SaveChanges(); // Save changes to the database
+            }
+        }
 
 
 

@@ -22,6 +22,8 @@ namespace SHARKNA.Areas.Admin.Controllers
             _UserDomain = userDomain;
         }
 
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+
         //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
         public IActionResult Index(string Successful = "", string Falied = "")
         {
@@ -36,12 +38,14 @@ namespace SHARKNA.Areas.Admin.Controllers
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
 
         //[Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult Create()
         {
             return View();
         }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
 
         //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
         public async Task<IActionResult> Update(Guid id)
@@ -53,7 +57,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             }
             return View(board);
         }
-
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Details(Guid id)
         {
             var board = await _boardDomain.GetTblBoardByIdAsync(id);
@@ -67,6 +71,8 @@ namespace SHARKNA.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin,SuperAdmin")]
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+
         public async Task<IActionResult> Create(BoardViewModel board)
         {
             try
@@ -108,6 +114,7 @@ namespace SHARKNA.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Update(BoardViewModel board)
         {
             try
@@ -156,6 +163,8 @@ namespace SHARKNA.Areas.Admin.Controllers
         [HttpGet]
         // [ValidateAntiForgeryToken]
         //[Authorize(Roles = "Admin, SuperAdmin")]
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+
 
         public async Task<IActionResult> Delete(Guid id)
         {
