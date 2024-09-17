@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SHARKNA.Domain;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security;
+using System.Security.Claims;
 
-namespace SHARKNA.Areas.Admin.Controllers
+namespace SHARKNA.Controllers
 {
-    [Area("Admin")]
+
+    [Authorize(Roles = "Super Admin")]
     public class PermissionsController : Controller
     {
         private readonly PermissionDomain _PermissionDomain;
@@ -23,7 +26,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
         }
 
-  
+
 
         public IActionResult Index(string Successful = "", string Falied = "")
         {
@@ -71,7 +74,7 @@ namespace SHARKNA.Areas.Admin.Controllers
                     }
 
                     permission.Id = Guid.NewGuid();
-                    _PermissionDomain.AddPermission(permission);
+                    await _PermissionDomain.AddPermissionAsync(permission, user.UserName);
                     ViewData["Successful"] = "تم تعيين الصلاحية";
                 }
                 catch (Exception ex)
@@ -116,7 +119,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(PermissionsViewModel Permission)
+        public async Task<IActionResult> Edit(PermissionsViewModel Permission)
         {
             ViewBag.RolesOfList = new SelectList(_RolesDomain.GetTblRoles(), "Id", "NameAr", Permission.RoleId);
 
@@ -124,7 +127,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             {
                 try
                 {
-                    _PermissionDomain.UpdatePermission(Permission);
+                    await _PermissionDomain.UpdatePermissionAsync(Permission, User.FindFirst(ClaimTypes.Name).Value);
                     // return RedirectToAction(nameof(Index));
                     ViewData["Successful"] = "تم التعديل بنجاح";
                 }
@@ -140,7 +143,7 @@ namespace SHARKNA.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             string Successful = "";
             string Falied = "";
@@ -148,7 +151,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             {
 
 
-                int check = _PermissionDomain.DeletePermission(id);
+                int check = await _PermissionDomain.DeletePermissionAsync(id, User.FindFirst(ClaimTypes.Name).Value);
                 if (check == 1)
                 {
                     Successful = "تم حذف الصلاحية";
@@ -169,7 +172,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
             }
             //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index), new { Successful, Falied });
+            return RedirectToAction(nameof(Index), new { Successful = Successful, Falied = Falied });
         }
 
         public async Task<UserViewModel> GetUserInfo(string id)
