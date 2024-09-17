@@ -1,0 +1,76 @@
+﻿@model SHARKNA.ViewModels.BoardMembersViewModel
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                var result = '@Html.Raw(ViewData["Successful"])';
+                Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Members", "BoardMembers" )';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                var result = '@Html.Raw(ViewData["Falied"])';
+                Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                var result = '@Html.Raw(ViewData["Falied"])';
+                Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h4 class="m-1">@Model.BoardName</h4> 
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="Details" method="post">
+                            <input hidden asp-for="BoardId" />
+                            <input hidden asp-for="Id" />
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="FullNameAr" class="mb-1">الاسم</label>
+                                        <input type="text" id="FullNameAr" class="form-control" asp-for="FullNameAr" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="BoardRoleName" class="mb-1">العضوية</label>
+                                        <select id="BoardRoleName" class="form-control" asp-for="BoardRoleId" asp-items="ViewBag.BoardRoleOfList">
+                                            <option value="">اختيار العضوية...</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                
+                            </div>
+
+                            <div class=" d-flex justify-content-center">
+                                <a href="@Url.Action("Members", "BoardMembers", new { boardId = Model.BoardId })" class="btn btn-secondary col-3 mx-2">العودة</a>
+                                <button type="submit" value="Create" class="btn btn-primary col-3 mx-2" title="save">حفظ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

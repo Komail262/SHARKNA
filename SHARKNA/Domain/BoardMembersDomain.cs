@@ -33,27 +33,10 @@ namespace SHARKNA.Domain
                 }).FirstOrDefaultAsync();
         }
 
-
-
-        //public async Task<IEnumerable<BoardMembersViewModel>> GetBoardMembersById(Guid id)
-        //{
-        //    return await _context.tblBoardMembers
-
-        //       .Select(x => new BoardMembersViewModel
-        //       {
-        //           Id = x.Id,
-        //           UserName = x.UserName,
-        //           Email = x.Email,
-        //           MobileNumber = x.MobileNumber,
-        //           FullNameAr = x.FullNameAr,
-        //           FullNameEn = x.FullNameEn,
-        //           BoardId = x.BoardId,
-        //           BoardRoleId = x.BoardRoleId,
-        //           BoardRoleName = x.BoardRole.NameAr,
-        //           BoardName = x.Board.NameAr,
-
-        //       }).ToListAsync();
-        //}
+        public async Task<tblBoardMembers> GettblBoardMemberByIdAsync(Guid id)
+        {
+            return await _context.tblBoardMembers.FirstOrDefaultAsync(x => x.Id == id);
+        }
 
         public async Task<IEnumerable<BoardMembersViewModel>> GetBoardMembersByBoardId(Guid boardId)
         {
@@ -78,17 +61,14 @@ namespace SHARKNA.Domain
                     IsDeleted = r.IsDeleted,
                 }).ToListAsync();
         }
-        public int UpdateBoardMembersAsync(tblBoardMembers MemR)
+        public async Task<int> UpdateBoardMembersAsync(tblBoardMembers MemR)
         {
             try
             {
-                tblBoardMembers MemByUsername = _context.tblBoardMembers.AsNoTracking().SingleOrDefault(A => A.UserName == MemR.UserName);
-                //if (MemByUsername != null && MemByUsername.Id != MemR.Id)
-                //    return 3; // This User is already there
-
-                MemR.BoardRoleId = MemByUsername.BoardRoleId;
-
-                _context.Update(MemR);
+                var MemberRole = await GettblBoardMemberByIdAsync(MemR.Id);
+                MemberRole.BoardRoleId = MemR.BoardRoleId;
+                _context.Update(MemberRole);
+                await _context.SaveChangesAsync();
                 return 1;
             }
             catch (Exception ex)
@@ -96,30 +76,30 @@ namespace SHARKNA.Domain
                 return 0;
             }
         }
-            //public async Task<int> UpdateBoardMembersAsync(Guid id)
-            //{
-            //    try
-            //    {
-            //        var Mem = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
-            //        if (Mem != null)
-            //        {
-            //            Mem.BoardRoleId = id;
-            //            _context.Update(Mem);
-            //            await _context.SaveChangesAsync();
+        //public async Task<int> UpdateBoardMembersAsync(Guid id)
+        //{
+        //    try
+        //    {
+        //        var Mem = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
+        //        if (Mem != null)
+        //        {
+        //            Mem.BoardRoleId = id;
+        //            _context.Update(Mem);
+        //            await _context.SaveChangesAsync();
 
-            //            return 1;
-            //        }
-            //        else
-            //            return 0;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        return 0;
-            //    }
+        //            return 1;
+        //        }
+        //        else
+        //            return 0;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return 0;
+        //    }
 
-            //}
+        //}
 
-            public IEnumerable<BoardViewModel> GetTblBoards()
+        public IEnumerable<BoardViewModel> GetTblBoards()
             {
                 return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
                 {

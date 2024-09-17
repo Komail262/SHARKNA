@@ -7,10 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Areas\Admin\Views\Home\AccessDenied.cshtml" />
     <Content Remove="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Areas\Admin\Views\Home\AccessDenied.cshtml" />
     <None Include="Views\Home\AccessDenied.cshtml" />
     <None Include="wwwroot\Assets\.DS_Store" />
     <None Include="wwwroot\Assets\css\.DS_Store" />

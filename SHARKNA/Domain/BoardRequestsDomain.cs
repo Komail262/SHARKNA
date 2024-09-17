@@ -17,12 +17,15 @@ namespace SHARKNA.Domain
 
         public IEnumerable<BoardRequestsViewModel> GetTblBoardRequests()
         {
-            return _context.tblBoardRequests.Select(x => new BoardRequestsViewModel
+            return _context.tblBoardRequests
+                .Where(x => x.Board.IsDeleted == false)
+                .Select(x => new BoardRequestsViewModel
             {
                 Id = x.Id,
                 UserName = x.UserName,
                 BoardId = x.BoardId,
                 BoardName = x.Board.NameAr,
+                BoardDescription = x.Board.DescriptionAr,
                 RejectionReasons = x.RejectionReasons,
                 RequestStatusName = x.RequestStatus.RequestStatusAr,
                 RequestStatusId = x.RequestStatusId,
@@ -38,7 +41,7 @@ namespace SHARKNA.Domain
         public BoardRequestsViewModel GetBoardRequestById(Guid id)
         {
             return _context.tblBoardRequests
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && x.Board.IsDeleted == false)
                 .Include(x => x.Board)
                 .Include(x => x.RequestStatus)
                 .Select(x => new BoardRequestsViewModel
@@ -50,6 +53,7 @@ namespace SHARKNA.Domain
                     Email = x.Email,
                     MobileNumber = x.MobileNumber,
                     BoardName = x.Board.NameAr,
+                    BoardDescription = x.Board.DescriptionAr,
                     RequestStatusId = x.RequestStatusId,
                     RequestStatusName = x.RequestStatus.RequestStatusAr,
                     RejectionReasons = x.RejectionReasons
@@ -57,8 +61,46 @@ namespace SHARKNA.Domain
                 .FirstOrDefault();
         }
 
+        public IEnumerable<BoardRequestsViewModel> GetTblBoardRequestsByUser(string username)
+        {
+            return _context.tblBoardRequests
+                .Where(x => x.UserName == username)
+                .Where(x => x.Board.IsDeleted == false)
+                .Select(x => new BoardRequestsViewModel
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    BoardId = x.BoardId,
+                    BoardName = x.Board.NameAr,
+                    BoardDescription = x.Board.DescriptionAr,
+                    RejectionReasons = x.RejectionReasons,
+                    RequestStatusName = x.RequestStatus.RequestStatusAr,
+                    RequestStatusId = x.RequestStatusId,
+                    Email = x.Email,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    MobileNumber = x.MobileNumber
+                })
+                .ToList();
+        }
 
+        public async Task<UserViewModel> GetTblUsersByUserName(string userName)
+        {
+            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == userName);
+            if (user == null)
+            {
+                return null;
+            }
 
+            return new UserViewModel
+            {
+                UserName = user.UserName,
+                FullNameAr = user.FullNameAr,
+                FullNameEn = user.FullNameEn,
+                MobileNumber = user.MobileNumber,
+                Email = user.Email
+            };
+        }
 
         public int AddBoardReq(BoardRequestsViewModel BoardReq, string UserName)
         {
@@ -78,17 +120,17 @@ namespace SHARKNA.Domain
                 _context.Add(VBoardReq);
 
                 _context.SaveChanges();
-                
-                //    tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
-                //    bLogs.Id = Guid.NewGuid() ;
-                //    bLogs.OpType = "Add";
-                //    bLogs.OpDateTime = DateTime.Now;
-                //    bLogs.CreatedBy = UserName;
-                //    bLogs.ReqId = VBoardReq.Id;
-                //    bLogs.AdditionalInfo = $"تم إضافة لجنة {VBoardReq.FullNameAr} بواسطة هذا المستخدم";
-                //    _context.tblBoardRequestLogs.Add(bLogs);
-                
-                //_context.SaveChanges();
+
+                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                bLogs.Id = Guid.NewGuid();
+                bLogs.ReqId = VBoardReq.Id;
+                bLogs.OpType = "اضافة";
+                bLogs.OpDateTime = DateTime.Now;
+                bLogs.CreatedBy = UserName;
+                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
+                _context.tblBoardRequestLogs.Add(bLogs);
+
+                _context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
@@ -98,6 +140,43 @@ namespace SHARKNA.Domain
 
         }
 
+        public int AddBoardReqAdmin(BoardRequestsViewModel BoardReq, string UserName)
+        {
+
+            try
+            {
+                tblBoardRequests VBoardReq = new tblBoardRequests();
+                VBoardReq.Id = BoardReq.Id;
+                VBoardReq.UserName = BoardReq.UserName;
+                VBoardReq.BoardId = BoardReq.BoardId;
+                VBoardReq.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
+                VBoardReq.Email = BoardReq.Email;
+                VBoardReq.FullNameAr = BoardReq.FullNameAr;
+                VBoardReq.FullNameEn = BoardReq.FullNameEn;
+                VBoardReq.MobileNumber = BoardReq.MobileNumber;
+
+                _context.Add(VBoardReq);
+
+                _context.SaveChanges();
+
+                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
+                bLogs.Id = Guid.NewGuid();
+                bLogs.ReqId = VBoardReq.Id;
+                bLogs.OpType = "اضافة";
+                bLogs.OpDateTime = DateTime.Now;
+                bLogs.CreatedBy = UserName;
+                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
+                _context.tblBoardRequestLogs.Add(bLogs);
+
+                _context.SaveChanges();
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
 
 
 
@@ -117,39 +196,82 @@ namespace SHARKNA.Domain
 
 
 
-        public void CancelRequest(Guid id)
+        public int CancelRequest(Guid id)
         {
-
-            var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
-            if (BoardRequest != null)
+            try
             {
-                BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
-                _context.SaveChanges();
+
+                var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+
+                if (BoardRequest != null)
+                {
+                    BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
+                    _context.SaveChanges();
+
+                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
+                    {
+                        Id = Guid.NewGuid(), 
+                        ReqId = BoardRequest.Id,
+                        OpType = "تم الالغاء",
+                        OpDateTime = DateTime.Now,
+                        CreatedBy = BoardRequest.UserName,
+                        AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
+                    };
+                    _context.tblBoardRequestLogs.Add(bLogs);
+                    _context.SaveChanges();
+
+                    
+                }
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                return 0;
             }
         }
 
         public async Task Accept(Guid id)
         {
-            var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
-            if (BoardRequest != null)
+            try
             {
-                BoardRequest.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"); // تعيين الحالة "مقبول"
-               
-                await _context.SaveChangesAsync();
-                tblBoardMembers member = new tblBoardMembers()
+                var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+                if (BoardRequest != null)
                 {
-                    BoardId = BoardRequest.BoardId,
-                    BoardRoleId = Guid.Parse("7d67185d-81bd-4738-a6c5-2106e441eea1"),
-                    Email = BoardRequest.Email,
-                    FullNameAr = BoardRequest.FullNameAr,
-                    FullNameEn = BoardRequest.FullNameEn,
-                    IsDeleted = false,
-                    IsActive = true,
-                    MobileNumber = BoardRequest.MobileNumber,
-                    UserName = BoardRequest.UserName,
-                };
-                await _context.AddAsync(member);
-                await _context.SaveChangesAsync();
+                    BoardRequest.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"); // تعيين الحالة "مقبول"
+
+                    await _context.SaveChangesAsync();
+                    tblBoardMembers member = new tblBoardMembers()
+                    {
+                        BoardId = BoardRequest.BoardId,
+                        BoardRoleId = Guid.Parse("7d67185d-81bd-4738-a6c5-2106e441eea1"),
+                        Email = BoardRequest.Email,
+                        FullNameAr = BoardRequest.FullNameAr,
+                        FullNameEn = BoardRequest.FullNameEn,
+                        IsDeleted = false,
+                        IsActive = true,
+                        MobileNumber = BoardRequest.MobileNumber,
+                        UserName = BoardRequest.UserName,
+                    };
+                    await _context.AddAsync(member);
+                    await _context.SaveChangesAsync();
+
+                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
+                    {
+                        Id = Guid.NewGuid(),
+                        ReqId = BoardRequest.Id,
+                        OpType = "Accept",
+                        OpDateTime = DateTime.Now,
+                        CreatedBy = BoardRequest.UserName,
+                        AdditionalInfo = $"تم قبول طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
+                    };
+                    _context.tblBoardRequestLogs.Add(bLogs);
+                    _context.SaveChanges();
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                 
             }
         }
 

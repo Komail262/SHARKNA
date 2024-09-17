@@ -1,0 +1,132 @@
+﻿@model SHARKNA.ViewModels.BoardViewModel
+@{
+    ViewData["Title"] = "Update Board";
+}
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Index", "Boards")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                    var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+<h2>تعديل اللجنة</h2>
+
+<section class="page_wrap">
+    <div class="page_content">
+
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">تعديل اللجنة</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="Update" method="post">
+                            <div class="row">
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">اسم اللجنة بالعربي</label>
+                                        <input asp-for="NameAr" type="text" placeholder="اسم اللجنة " class="form-control">
+                                        <span asp-validation-for="NameAr" class="text-danger"></span>
+
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1"> اسم اللجنة بالإنجليزي</label>
+                                        <input asp-for="NameEn" type="text" placeholder="اسم اللجنة بالإنجليزي"
+                                               class="form-control text-start">
+                                        <span asp-validation-for="NameEn" class="text-danger"></span>
+
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">الوصف بالعربي</label>
+                                        <textarea asp-for="DescriptionAr" type="text" class="form-control text-start"> </textarea>
+                                        <span asp-validation-for="DescriptionAr" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1"> الوصف بالإنجليزي </label>
+                                        <textarea asp-for="DescriptionEn" type="text" class="form-control"></textarea>
+                                        <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">الجنس</label>
+                                        <div class="form-check">
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Male" name="Gender" value="true" />
+                                            <label class="form-check-label" for="Male"> ذكر </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Female" name="Gender" value="false" />
+                                            <label class="form-check-label" for="Female"> أنثى</label>
+                                        </div>
+                                        <div class="form-check">
+                                            @if (Model.Gender == null)
+                                            {
+                                                <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="" checked />
+
+                                            }
+                                            else
+                                            {
+                                                <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value=""  />
+
+                                            }
+                                            <label class="form-check-label" for="Both"> ذكور وإناث  </label>
+                                        </div>
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+                                </div><!-- END ITEM -->
+
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" value="Create" class="btn btn-primary px-5" title="save">حفظ</button>
+                            </div>
+
+                        </form>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</section><!-- End Page Wrap -->
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

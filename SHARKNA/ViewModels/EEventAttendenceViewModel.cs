@@ -42,7 +42,7 @@ namespace SHARKNA.ViewModels
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("وقت التسجيل")]
         public DateTime RRegDate { get; set; }
-        
+
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [DisplayName("الإسم بالعربي")]

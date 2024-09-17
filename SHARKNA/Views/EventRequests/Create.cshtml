@@ -1,6 +1,26 @@
 ﻿@model SHARKNA.ViewModels.EventViewModel
+@using System.Globalization
 
-<h2>اضافة حدث</h2>
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<!-- عرض اسم المستخدم في الهيدر -->
+<div class="alert alert-info">
+    مرحباً, @ViewBag.Username
+</div>
+
+<!-- عرض أسماء الـ Boards المرتبطة بالمستخدم -->
+@if (ViewBag.BoardsList != null)
+{
+    <h3>أسماء Boards المرتبطة بالمستخدم:</h3>
+    <ul>
+        @foreach (var board in (SelectList)ViewBag.BoardsList)
+        {
+            <li>@board.Text</li>
+        }
+    </ul>
+}
 
 <script>
     @{
@@ -33,7 +53,7 @@
     <div class="page_content">
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">إضافة الحدث</h5>
+                <h2>اضافة حدث</h2>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
@@ -43,7 +63,7 @@
                                 <!-- Event Title in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="EventTitleAr" class="mb-1">اسم الحدث </label>
+                                        <label asp-for="EventTitleAr" class="mb-1">الحدث </label>
                                         <input asp-for="EventTitleAr" class="form-control">
                                         <span asp-validation-for="EventTitleAr" class="text-danger"></span>
                                     </div>
@@ -52,7 +72,7 @@
                                 <!-- Event Title in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="EventTitleEn" class="mb-1">اسم الحدث بالانجليزي</label>
+                                        <label asp-for="EventTitleEn" class="mb-1"> الحدث بالانجليزي</label>
                                         <input asp-for="EventTitleEn" class="form-control">
                                         <span asp-validation-for="EventTitleEn" class="text-danger"></span>
                                     </div>
@@ -96,7 +116,7 @@
                                 <!-- Topic in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="TopicAr" class="mb-1">موضوع الحدث</label>
+                                        <label asp-for="TopicAr" class="mb-1">الموضوع</label>
                                         <input asp-for="TopicAr" class="form-control">
                                         <span asp-validation-for="TopicAr" class="text-danger"></span>
                                     </div>
@@ -105,7 +125,7 @@
                                 <!-- Topic in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="TopicEn" class="mb-1">موضوع الحدث بالانجليزي</label>
+                                        <label asp-for="TopicEn" class="mb-1">الموضوع بالانجليزي</label>
                                         <input asp-for="TopicEn" class="form-control">
                                         <span asp-validation-for="TopicEn" class="text-danger"></span>
                                     </div>
@@ -114,8 +134,8 @@
                                 <!-- Description in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="DescriptionAr" class="mb-1">وصف الحدث</label>
-                                        <input asp-for="DescriptionAr" class="form-control">
+                                        <label asp-for="DescriptionAr" class="mb-1">الوصف</label>
+                                        <textarea asp-for="DescriptionAr" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
                                         <span asp-validation-for="DescriptionAr" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -123,16 +143,17 @@
                                 <!-- Description in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="DescriptionEn" class="mb-1">وصف الحدث بالانجليزي</label>
-                                        <input asp-for="DescriptionEn" class="form-control">
+                                        <label asp-for="DescriptionEn" class="mb-1">الوصف بالانجليزي</label>
+                                        <textarea asp-for="DescriptionEn" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
                                         <span asp-validation-for="DescriptionEn" class="text-danger"></span>
                                     </div>
                                 </div>
 
+
                                 <!-- Location in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="LocationAr" class="mb-1">موقع الحدث </label>
+                                        <label asp-for="LocationAr" class="mb-1">الموقع  </label>
                                         <input asp-for="LocationAr" class="form-control">
                                         <span asp-validation-for="LocationAr" class="text-danger"></span>
                                     </div>
@@ -141,7 +162,7 @@
                                 <!-- Location in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="LocationEn" class="mb-1">موقع الحدث بالانجليزي</label>
+                                        <label asp-for="LocationEn" class="mb-1">الموقع بالانجليزي</label>
                                         <input asp-for="LocationEn" class="form-control">
                                         <span asp-validation-for="LocationEn" class="text-danger"></span>
                                     </div>
@@ -177,16 +198,26 @@
                                     </div>
                                 </div>
                                 <!-- END ITEM -->
-                                <!-- Board Selection -->
+                                <!-- Board Selection: Select جديد يحتوي على أسماء الـ Boards -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="BoardId" class="mb-1">اللجنة</label>
-                                        <select asp-for="BoardId" class="form-control" asp-items="ViewBag.BoardsList">
-                                            <option value="">اختر اللجنة</option>
+                                        <label asp-for="BoardId" class="mb-1"> اللجنة:</label>
+                                        <select asp-for="BoardId" class="form-control">
+                                            <option value="">اختر اللجنة</option> <!-- خيار افتراضي -->
+                                            @if (ViewBag.BoardsList != null)
+                                            {
+                                                // تكرار على الـ Boards وعرضها في Select
+                                                foreach (var board in (SelectList)ViewBag.BoardsList)
+                                                {
+                                                    <option value="@board.Value"> @board.Text</option>
+                                                }
+                                            }
                                         </select>
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
                                     </div>
                                 </div>
+
+
 
                                 <div class="d-flex justify-content-end">
                                     <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>

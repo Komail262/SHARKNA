@@ -1,0 +1,119 @@
+﻿@model IEnumerable<BoardViewModel>
+
+@{
+    ViewData["Title"] = "Board List";
+}
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Successful"])';
+                    Swal.fire(result, '', 'success')
+                        .then(
+                            function () {
+                                window.location.href = '@Url.Action("Index", "Boards")';
+                            }
+                        );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
+        {
+            <Text>
+                                var result = '@Html.Raw(ViewData["Falied"])';
+                    Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+<script>
+    function Display
+</script>
+
+<!DOCTYPE html>
+<html lang="en" dir="rtl" data-theme="light">
+<body>
+    <script>
+
+    </script>
+    <!-- Start Page Wrap -->
+    <section class="page_wrap">
+        <div class="page_content">
+            <div class="block mb-4">
+                <div class="block-header border-bottom px-4 py-3">
+                    <h5 class="m-0">إدارة اللجان</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                        <div>
+                            <a asp-action="Create"  class="btn btn-primary">إضافة لجنة</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="block-body">
+                    <table class="table table-hover js-dataTable">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(m => m.NameAr)</th>
+                               @* <th>@Html.DisplayNameFor(m => m.NameEn)</th>
+                                <th>@Html.DisplayNameFor(m => m.DescriptionAr)</th>
+                                <th>@Html.DisplayNameFor(m => m.DescriptionEn)</th>*@
+                                <th>@Html.DisplayNameFor(m => m.Gender)</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var board in Model)
+                            {
+                                <tr>
+                                    <td>@board.NameAr</td>
+                                  @*  <td>@board.NameEn</td>
+                                    <td>@board.DescriptionAr</td>
+                                    <td>@board.DescriptionEn</td>*@
+                                    <td>
+                                        @if (board.Gender.HasValue)
+                                        {
+                                            @if (board.Gender == true)
+                                            {
+                                                @:ذكور
+                                            }
+                                            else
+                                            {
+                                                @:إناث
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @:  ذكور وإناث
+                                        }
+                                    </td>
+
+
+                                    <td>
+                                        <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-success">تعديل</a> |
+                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a> |
+                                        <a asp-action="Details" asp-route-id="@board.Id" class="btn btn-primary">عرض التفاصيل</a>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section><!-- End Page Wrap -->
+
+
+</body>
+</html>

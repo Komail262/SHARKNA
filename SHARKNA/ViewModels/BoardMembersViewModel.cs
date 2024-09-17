@@ -27,7 +27,7 @@ namespace SHARKNA.ViewModels
 
         
         [StringLength(100)]
-        [DisplayName("الاسم بالعربي")]
+        [DisplayName("الاسم")]
         public string FullNameAr { get; set; }
 
 

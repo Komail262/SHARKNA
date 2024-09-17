@@ -1,0 +1,176 @@
+﻿@model SHARKNA.ViewModels.EventRequestViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    @{
+        if (ViewData["Successful"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(function () {
+                    window.location.href = '@Url.Action("details", "EventRequests")';
+                });
+            </text>
+        }
+        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] == null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Failed"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] != null)
+        {
+            <text>
+                            var result = '@Html.Raw(ViewData["Failed"])';
+            Swal.fire(result, '', 'error');
+            </text>
+        }
+    }
+</script>
+
+<div class="container mt-4">
+    <h2>تفاصيل الطلب</h2>
+
+    <!-- قسم معلومات المستخدم -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>معلومات صاحب الطلب</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>اسم المستخدم:</strong> @Model.CreatedByUserName</p>
+            <p><strong>الاسم الكامل:</strong> @Model.CreatedByFullName</p>
+            <p><strong>البريد الإلكتروني:</strong> @Model.CreatedByEmail</p>
+            <p><strong>رقم الجوال:</strong> @Model.CreatedByMobileNumber</p>
+            <p><strong>الجنس:</strong> @Model.CreatedByGender</p>
+        </div>
+    </div>
+
+
+    <!-- قسم الفعالية ومعلوماتها -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>تفاصيل الفعالية</h4>
+        </div>
+        <div class="card-body">
+            <p><strong> الفعالية:</strong> @Model.EventName</p>
+            <p><strong>الوصف :</strong> @Model.EventDescriptionAr</p>
+            <p><strong>الموضوع:</strong> @Model.TopicAr</p>
+            <p><strong>تاريخ البدء:</strong> @Model.EventStartDate?.ToString("MM/dd/yyyy")</p>
+            <p><strong>تاريخ الانتهاء:</strong> @Model.EventEndtDate?.ToString("MM/dd/yyyy")</p>
+            <p><strong>من الساعة:</strong> @Model.EventStartDate?.ToString(@"hh\:mm")</p>
+            <p><strong>إلى الساعة:</strong> @Model.EventEndtDate?.ToString(@"hh\:mm")</p>
+            <p><strong>الموقع:</strong> @Model.LocationAr</p>
+            <p><strong>الحد الأقصى للحضور:</strong> @Model.MaxAttendence</p>
+            <p>
+                <strong>الجنس:</strong> @if (Model.Gender.HasValue)
+                {
+                    @if (Model.Gender == true)
+                    {
+                        @:طلاب
+                    }
+                    else if (Model.Gender == false)
+                    {
+                        @:طالبات
+                    }
+                }
+                else
+                {
+                    @: طلاب وطالبات
+                }
+            </p>
+
+            <p><strong>المتحدثون:</strong> @Model.SpeakersAr</p>
+        </div>
+    </div>
+
+    <!-- قسم معلومات اللجنة -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>معلومات اللجنة</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>اللجنة:</strong> @Model.BoardName</p>
+            <p><strong>الوصف:</strong> @Model.BoardDescriptionAr</p>
+            <p>
+                <strong>الجنس:</strong> @if (Model.Genderr.HasValue)
+                {
+                    @if (Model.Genderr == true)
+                    {
+                        @:طلاب
+                    }
+                    else if (Model.Genderr == false)
+                    {
+                        @:طالبات
+                    }
+                }
+                else
+                {
+                    @: طلاب وطالبات
+                }
+            </p>
+
+        </div>
+    </div>
+
+    
+       
+    
+
+    <!-- قسم حالة الطلب -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>حالة الطلب</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>حالة الطلب:</strong> @Model.RequestStatusName</p>
+
+            @if (Model.RequestStatusName == "مرفوض")
+            {
+                <p><strong>أسباب الرفض:</strong> @Model.RejectionReasons</p>
+            }
+
+            @if (Model.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2")) // "تحت الدراسة"
+            {
+                <!-- عرض الأزرار لقبول أو رفض الطلب -->
+                <div class="text-center mt-4">
+                    <a asp-action="Accept" asp-route-id="@Model.Id" class="btn btn-success px-5">قبول</a>
+                    <a href="javascript:void(0);" class="btn btn-danger px-5" data-bs-toggle="modal" data-bs-target="#rejectModal">رفض</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- زر العودة إلى القائمة -->
+    <div class="mt-3">
+        <a asp-action="Admin" class="btn btn-secondary">العودة إلى القائمة</a>
+    </div>
+</div>
+
+<!-- Modal لرفض الطلب -->
+<div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5 class="modal-title" id="rejectModalLabel">:سبب الرفض</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <form asp-action="Reject" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <div class="form-group">
+                        <textarea name="rejectionReason" id="rejectionReason" class="form-control" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-danger">تأكيد الرفض</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

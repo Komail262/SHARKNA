@@ -78,6 +78,15 @@ namespace SHARKNA.ViewModels
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100, ErrorMessage = "يجب ألا يتجاوز الوصف 100 حرف")]
         [DisplayName("وصف اللجنة")]
+
+        public bool? Genderr { get; set; }
         public string BoardDescriptionAr { get; set; }
+
+        // الحقول الجديدة لمعلومات المستخدم
+        public string CreatedByUserName { get; set; }
+        public string CreatedByFullName { get; set; }
+        public string CreatedByEmail { get; set; }
+        public string CreatedByMobileNumber { get; set; }
+        public string CreatedByGender { get; set; } // يمكن استخدام string أو نوع enum للعرض
     }
 }
