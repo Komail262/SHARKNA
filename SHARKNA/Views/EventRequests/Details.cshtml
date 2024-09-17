@@ -52,6 +52,23 @@
         <div class="card-body">
             <p><strong>اللجنة:</strong> @Model.BoardName</p>
             <p><strong>الوصف:</strong> @Model.BoardDescriptionAr</p>
+            <p>
+                <strong>الجنس:</strong> @if (Model.Genderr.HasValue)
+                {
+                    @if (Model.Genderr == true)
+                    {
+                        @:طلاب
+                    }
+                    else if (Model.Genderr == false)
+                    {
+                        @:طالبات
+                    }
+                }
+                else
+                {
+                    @: طلاب وطالبات
+                }
+            </p>
 
         </div>
     </div>
