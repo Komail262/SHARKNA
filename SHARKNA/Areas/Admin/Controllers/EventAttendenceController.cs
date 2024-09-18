@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,22 +9,29 @@ using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace SHARKNA.Areas.Admin.Controllers
+namespace SHARKNA.Controllers
 {
     [Area("Admin")]
+
     public class EventAttendenceController : Controller
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
         private readonly EventRegistrationsDomain _EventRegistrations;
         private readonly UserDomain _UserDomain;
+        private readonly SHARKNAContext _context;
 
 
-        public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain, UserDomain userDomain)
+
+
+        public EventAttendenceController(EventAttendenceDomain eventAttendenceDomain, EventRegistrationsDomain eventRegDomain, UserDomain userDomain, SHARKNAContext context)
         {
             _eventattendenceDomain = eventAttendenceDomain;
             _EventRegistrations = eventRegDomain;
             _UserDomain = userDomain;
+            _context = context;
         }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+
         public async Task<IActionResult> Index()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
@@ -32,6 +40,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             return View(events);
         }
 
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
 
         public async Task<IActionResult> Details(Guid id)
         {
@@ -43,57 +52,107 @@ namespace SHARKNA.Areas.Admin.Controllers
 
             return View(eventDays);
         }
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
 
         public async Task<IActionResult> Members(Guid id, int day)
         {
-            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة المسجلين يالفعاليات من الدومين ايفنت اتيندينس 
+            var eventTitle = await _eventattendenceDomain.GetEventTitleByIdAsync(id);
+            ViewBag.EventTitle = eventTitle;
+            ViewBag.Day = day;
 
-            return View(Ereg);
-
+            var eventAttendance = await _eventattendenceDomain.GetTblEventAttendenceAsync(id, day);
+            return View(eventAttendance);
         }
 
 
+
+
+
+
+
+        //[HttpPost]
+        ////[ValidateAntiForgeryToken]
+
+        //public async Task<IActionResult> Members(IFormCollection forms, Guid id, int day)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+
+        //            //var eventId = new Guid(forms["eventId"]);
+        //            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+
+        //            var count = Request.Form["attendanceStatus"].Count;
+        //            var count1 = 0;
+
+        //            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+        //                                                                                        //return View(Ereg);
+
+        //            if (count != 0)
+        //            {
+        //                for (int i = 0; i < count; i++){
+        //                    var test = Guid.Parse(Request.Form["attendanceStatus"][i].ToString());
+        //                    _eventattendenceDomain.IsAtten(Guid.Parse(Request.Form["attendanceStatus"][i].ToString()));
+        //                }
+        //                ViewData["Successful"] = "تم التحضير بنجاح";
+        //            }
+
+        //            else
+        //                ViewData["Falied"] = "حدث خطأ";
+
+        //            return View(Ereg);
+
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+        //        ViewData["Falied"] = "حدث خطأ";
+        //    }
+        //    var attendees = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);
+        //    return View(attendees); // Return the correct model
+
+        //    //return View(forms);
+
+        //}
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-
-        public async Task<IActionResult> Members(FormCollection forms, Guid id, int day)
+        public async Task<IActionResult> Members(IEnumerable<EEventAttendenceViewModel> attendances, Guid id, int day)
         {
-            try
+            int check = 0;
+            foreach (var attendance in attendances)
             {
-                if (ModelState.IsValid)
-                {
-                    //var eventId = new Guid(forms["eventId"]);
-                    var username = User.FindFirst(ClaimTypes.Name)?.Value;
-                    //var user = _UserDomain.GetUserFER(username);
-
-
-                    var count = forms["attendanceStatus"].Count;
-
-
-
-                    var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-                                                                                                //return View(Ereg);
-
-                    if (count == 1)
-                        ViewData["Successful"] = "تم التحضير بنجاح";
-                    else
-                        ViewData["Falied"] = "حدث خطأ";
-
-                    return View(forms);
-
-                }
+                int iscount = await _eventattendenceDomain.UpdateAttendance(attendance.Id, attendance.IsAttend);
+                check = check + iscount;
             }
 
-            catch (Exception ex)
+            if (check == attendances.Count())
             {
-                ViewData["Falied"] = "حدث خطأ";
+                ViewData["Successful"] = "تم التحضير بنجاح.";
+            }
+            else if (check < attendances.Count() && check != 0)
+            {
+                ViewData["Failed"] = "حدث خطأ.";
+            }
+            else
+            {
+                ViewData["Failed"] = "حدث خطأ.";
             }
 
-            return View(forms);
+            var attendT = attendances.FirstOrDefault();
 
+            var domaininfo = await _eventattendenceDomain.GetTblEventAttendenceAsync(id,day);
+
+
+            return View(domaininfo);
+            
         }
+
+
+
 
 
     }

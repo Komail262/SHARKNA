@@ -1,0 +1,58 @@
+﻿@model IEnumerable<SHARKNA.ViewModels.EventRequestViewModel>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h2 class="m-0">أرشيف الطلبات</h2>
+                    <div class="d-flex gap-2">
+
+                <!-- رابط لصفحة الطلبات تحت الدراسة -->
+                @* <a href="@Url.Action("Admin", "EventRequests")" class="btn btn-secondary">عرض الطلبات تحت الدراسة</a> *@
+                    <div class="form-group">
+                        <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                    </div>
+                    </div>
+            </div>
+            <div class="block-body">
+                <table class="table table-hover js-dataTable">
+                    <thead>
+                        <tr>
+                            <th>الفعالية</th>
+                            <th>اللجنة</th>
+                            <th>حالة الطلب</th>
+                            <th>أسباب الرفض</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var request in Model.Where(r => r.RequestStatusName == "تم الالغاء" || r.RequestStatusName == "مقبولة" || r.RequestStatusName == "مرفوض"))
+                        {
+                            <tr>
+                                <td>@request.EventName</td>
+                                <td>@request.BoardName</td>
+                                <td>@request.RequestStatusName</td>
+                                <td>
+                                    @if (request.RequestStatusName == "مرفوض")
+                                    {
+                                        @request.RejectionReasons
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="DetailsAdmin" asp-route-id="@request.Id" class="btn btn-primary btn-sm details-btn">عرض التفاصيل</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- زر العودة إلى القائمة -->
+<div class="mt-3">
+    <a asp-action="Admin" class="btn btn-secondary">العودة إلى القائمة</a>
+</div>

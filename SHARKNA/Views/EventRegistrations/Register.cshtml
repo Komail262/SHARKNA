@@ -16,7 +16,12 @@
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">تسجيل طلب حضور فعالية</h5>
+                    <h5 class="m-0">الفعاليات</h5>
+                    <div class="d-flex gap-2">
+                        <div class="form-group">
+                            <input type="text" id="eventSearch" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                        </div>
+                    </div>
                 </div>
                 <div class="block-body py-5">
                     <script>
@@ -47,19 +52,19 @@
                         }
                     </script>
 
-                    <div class="row">
+                    <div class="row" id="eventList">
                         @foreach (var eventItem in Model)
                         {
                             var isFull = eventRegistrations != null && eventRegistrations.ContainsKey(eventItem.Id) && eventRegistrations[eventItem.Id] >= eventItem.MaxAttendence;
 
-                            <div class="col-md-4 mb-4">
+                            <div class="col-md-4 mb-4 event-card" data-title="@eventItem.EventTitleAr">
                                 <div class="card h-100">
                                     <div class="card-body">
-                                        <h5 class="card-title">@eventItem.EventTitleAr</h5>
+                                        <h5 class="card-header">@eventItem.EventTitleAr</h5>
+                                        <br />
                                         <p class="card-text"><strong>تاريخ البداية:</strong> @eventItem.EventStartDate?.ToString("dd-MM-yyyy")</p>
                                         <p class="card-text"><strong>تاريخ النهاية:</strong> @eventItem.EventEndtDate?.ToString("dd-MM-yyyy")</p>
                                         <p class="card-text"><strong>الوقت:</strong> @eventItem.EventStartDate?.ToString(@"hh\:mm")</p>
-                                        <p class="card-text"><strong>الموقع:</strong> @eventItem.LocationAr</p>
                                     </div>
                                     <div class="card-footer">
                                         @if (registeredEvents != null && registeredEvents.Contains(eventItem.Id))
@@ -86,5 +91,21 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.getElementById('eventSearch').addEventListener('input', function () {
+            var searchQuery = this.value.toLowerCase();
+            var eventCards = document.querySelectorAll('.event-card');
+
+            eventCards.forEach(function (card) {
+                var title = card.getAttribute('data-title').toLowerCase();
+                if (title.includes(searchQuery)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>

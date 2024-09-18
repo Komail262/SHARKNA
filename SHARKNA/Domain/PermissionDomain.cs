@@ -58,7 +58,7 @@ namespace SHARKNA.Domain
         }
 
 
-        public int AddPermission(PermissionsViewModel Permission)
+        public async Task<int> AddPermissionAsync(PermissionsViewModel Permission, string username)
         {
             try
             {
@@ -73,6 +73,20 @@ namespace SHARKNA.Domain
 
                 _context.tblPermissions.Add(permission);
                 _context.SaveChanges();
+
+                tblPermmisionLogs Plogs = new tblPermmisionLogs();
+                Plogs.Id = Guid.NewGuid();
+                Plogs.Id = permission.Id;
+                Plogs.OpType = "إضافة";
+                Plogs.DateTime = DateTime.Now;
+                Plogs.CreatedBy = username;
+                Plogs.ModifiedBy = username;
+                Plogs.CreatedTo = permission.FullNameAr;
+                Plogs.AdditionalInfo = $"تم إضافة صلاحية {permission.FullNameAr} بواسطة هذا المستخدم {username}";
+                _context.tblPermmisionLogs.Add(Plogs);
+
+                await _context.SaveChangesAsync();
+
                 return 1;
             }
             catch (Exception ex)
@@ -82,7 +96,7 @@ namespace SHARKNA.Domain
             }
         }
 
-        public int UpdatePermission(PermissionsViewModel Permission)
+        public async Task<int> UpdatePermissionAsync(PermissionsViewModel Permission, string username)
         {
             try
             {
@@ -99,6 +113,20 @@ namespace SHARKNA.Domain
                 existingPermission.IsDeleted = false;
                 _context.Update(existingPermission);
                 _context.SaveChanges();
+
+                tblPermmisionLogs Plogs = new tblPermmisionLogs();
+                Plogs.Id = Guid.NewGuid();
+                Plogs.Id = existingPermission.Id;
+                Plogs.OpType = "تعديل";
+                Plogs.DateTime = DateTime.Now;
+                Plogs.CreatedBy = username;
+                Plogs.ModifiedBy = username;
+                Plogs.CreatedTo = existingPermission.FullNameAr;
+                Plogs.AdditionalInfo = $"تم تعديل صلاحية {existingPermission.FullNameAr} بواسطة هذا المستخدم {username}";
+                _context.tblPermmisionLogs.Add(Plogs);
+
+                await _context.SaveChangesAsync();
+
                 return 1;
             }
             catch (Exception ex)
@@ -108,16 +136,30 @@ namespace SHARKNA.Domain
             }
         }
 
-        public int DeletePermission(Guid id)
+        public async Task<int> DeletePermissionAsync(Guid id, string username)
         {
             try
             {
+                PermissionsViewModel Permission = new PermissionsViewModel();
                 var Per = _context.tblPermissions.FirstOrDefault(b => b.Id == id);
                 if (Per != null)
                 {
                     Per.IsDeleted = true;
                     _context.Update(Per);
                     _context.SaveChanges();
+
+                    tblPermmisionLogs Plogs = new tblPermmisionLogs();
+                    Plogs.Id = Guid.NewGuid();
+                    Plogs.Id = Per.Id;
+                    Plogs.OpType = "حذف";
+                    Plogs.DateTime = DateTime.Now;
+                    Plogs.CreatedBy = username;
+                    Plogs.ModifiedBy = username;
+                    Plogs.CreatedTo = Per.FullNameAr;
+                    Plogs.AdditionalInfo = $"تم حذف  صلاحية {Per.FullNameAr} بواسطة هذا المستخدم {username}";
+                    _context.tblPermmisionLogs.Add(Plogs);
+
+                    await _context.SaveChangesAsync();
 
                     return 1;
                 }

@@ -94,22 +94,23 @@ namespace SHARKNA.Domain
 
 
 
-            //var ev = _eventDomain.GettblEventsAsync(eventReg.EventId);
-            //var days = (ev.EventEndtDate - ev.EventStartDate).Days + 1;
+            var ev = _eventDomain.GetEventById(eventReg.EventId);
+            var days = (ev.EventEndtDate.Value - ev.EventStartDate.Value).Days + 1;
 
-            //for (int i = 0; i < days; i++)
-            //{
-            //    tblEventAttendence atten = new tblEventAttendence();
-            //    atten.Id = Guid.NewGuid();
-            //    atten.EventsId = eventReg.EventId;
-            //    atten.EventsRegId = eventReg.Id;
-            //    atten.Day = i + 1;
-            //    atten.IsAttend = false;
-            //    atten.EventDate = ev.EventStartDate.AddDays(i);
-            //    _context.tblEventAttendence.Add(atten);
-            //    _context.SaveChanges();
+            for (int i = 0; i < days; i++)
+            {
+                tblEventAttendence atten = new tblEventAttendence();
+                atten.Id = Guid.NewGuid();
+                atten.EventsId = eventReg.EventId;
+                atten.EventsRegId = eventReg.Id;
+                atten.Day = i + 1;
+                atten.IsAttend = false;
+                atten.EventDate = ev.EventStartDate.Value.AddDays(i);
+                _context.tblEventAttendence.Add(atten);
+                _context.SaveChanges();
 
-            //}
+            }
+
         }
 
         public async Task<List<EventViewModel>> GetEventsForUserAsync(string username)

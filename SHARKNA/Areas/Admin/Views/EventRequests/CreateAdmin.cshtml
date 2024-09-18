@@ -10,17 +10,7 @@
     مرحباً, @ViewBag.Username
 </div>
 
-<!-- عرض أسماء الـ Boards المرتبطة بالمستخدم -->
-@if (ViewBag.BoardsList != null)
-{
-    <h3>أسماء Boards المرتبطة بالمستخدم:</h3>
-    <ul>
-        @foreach (var board in (SelectList)ViewBag.BoardsList)
-        {
-            <li>@board.Text</li>
-        }
-    </ul>
-}
+
 
 <script>
     @{
@@ -197,25 +187,20 @@
                                         <span asp-validation-for="Gender" class="text-danger"></span>
                                     </div>
                                 </div>
-                                <!-- END ITEM -->
-                                <!-- Board Selection: Select جديد يحتوي على أسماء الـ Boards -->
+
+
+                                <!-- Board Selection -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="BoardId" class="mb-1"> اللجنة:</label>
-                                        <select asp-for="BoardId" class="form-control">
-                                            <option value="">اختر اللجنة</option> <!-- خيار افتراضي -->
-                                            @if (ViewBag.BoardsList != null)
-                                            {
-                                                // تكرار على الـ Boards وعرضها في Select
-                                                foreach (var board in (SelectList)ViewBag.BoardsList)
-                                                {
-                                                    <option value="@board.Value"> @board.Text</option>
-                                                }
-                                            }
+                                        <label asp-for="BoardId" class="mb-1">اللجنة</label>
+                                        <select asp-for="BoardId" class="form-control" asp-items="ViewBag.BoardsList">
+                                            <option value="">اختر اللجنة</option>
                                         </select>
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
                                     </div>
                                 </div>
+                               
+
 
 
 
