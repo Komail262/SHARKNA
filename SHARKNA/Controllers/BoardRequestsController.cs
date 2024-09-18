@@ -6,6 +6,7 @@ using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SHARKNA.Controllers
 {
@@ -17,17 +18,16 @@ namespace SHARKNA.Controllers
         private readonly BoardMembersDomain _BoardMembersDomain;
         private readonly UserDomain _UserDomain;
 
-        public BoardRequestsController(BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain , UserDomain userDomain)
+        public BoardRequestsController(BoardRequestsDomain boardRequestsDomain, BoardDomain BoardDomain, RequestStatusDomain requestStatusDomain, BoardMembersDomain boardMembersDomain, UserDomain userDomain)
         {
             _boardRequestsDomain = boardRequestsDomain;
             _BoardDomain = BoardDomain;
             _RequestStatusDomain = requestStatusDomain;
             _BoardMembersDomain = boardMembersDomain;
-            _UserDomain = userDomain;   
+            _UserDomain = userDomain;
         }
 
-        [Authorize(Roles = "User")]
-        public IActionResult Index(string Successful = "", string Falied = "")
+        public async Task<IActionResult> Index(string Successful = "", string Falied = "")
         {
             if (!string.IsNullOrEmpty(Successful))
                 ViewData["Successful"] = Successful;
@@ -35,31 +35,34 @@ namespace SHARKNA.Controllers
                 ViewData["Falied"] = Falied;
 
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            var userBoardRequests = _boardRequestsDomain.GetTblBoardRequestsByUser(username);
+            var userBoardRequests = await _boardRequestsDomain.GetTblBoardRequestsByUserAsync(username);
 
             return View(userBoardRequests);
         }
+
         [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
-        public IActionResult UserDetails()
+        public async Task<IActionResult> UserDetails()
         {
-            var userBoardRequests = _BoardDomain.GetTblBoards();
+            var username = User.FindFirst(ClaimTypes.GivenName)?.Value;
+            var userGender = User.FindFirst(ClaimTypes.Gender)?.Value ?? "NotSpecified";
+            var userBoardRequests = await _BoardDomain.GetTblBoardsAsync(userGender);
             return View(userBoardRequests);
         }
 
-        public IActionResult Archive()
+        public async Task<IActionResult> Archive()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            var userBoardRequests = _boardRequestsDomain.GetTblBoardRequestsByUser(username);
+            var userBoardRequests = await _boardRequestsDomain.GetTblBoardRequestsByUserAsync(username);
 
             return View(userBoardRequests);
         }
-        
+
         [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Create(Guid boardId)
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             var user = await _UserDomain.GetUserFERAsync(username);
-            var board =  _BoardDomain.GetTblBoards().FirstOrDefault(b => b.Id == boardId);
+            var board = await _BoardDomain.GetTblBoardByIdAsync(boardId);
 
             var model = new BoardRequestsViewModel
             {
@@ -69,20 +72,20 @@ namespace SHARKNA.Controllers
                 FullNameAr = user.FullNameAr,
                 BoardId = boardId,
                 BoardName = board.NameAr,
-                BoardDescription = board.DescriptionAr, 
+                BoardDescription = board.DescriptionAr,
                 FullNameEn = user.FullNameEn
             };
-                        
-            return View(model); 
+
+            return View(model);
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            var request = _boardRequestsDomain.GetBoardRequestById(id);
+            var request = await _boardRequestsDomain.GetBoardRequestByIdAsync(id);
             return View(request);
         }
 
-
+        
 
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
@@ -94,15 +97,13 @@ namespace SHARKNA.Controllers
                 var username = User.FindFirst(ClaimTypes.Name)?.Value;
                 var user = await _UserDomain.GetUserFERAsync(username);
 
+                bool canMakeNewRequest = await _boardRequestsDomain.CanUserMakeNewRequestAsync(user.Email, BoardReq.BoardId);
 
-                bool requestExists =  _boardRequestsDomain.CheckRequestExists(user.Email, BoardReq.BoardId);
-                if (requestExists)
+                if (!canMakeNewRequest)
                 {
-                    ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
-
+                    ViewData["Falied"] = "لا يمكنك تقديم طلب جديد لهذا النادي، لديك طلب سابق.";
                     return View(BoardReq);
                 }
-
                 if (ModelState.IsValid)
                 {
                     BoardReq.Id = Guid.NewGuid();
@@ -112,7 +113,7 @@ namespace SHARKNA.Controllers
                     BoardReq.FullNameAr = user.FullNameAr;
                     BoardReq.FullNameEn = user.FullNameEn;
 
-                    int check = _boardRequestsDomain.AddBoardReq(BoardReq, UserName);
+                    int check = await _boardRequestsDomain.AddBoardReqAsync(BoardReq, UserName);
                     if (check == 1)
                     {
                         ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
@@ -132,31 +133,22 @@ namespace SHARKNA.Controllers
             return View(BoardReq);
         }
 
-
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CancelRequest(Guid id)
+        public async Task<IActionResult> CancelRequest(Guid id)
         {
             try
             {
-                _boardRequestsDomain.CancelRequest(id);
+                await _boardRequestsDomain.CancelRequestAsync(id);
                 ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
             catch (Exception ex)
             {
-                ViewBag["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
+                ViewData["Falied"] = "حدث خطأ أثناء محاولة إلغاء الطلب.";
             }
 
             return RedirectToAction(nameof(Index));
         }
-
-
     }
-
-
-
-
 }
-         
-

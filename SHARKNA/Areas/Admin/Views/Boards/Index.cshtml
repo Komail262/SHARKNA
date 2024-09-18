@@ -3,35 +3,23 @@
 @{
     ViewData["Title"] = "Board List";
 }
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    @{
-        if (@ViewData["Successful"] != null)
-        {
-            <Text>
-                                var result = '@Html.Raw(ViewData["Successful"])';
-                    Swal.fire(result, '', 'success')
-                        .then(
-                            function () {
-                                window.location.href = '@Url.Action("Index", "Boards")';
-                            }
-                        );
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
-        {
-            <Text>
-                                var result = '@Html.Raw(ViewData["Falied"])';
-                    Swal.fire(result, '', 'error');
-            </Text>
-        }
-        else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
-        {
-            <Text>
-                                var result = '@Html.Raw(ViewData["Falied"])';
-                    Swal.fire(result, '', 'error');
-            </Text>
-        }
+    function confirmCancel(boardId) {
+        Swal.fire({
+            title: 'تأكيد الحذف؟',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم',
+            cancelButtonText: 'لا'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('cancelForm-' + boardId).submit();
+            }
+        });
     }
 </script>
 
@@ -101,8 +89,10 @@
 
                                     <td>
                                         <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-success">تعديل</a> |
-                                        <a asp-action="Delete" asp-route-id="@board.Id" class="btn btn-danger">حذف</a> |
-                                        <a asp-action="Details" asp-route-id="@board.Id" class="btn btn-primary">عرض التفاصيل</a>
+
+                                        <form asp-action="Delete" asp-route-id="@board.Id" id="cancelForm-@board.Id" method="post" style="display:inline;">
+                                            <button type="button" onclick="confirmCancel('@board.Id')" class="btn btn-danger">حذف</button>
+                                        </form>
 
                                     </td>
                                 </tr>
