@@ -2,34 +2,30 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SHARKNA.Domain;
-using SHARKNA.Models; 
+using SHARKNA.Models;
 using SHARKNA.ViewModels;
-using System;
-using System.Globalization;
-using System.Linq; 
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace SHARKNA.Controllers
+namespace SHARKNA.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class EventRequestsController : Controller
     {
         private readonly EventRequestsDomain _eventRequestDomain;
         private readonly EventDomain _eventDomain;
         private readonly UserDomain _UserDomain;
-        private readonly SHARKNAContext _context; 
-
+        private readonly SHARKNAContext _context;
         public EventRequestsController(EventRequestsDomain eventRequestDomain, EventDomain eventDomain, UserDomain userDomain, SHARKNAContext context)
         {
             _eventRequestDomain = eventRequestDomain;
             _eventDomain = eventDomain;
             _UserDomain = userDomain;
-            _context = context; 
+            _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            
+
             string username = User.FindFirst(ClaimTypes.Name)?.Value;
 
             if (string.IsNullOrEmpty(username))
@@ -422,7 +418,5 @@ namespace SHARKNA.Controllers
         //    }
         //}
     }
+
 }
-
-
-

@@ -99,6 +99,7 @@ namespace SHARKNA.Domain
                     BoardId = request.BoardId,
                     BoardName = request.Board.NameAr,
                     BoardDescriptionAr = request.Board.DescriptionAr,
+                    Genderr = request.Board.Gender,
 
                     // إضافة معلومات المستخدم
                     CreatedByUserName = user.UserName,
