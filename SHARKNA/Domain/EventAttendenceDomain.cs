@@ -74,12 +74,21 @@ namespace SHARKNA.Domain
         }
 
 
-        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventattendenceAsync(Guid eventId, int day)
+
+        public async Task<string> GetEventTitleByIdAsync(Guid eventId)
+        {
+            // Fetch the event title in Arabic; you can also include English if needed
+            var eventEntity = await _context.tblEvents.FirstOrDefaultAsync(e => e.Id == eventId);
+            return eventEntity?.EventTitleAr; // Return the Arabic title; adjust if you want the English title
+        }
+
+
+        public async Task<IEnumerable<EEventAttendenceViewModel>> GetTblEventAttendenceAsync(Guid eventId, int day)
         {
 
             return await _context.tblEventAttendence.Include(R => R.EventsReg)
-
-                .Where(x => x.EventsId == eventId && x.Day == day).Select(x => new EEventAttendenceViewModel
+                .Where(x => x.EventsId == eventId && x.Day == day)
+                .Select(x => new EEventAttendenceViewModel
                 {
                     Id = x.Id,
                     EventDate = x.EventDate,
@@ -90,59 +99,21 @@ namespace SHARKNA.Domain
                     RRegDate = x.EventsReg.RegDate,
                     EEmail = x.EventsReg.Email,
                     IsAttend = x.IsAttend
-
                 }).ToListAsync();
-
-
         }
 
-
-
-
-        //public void IsAtten(Guid id)
-        //{
-        //    var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
-
-        //    if (att == null) 
-        //    {
-        //        att.IsAttend = false;
-        //    }
-        //    else
-        //    {
-        //        att.IsAttend = true;
-        //    }
-
-        //    _context.SaveChanges();
-
-        //}
-
-        public void IsAtten(Guid id)
+        public async Task<int> UpdateAttendance(Guid guid, bool isAttend)
         {
-            var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
-
-            if (att != null) // Only update if att is not null
+            var attendance = await _context.tblEventAttendence.FirstOrDefaultAsync(x => x.Id == guid);
+            if (attendance == null)
             {
-                att.IsAttend = !att.IsAttend; // Toggle the IsAttend status
-                _context.tblEventAttendence.Update(att);
-                _context.SaveChanges();
+                return 0;
             }
+
+            attendance.IsAttend = isAttend;
+            _context.tblEventAttendence.Update(attendance);
+            return await _context.SaveChangesAsync();
         }
-
-        public void SetAttendanceStatus(Guid id, bool isAttending)
-        {
-            var att = _context.tblEventAttendence.FirstOrDefault(x => x.Id == id);
-
-            if (att != null)
-            {
-                att.IsAttend = isAttending;
-                _context.tblEventAttendence.Update(att); // Ensure that the entity is marked as modified
-                _context.SaveChanges(); // Save changes to the database
-            }
-        }
-
-
-
-
 
 
 
