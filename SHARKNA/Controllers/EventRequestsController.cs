@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SHARKNA.Domain;
@@ -27,6 +28,8 @@ namespace SHARKNA.Controllers
             _context = context; 
         }
 
+        //صفحة الطلبات للمستخدم
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Index()
         {
             
@@ -34,7 +37,7 @@ namespace SHARKNA.Controllers
 
             if (string.IsNullOrEmpty(username))
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Users");
             }
 
             var userRequests = await _eventRequestDomain.GetEventRequestsByUserAsync(username);
@@ -43,28 +46,16 @@ namespace SHARKNA.Controllers
         }
 
 
-        public async Task<IActionResult> Admin()
-        {
-            var eventRequests = await _eventRequestDomain.GetTblEventRequestsAsync();
-            return View(eventRequests);
-        }
-        public async Task<IActionResult> AdminArsh()
-        {
-            var eventRequests = await _eventRequestDomain.GetTblEventRequestsAsync();
-            return View(eventRequests);
-        }
 
-
-
+        //get for user
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Create()
         {
-            // احصل على اسم المستخدم الحالي
             string username = User.FindFirst(ClaimTypes.Name)?.Value;
 
             if (string.IsNullOrEmpty(username))
             {
-                // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Users");
             }
 
             // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
@@ -82,14 +73,7 @@ namespace SHARKNA.Controllers
         }
 
 
-
-
-
-
-
-
-
-
+        //post for user
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(EventViewModel eventViewModel)
@@ -102,7 +86,7 @@ namespace SHARKNA.Controllers
                 if (string.IsNullOrEmpty(username))
                 {
                     // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Users");
                 }
 
                 // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
@@ -182,6 +166,8 @@ namespace SHARKNA.Controllers
         }
 
 
+        //get for user
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Edit(Guid id)
         {
             // احصل على اسم المستخدم الحالي
@@ -190,7 +176,7 @@ namespace SHARKNA.Controllers
             if (string.IsNullOrEmpty(username))
             {
                 // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Users");
             }
 
             // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
@@ -216,6 +202,7 @@ namespace SHARKNA.Controllers
             return View(eventViewModel);
         }
 
+        //post for users
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(EventViewModel eventViewModel)
@@ -228,7 +215,7 @@ namespace SHARKNA.Controllers
                 if (string.IsNullOrEmpty(username))
                 {
                     // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction("Login", "Users");
                 }
 
                 // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
@@ -283,7 +270,7 @@ namespace SHARKNA.Controllers
                         await _context.SaveChangesAsync();
                     }
 
-                    ViewData["Successful"] = "تم تعديل الحدث بنجاح وتم تحديث جميع السجلات ذات الصلة.";
+                    ViewData["Successful"] = "تم تعديل الحدث بنجاح .";
                 }
                 else
                 {
@@ -299,6 +286,7 @@ namespace SHARKNA.Controllers
         }
 
 
+        //post for users
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(Guid id)
@@ -320,7 +308,8 @@ namespace SHARKNA.Controllers
             if (string.IsNullOrEmpty(currentUser))
             {
                 // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Users");
+
             }
 
             // جلب طلبات الفعاليات المتعلقة بالمستخدم الحالي، بما في ذلك الطلبات الملغاة
@@ -334,22 +323,8 @@ namespace SHARKNA.Controllers
 
 
 
-
-        [HttpGet]
-        public async Task<IActionResult> Accept(Guid id)
-        {
-            try
-            {
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
-                await _eventRequestDomain.AcceptRequestAsync(id, username);
-                return RedirectToAction(nameof(Index), new { Successful = "تم قبول الطلب بنجاح." });
-            }
-            catch (Exception)
-            {
-                return RedirectToAction(nameof(Index), new { Falied = "حدث خطأ أثناء قبول الطلب." });
-            }
-        }
-
+        //Get for users
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Details(Guid id)
         {
             var eventRequest = await _eventRequestDomain.GetEventRequestByIdAsync(id);
@@ -361,66 +336,13 @@ namespace SHARKNA.Controllers
             return View(eventRequest);
 
         }
-        public async Task<IActionResult> DetailsAdmin(Guid id)
-        {
-            var eventRequest = await _eventRequestDomain.GetEventRequestByIdAsync(id);
-            if (eventRequest == null)
-            {
-                return NotFound();
-            }
-            ViewBag.RequestStatusList = new SelectList(await _eventRequestDomain.GetTblRequestStatusAsync(), "Id", "RequestStatusAr", eventRequest.RequestStatusId);
-            return View(eventRequest);
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reject(Guid id, string rejectionReason)
-        {
-            try
-            {
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+      
+
+       
 
 
-                await _eventRequestDomain.RejectRequestAsync(id, rejectionReason, username);
-                return RedirectToAction(nameof(Index), new { Successful = "تم رفض الطلب بنجاح." });
 
-            }
-            catch (Exception)
-            {
-                return RedirectToAction(nameof(Index), new { Failed = "حدث خطأ أثناء رفض الطلب." });
-            }
-        }
-
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> UpdateRequestStatus(Guid id, Guid RequestStatusId, string RejectionReasons)
-        //{
-        //    try
-        //    {
-        //        string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
-        //        if (username != null)
-        //        {
-        //            int result = await _eventRequestDomain.UpdateRequestStatusAsync(id, RequestStatusId, RejectionReasons, username);
-        //            if (result == 1)
-        //            {
-        //                return RedirectToAction(nameof(Index), new { Successful = "تم تحديث حالة الطلب بنجاح." });
-        //            }
-        //            else
-        //            {
-        //                return RedirectToAction(nameof(Index), new { Failed = "فشل في تحديث حالة الطلب." });
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return RedirectToAction(nameof(Index), new { Failed = "فشل في الحصول على اسم المستخدم." });
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return RedirectToAction(nameof(Index), new { Failed = "حدث خطأ أثناء تحديث حالة الطلب." });
-        //    }
-        //}
     }
 }
 

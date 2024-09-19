@@ -23,6 +23,8 @@ namespace SHARKNA.Domain
         //    return user?.FullNameAr;
         //}
 
+
+
         public IEnumerable<BoardViewModel> GetTblBoards()
         {
             return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
@@ -36,6 +38,61 @@ namespace SHARKNA.Domain
                 IsDeleted = x.IsDeleted,
                 IsActive = x.IsActive
             }).ToList();
+        }
+
+        public async Task<IEnumerable<BoardViewModel>> GetTblBoardsAsync(string userGender)
+        {
+            try
+            {
+                var allBoards = await _context.tblBoards
+                    .Where(e => e.IsActive && !e.IsDeleted)
+                    .ToListAsync();
+
+                IEnumerable<BoardViewModel> filteredBoards;
+
+                if (userGender == "Male")
+                {
+
+                    filteredBoards = allBoards
+                        .Where(e => e.Gender == true || e.Gender == null)
+                        .Select(e => new BoardViewModel
+                        {
+                            Id = e.Id,
+                            NameAr = e.NameAr,
+                            NameEn = e.NameEn,
+                            DescriptionAr = e.DescriptionAr,
+                            DescriptionEn = e.DescriptionEn,
+                            Gender = e.Gender,
+                            IsDeleted = e.IsDeleted,
+                            IsActive = e.IsActive
+                        });
+                }
+                else
+                {
+
+                    filteredBoards = allBoards
+                        .Where(e => e.Gender == false || e.Gender == null)
+                        .Select(e => new BoardViewModel
+                        {
+                            Id = e.Id,
+                            NameAr = e.NameAr,
+                            NameEn = e.NameEn,
+                            DescriptionAr = e.DescriptionAr,
+                            DescriptionEn = e.DescriptionEn,
+                            Gender = e.Gender,
+                            IsDeleted = e.IsDeleted,
+                            IsActive = e.IsActive
+                        });
+                }
+
+                await _context.SaveChangesAsync();
+                return filteredBoards;
+            }
+            catch
+            {
+
+                throw;
+            }
         }
 
         public async Task<BoardViewModel> GetTblBoardByIdAsync(Guid id)
