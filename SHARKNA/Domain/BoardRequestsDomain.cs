@@ -171,17 +171,27 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task<bool> IsEmailDuplicateAsync(string email, Guid? BoardReqId = null)
+        //public async Task<bool> IsEmailDuplicateAsync(string email, Guid? BoardReqId = null)
+        //{
+        //    if (BoardReqId == null)
+        //    {
+        //        return await _context.tblBoardRequests.AnyAsync(u => u.Email == email);
+        //    }
+        //    else
+        //    {
+        //        return await _context.tblBoardRequests.AnyAsync(u => u.Email == email && u.Id != BoardReqId);
+        //    }
+        //}
+
+        public async Task<IEnumerable<tblBoards>> GetTblBoardsByUserAsync(string username)
         {
-            if (BoardReqId == null)
-            {
-                return await _context.tblBoardRequests.AnyAsync(u => u.Email == email);
-            }
-            else
-            {
-                return await _context.tblBoardRequests.AnyAsync(u => u.Email == email && u.Id != BoardReqId);
-            }
+            return await _context.tblBoards
+                .Include(b => b.BoardMembers)
+                .Where(b => !b.IsDeleted && b.IsActive &&
+                            b.BoardMembers.Any(bm => !bm.IsDeleted && bm.IsActive && bm.UserName == username))
+                .ToListAsync(); 
         }
+
 
         public async Task<int> CancelRequestAsync(Guid id, string username)
         {

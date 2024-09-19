@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace SHARKNA.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin,Editor")]
+
     public class BoardRequestsController : Controller
     {
         private readonly BoardRequestsDomain _boardRequestsDomain;

@@ -88,7 +88,18 @@ namespace SHARKNA.Controllers
             return View(request);
         }
 
-        
+        public async Task<IActionResult> MyBoards()
+        {
+            string username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+           
+            var userBoards = await _boardRequestsDomain.GetTblBoardsByUserAsync(username);
+
+
+            return View(userBoards);
+        }
+
+
 
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
@@ -135,6 +146,8 @@ namespace SHARKNA.Controllers
 
             return View(BoardReq);
         }
+
+
 
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]

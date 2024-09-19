@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Content Remove="Areas\Admin\Views\Home\AccessDenied.cshtml" />
-    <Content Remove="Views\BoardRequests\MyBoards.cshtml" />
     <Content Remove="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
 

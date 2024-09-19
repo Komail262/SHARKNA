@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SHARKNA.Domain;
@@ -10,6 +11,8 @@ using System.Security.Claims;
 namespace SHARKNA.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin,Editor")]
+
     public class BoardMembersController : Controller
     {
         private readonly BoardMembersDomain _BoardMembersDomain;
