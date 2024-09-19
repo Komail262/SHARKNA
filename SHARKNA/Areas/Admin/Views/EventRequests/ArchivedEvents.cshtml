@@ -1,0 +1,99 @@
+﻿@model IEnumerable<SHARKNA.ViewModels.EventRequestViewModel>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // إظهار رسائل النجاح أو الفشل باستخدام SweetAlert
+    @if (ViewData["Successful"] != null)
+    {
+        <text>
+            Swal.fire('نجاح', '@Html.Raw(ViewData["Successful"])', 'success');
+        </text>
+    }
+    else if (ViewData["Falied"] != null)
+    {
+        <text>
+            Swal.fire('خطأ', '@Html.Raw(ViewData["Falied"])', 'error');
+        </text>
+    }
+
+        // تأكيد إلغاء الأرشفة
+        function confirmUnarchive(eventId) {
+            Swal.fire({
+                title: 'هل أنت متأكد من إلغاء أرشفة الفعالية؟',
+                text: "سوف يتمكن المستخدمون من التسجيل في الفعالية بعد هذا الاجراء!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، قم بإلغاء الأرشفة!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('unarchiveForm-' + eventId).submit();
+                }
+            });
+        }
+
+    // تأكيد الحذف
+    function confirmDelete(eventId) {
+        Swal.fire({
+            title: 'هل أنت متأكد من حذف الفعالية؟',
+            text: "لن تتمكن من التراجع عن هذا الإجراء!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'نعم، قم بالحذف!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('deleteForm-' + eventId).submit();
+            }
+        });
+    }
+</script>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h2 class="m-0">الفعاليات المؤرشفة</h2>
+                <a href="@Url.Action("ActiveEvents", "EventRequests")" class="btn btn-secondary float-right">عرض الفعاليات النشطة</a> <!-- زر العودة إلى الفعاليات النشطة -->
+            </div>
+            <div class="block-body">
+                <table class="table table-hover js-dataTable">
+                    <thead>
+                        <tr>
+                            <th>الفعالية</th>
+                            <th>تاريخ البداية</th>
+                            <th>تاريخ النهاية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var eventItem in Model)
+                        {
+                            <tr>
+                                <td>@eventItem.EventName</td>
+                                <td>@eventItem.EventStartDate?.ToString("dd/MM/yyyy")</td>
+                                <td>@eventItem.EventEndtDate?.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <!-- جعل الأزرار بجانب بعض -->
+                                        <form id="unarchiveForm-@eventItem.EventId" method="post" asp-action="UnarchiveEvent" asp-route-eventId="@eventItem.EventId" style="display:inline;">
+                                            <button type="button" class="btn btn-success" onclick="confirmUnarchive('@eventItem.EventId')">إلغاء الأرشفة</button>
+                                        </form>
+                                        <form id="deleteForm-@eventItem.EventId" method="post" asp-action="DeleteEvent" asp-route-eventId="@eventItem.EventId" style="display:inline;">
+                                            <button type="button" class="btn btn-danger" onclick="confirmDelete('@eventItem.EventId')">حذف</button>
+                                        </form>
+                                        <!-- تعديل زر عرض التفاصيل -->
+                                        <a asp-action="Details" asp-route-id="@eventItem.EventId" class="btn btn-primary btn-sm">عرض التفاصيل</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

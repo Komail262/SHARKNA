@@ -68,4 +68,11 @@
     <_ContentIncludedByDefault Remove="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\EventRequests\ActiveEvents.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

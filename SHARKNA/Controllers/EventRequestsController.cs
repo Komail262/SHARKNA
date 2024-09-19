@@ -321,8 +321,6 @@ namespace SHARKNA.Controllers
 
 
 
-
-
         //Get for users
         [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Details(Guid id)
