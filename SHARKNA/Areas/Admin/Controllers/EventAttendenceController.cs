@@ -66,59 +66,6 @@ namespace SHARKNA.Controllers
 
 
 
-
-
-
-
-        //[HttpPost]
-        ////[ValidateAntiForgeryToken]
-
-        //public async Task<IActionResult> Members(IFormCollection forms, Guid id, int day)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-
-        //            //var eventId = new Guid(forms["eventId"]);
-        //            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-
-        //            var count = Request.Form["attendanceStatus"].Count;
-        //            var count1 = 0;
-
-        //            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-        //                                                                                        //return View(Ereg);
-
-        //            if (count != 0)
-        //            {
-        //                for (int i = 0; i < count; i++){
-        //                    var test = Guid.Parse(Request.Form["attendanceStatus"][i].ToString());
-        //                    _eventattendenceDomain.IsAtten(Guid.Parse(Request.Form["attendanceStatus"][i].ToString()));
-        //                }
-        //                ViewData["Successful"] = "تم التحضير بنجاح";
-        //            }
-
-        //            else
-        //                ViewData["Falied"] = "حدث خطأ";
-
-        //            return View(Ereg);
-
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        ViewData["Falied"] = "حدث خطأ";
-        //    }
-        //    var attendees = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);
-        //    return View(attendees); // Return the correct model
-
-        //    //return View(forms);
-
-        //}
-
-
         [HttpPost]
         public async Task<IActionResult> Members(IEnumerable<EEventAttendenceViewModel> attendances, Guid id, int day)
         {
