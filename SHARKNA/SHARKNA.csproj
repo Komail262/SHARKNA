@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <None Include="Areas\Admin\Views\Home\AccessDenied.cshtml" />
-    <None Include="Views\BoardRequests\MyBoards.cshtml" />
     <None Include="Views\Home\AccessDenied.cshtml" />
     <None Include="wwwroot\Assets\.DS_Store" />
     <None Include="wwwroot\Assets\css\.DS_Store" />

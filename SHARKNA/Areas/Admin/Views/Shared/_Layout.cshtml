@@ -1,5 +1,11 @@
 ﻿@using System.Security.Claims
+@{
+    var FullNameAr = User.FindFirst(ClaimTypes.GivenName)?.Value;
+    var username = User.FindFirst(ClaimTypes.Name)?.Value;
+    var Email = User.FindFirst(ClaimTypes.Email)?.Value;
+    // var userrole = User.FindFirst("Role").Value;
 
+}
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 
@@ -10,11 +16,11 @@
     <title>@ViewData["Title"] - لوحة التحكم بالنظام</title>
 
     <!-- Favico -->
-    <link rel="apple-touch-icon" sizes="180x180" href="~/assets/imgs/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/assets/imgs/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/assets/imgs/favicon/favicon-16x16.png">
-    <link rel="manifest" href="~/assets/imgs/favicon/site.webmanifest">
-    <link rel="mask-icon" href="~/assets/imgs/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Assets/imgs/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Assets/imgs/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Assets/imgs/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/Assets/imgs/favicon/site.webmanifest">
+    <link rel="mask-icon" href="~/Assets/imgs/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="theme-color" content="#ffffff">
 
@@ -25,15 +31,29 @@
     <script src="~/lib/sweetalert2/sweetalert2.min.js"></script>
     <!--------- CSS Liberaries ---------->
     <!-- Data Table -->
-    <link rel="stylesheet" href="~/Assets/lib/DataTable/css/select.dataTables.min.css" />
-    <link rel="stylesheet" href="~/Assets/lib/DataTable/css/datatables_customization.css" />
+    <link rel="stylesheet" href="~/assets/lib/DataTable/css/select.dataTables.min.css" />
+    <link rel="stylesheet" href="~/assets/lib/DataTable/css/datatables_customization.css" />
 
     <!-- customization -->
-    <link rel="stylesheet" href="~/Assets/css/app_rtl.css">
+    <link rel="stylesheet" href="~/assets/css/app_rtl.css">
+    <!-- main JS Scripts -->
+    <script src="~/Assets/js/jquery-3.4.1.min.js"></script>
+    <script src="~/Assets/js/popper.min.js"></script>
+    <script src="~/Assets/js/bootstrap.min.js"></script>
+
+    <!--------- JS Liberaries ---------->
+    <script src="~/Assets/lib/DataTable/js/dataTables.min.js"></script>
+    <script src="~/Assets/lib/quickSearch/jquery.quicksearch.js"></script>
+
+    <!-- customization -->
+    <script src="~/Assets/js/app.js"></script>
+
 </head>
 
 <body>
     <main class="app_wrap">
+        
+
         <!-- Start Side Menu -->
         <nav class="side_menu">
             <div class="logo_wrap">
@@ -42,7 +62,7 @@
             <div class="menu_links">
                 <ul>
                     <li>
-                        <a href="/">
+                        <a href="/Admin">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <rect x="2" y="2" width="9" height="9" rx="2" fill="currentColor"></rect>
@@ -54,45 +74,96 @@
                             <span>الرئيسية</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/Orders" class="active">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M21 10H13V11C13 11.6 12.6 12 12 12C11.4 12 11 11.6 11 11V10H3C2.4 10 2 10.4 2 11V13H22V11C22 10.4 21.6 10 21 10Z"
-                                      fill="currentColor"></path>
-                                <path opacity="0.3"
-                                      d="M12 12C11.4 12 11 11.6 11 11V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V11C13 11.6 12.6 12 12 12Z"
-                                      fill="currentColor"></path>
-                                <path opacity="0.3"
-                                      d="M18.1 21H5.9C5.4 21 4.9 20.6 4.8 20.1L3 13H21L19.2 20.1C19.1 20.6 18.6 21 18.1 21ZM13 18V15C13 14.4 12.6 14 12 14C11.4 14 11 14.4 11 15V18C11 18.6 11.4 19 12 19C12.6 19 13 18.6 13 18ZM17 18V15C17 14.4 16.6 14 16 14C15.4 14 15 14.4 15 15V18C15 18.6 15.4 19 16 19C16.6 19 17 18.6 17 18ZM9 18V15C9 14.4 8.6 14 8 14C7.4 14 7 14.4 7 15V18C7 18.6 7.4 19 8 19C8.6 19 9 18.6 9 18Z"
-                                      fill="currentColor"></path>
-                            </svg>
-                            <span>الطلبات</span>
-   
-                            
-                                <a href="/BoardRequests"><span>طلبات الأندية</span></a>
-                           
-                           
-                        </a>
-                    </li>
+
                     <li class="sub_menu">
                         <a href="JavaScript:void(0)">
-                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                                <path opacity="0.2" fill-rule="evenodd" clip-rule="evenodd"
-                                      d="M11 3C10.4477 3 10 3.44772 10 4V4.56876C10 4.99658 9.71288 5.36825 9.31776 5.53229C8.9225 5.6964 8.46228 5.63386 8.15966 5.33123L7.75734 4.92891C7.36681 4.53839 6.73365 4.53839 6.34312 4.92891L4.92891 6.34313C4.53838 6.73365 4.53838 7.36681 4.92891 7.75734L5.33123 8.15966C5.63386 8.46229 5.6964 8.9225 5.53229 9.31776C5.36825 9.71288 4.99658 10 4.56877 10L4 10C3.44772 10 3 10.4477 3 11V13C3 13.5523 3.44772 14 4 14H4.56879C4.99659 14 5.36825 14.2871 5.53228 14.6822C5.69638 15.0775 5.63384 15.5377 5.33123 15.8403L4.92889 16.2426C4.53837 16.6331 4.53837 17.2663 4.92889 17.6568L6.34311 19.071C6.73363 19.4616 7.36679 19.4616 7.75732 19.071L8.1596 18.6688C8.46223 18.3661 8.92247 18.3036 9.31774 18.4677C9.71287 18.6317 10 19.0034 10 19.4313V20C10 20.5523 10.4477 21 11 21H13C13.5523 21 14 20.5523 14 20V19.4312C14 19.0034 14.2871 18.6318 14.6822 18.4677C15.0775 18.3036 15.5377 18.3661 15.8403 18.6688L16.2426 19.071C16.6331 19.4616 17.2663 19.4616 17.6568 19.071L19.071 17.6568C19.4616 17.2663 19.4616 16.6331 19.071 16.2426L18.6688 15.8403C18.3661 15.5377 18.3036 15.0775 18.4677 14.6822C18.6318 14.2871 19.0034 14 19.4312 14H20C20.5523 14 21 13.5523 21 13V11C21 10.4477 20.5523 10 20 10L19.4313 10C19.0034 10 18.6317 9.71287 18.4677 9.31774C18.3036 8.92247 18.3661 8.46223 18.6688 8.1596L19.071 7.75734C19.4615 7.36681 19.4616 6.73365 19.071 6.34312L17.6568 4.92891C17.2663 4.53838 16.6331 4.53838 16.2426 4.92891L15.8403 5.33123C15.5377 5.63384 15.0775 5.69638 14.6822 5.53228C14.2871 5.36825 14 4.99659 14 4.56879V4C14 3.44772 13.5523 3 13 3H11ZM12 14C13.1046 14 14 13.1046 14 12C14 10.8954 13.1046 10 12 10C10.8954 10 10 10.8954 10 12C10 13.1046 10.8954 14 12 14Z"
-                                      fill="currentColor"></path>
-                                <path d="M10 4C10 3.44772 10.4477 3 11 3H13C13.5523 3 14 3.44772 14 4V4.56879C14 4.99659 14.2871 5.36825 14.6822 5.53228C15.0775 5.69638 15.5377 5.63384 15.8403 5.33123L16.2426 4.92891C16.6331 4.53838 17.2663 4.53838 17.6568 4.92891L19.071 6.34312C19.4616 6.73365 19.4616 7.36681 19.071 7.75734L18.6688 8.1596C18.3661 8.46223 18.3036 8.92247 18.4677 9.31774C18.6317 9.71287 19.0034 10 19.4313 10L20 10C20.5523 10 21 10.4477 21 11V13C21 13.5523 20.5523 14 20 14H19.4312C19.0034 14 18.6318 14.2871 18.4677 14.6822C18.3036 15.0775 18.3661 15.5377 18.6688 15.8403L19.071 16.2426C19.4616 16.6331 19.4616 17.2663 19.071 17.6568L17.6568 19.071C17.2663 19.4616 16.6331 19.4616 16.2426 19.071L15.8403 18.6688C15.5377 18.3661 15.0775 18.3036 14.6822 18.4677C14.2871 18.6317 14 19.0034 14 19.4312V20C14 20.5523 13.5523 21 13 21H11C10.4477 21 10 20.5523 10 20V19.4313C10 19.0034 9.71287 18.6317 9.31774 18.4677C8.92247 18.3036 8.46223 18.3661 8.1596 18.6688L7.75732 19.071C7.36679 19.4616 6.73363 19.4616 6.34311 19.071L4.92889 17.6568C4.53837 17.2663 4.53837 16.6331 4.92889 16.2426L5.33123 15.8403C5.63384 15.5377 5.69638 15.0775 5.53228 14.6822C5.36825 14.2871 4.99659 14 4.56879 14H4C3.44772 14 3 13.5523 3 13V11C3 10.4477 3.44772 10 4 10L4.56877 10C4.99658 10 5.36825 9.71288 5.53229 9.31776C5.6964 8.9225 5.63386 8.46229 5.33123 8.15966L4.92891 7.75734C4.53838 7.36681 4.53838 6.73365 4.92891 6.34313L6.34312 4.92891C6.73365 4.53839 7.36681 4.53839 7.75734 4.92891L8.15966 5.33123C8.46228 5.63386 8.9225 5.6964 9.31776 5.53229C9.71288 5.36825 10 4.99658 10 4.56876V4Z"
-                                      stroke="currentColor" stroke-width="1.5"></path>
-                                <path d="M14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12Z"
-                                      stroke="currentColor" stroke-width="1.5"></path>
+                            <!-- New SVG Icon (User with Gear) -->
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="currentColor" />
+                                <path d="M12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor" />
+                                <path d="M18.94 15.58C19.15 15.58 19.36 15.65 19.53 15.78L20.49 16.42C20.74 16.6 20.83 16.93 20.71 17.22L20.15 18.49C20.5 18.95 20.82 19.43 21.08 19.94L22.38 20.18C22.68 20.23 22.92 20.5 22.92 20.81V22.19C22.92 22.5 22.68 22.77 22.38 22.82L21.08 23.06C20.82 23.57 20.5 24.05 20.15 24.51L20.71 25.78C20.83 26.07 20.74 26.4 20.49 26.58L19.53 27.22C19.36 27.35 19.15 27.42 18.94 27.42C18.74 27.42 18.53 27.35 18.36 27.22L17.4 26.58C17.15 26.4 17.06 26.07 17.18 25.78L17.74 24.51C17.39 24.05 17.07 23.57 16.81 23.06L15.51 22.82C15.22 22.77 14.97 22.5 14.97 22.19V20.81C14.97 20.5 15.22 20.23 15.51 20.18L16.81 19.94C17.07 19.43 17.39 18.95 17.74 18.49L17.18 17.22C17.06 16.93 17.15 16.6 17.4 16.42L18.36 15.78C18.53 15.65 18.74 15.58 18.94 15.58ZM18 22C18.83 22 19.5 21.33 19.5 20.5C19.5 19.67 18.83 19 18 19C17.17 19 16.5 19.67 16.5 20.5C16.5 21.33 17.17 22 18 22Z" fill="currentColor" />
                             </svg>
-                            <span>إدارة</span>
+
+                            <span>المستخدمين</span>
+
                         </a>
                         <ul>
-                            <li><a href="/Users"><span>المستخدمين</span></a></li>
-                            <li><a href="/Rules"><span>الأدوار</span></a></li>
+                            <li><a href="@Url.Action("Index", "Permissions", new { area = "Admin" })"><span>الصلاحيات</span></a></li>
+                            <li><a href="@Url.Action("Create", "Permissions", new { area = "Admin" })"><span>إضافة صلاحية</span></a></li>
                         </ul>
                     </li>
+
+                    <li class="sub_menu">
+                        <a href="JavaScript:void(0)">
+                            <!-- New SVG Icon (Graduation Cap) -->
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 11C17.6569 11 19 9.65685 19 8C19 6.34315 17.6569 5 16 5C14.3431 5 13 6.34315 13 8C13 9.65685 14.3431 11 16 11Z" fill="currentColor" />
+                                <path d="M8 11C9.65685 11 11 9.65685 11 8C11 6.34315 9.65685 5 8 5C6.34315 5 5 6.34315 5 8C5 9.65685 6.34315 11 8 11Z" fill="currentColor" />
+                                <path d="M2 19C2 16.2386 5.58172 14 9 14C12.4183 14 16 16.2386 16 19V20H2V19Z" fill="currentColor" />
+                                <path d="M16 14C17.9204 14 19.7435 14.5194 21 15.3784V20H17V19C17 17.5726 16.5929 16.2645 15.8325 15.2008C15.055 14.1183 14.0901 13.3987 13 13.0841" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                            <span>اللجان</span>
+
+                        </a>
+                        <ul>
+
+                            <li><a href="@Url.Action("Index", "Boards" ,  new { area = "Admin" })"><span>عرض اللجان</span></a></li>
+                            <li><a href="@Url.Action("Create", "Boards" ,  new { area = "Admin" })"><span>إضافة لجنة </span></a></li>
+                            <li><a href="@Url.Action("Index", "BoardRoles" ,  new { area = "Admin" })"><span>عرض الأدوار </span></a></li>
+                            <li><a href="@Url.Action("Create", "BoardRoles" ,  new { area = "Admin" })"><span> إضافة أدوار </span></a></li>
+
+                        </ul>
+                    </li>
+
+                    <li class="sub_menu">
+                        <a href="JavaScript:void(0)">
+                            <!-- New SVG Icon -->
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M17 2H7C5.89543 2 5 2.89543 5 4V20C5 21.1046 5.89543 22 7 22H17C18.1046 22 19 21.1046 19 20V4C19 2.89543 18.1046 2 17 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 2V6H15V2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 10H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 14H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 18H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                            <span>طلبات الأندية</span>
+
+                        </a>
+                        <ul>
+
+                            <li><a href="@Url.Action("Admin", "BoardRequests" ,  new { area = "Admin" })"><span>إدارة الطلبات </span></a></li>
+                            <li><a href="@Url.Action("Archive", "BoardRequests" ,  new { area = "Admin" })"><span> أرشيف الطلبات </span></a></li>
+                            <li><a href="@Url.Action("Members", "BoardMembers" ,  new { area = "Admin" })"><span>إدارة الأعضاء</span></a></li>
+
+
+                        </ul>
+                    </li>
+
+
+                    <li class="sub_menu">
+                        <a href="JavaScript:void(0)">
+                            <!-- New SVG Icon (Event Ticket) -->
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 2V22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M4 2L20 8L4 14V2Z" fill="currentColor" />
+                            </svg>
+
+                            <span>الفعاليات</span>
+
+                        </a>
+                        <ul>
+
+                            <li><a href="@Url.Action("ActiveEvents", "EventRequests",  new { area = "Admin" } )"><span>عرض الفعاليات</span></a></li>
+                            <li><a href="@Url.Action("Create", "EventRequests",  new { area = "Admin" })"><span>إضافة فعالية</span></a></li>
+                            <li><a href="@Url.Action("Admin", "EventRequests",  new { area = "Admin" })"><span></span>إدارة الطلبات</a></li>
+                            <li><a href="@Url.Action("AdminArsh", "EventRequests",  new { area = "Admin" })"><span></span>أرشيف الطلبات</a></li>
+                            <li><a href="@Url.Action("Index", "EventAttendence",  new { area = "Admin" })"><span></span>سجل الحضور</a></li>
+
+                        </ul>
+                    </li>
+
+                   
                 </ul>
             </div>
             <div class="btm_link">
@@ -114,12 +185,7 @@
 
             </div>
         </nav><!-- End Side Menu -->
-        <!-- Start Content wrapper -->
-        <main class="side_content">
-            @{
-                ViewData["Title"] = "Login";
-            }
-
+        <section class="side_content">
             <!-- Start Header Navbar -->
             <header>
                 <ul class="nav me-auto">
@@ -134,32 +200,68 @@
                             </svg>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <div class="input-group overflow-hidden bg-dark-rgb border-0 br-10">
-                            <span class="input-group-text" id="basic-addon1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"
-                                     stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path d="M20 11v-2a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v5a2 2 0 0 0 2 2h5" />
-                                    <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                                    <path d="M20.2 20.2l1.8 1.8" />
-                                </svg>
-                            </span>
-                            <input type="text" class="form-control header__search_input ps-0" placeholder="البحث ...">
-                        </div>
+
+                </ul>
+                <ul class="nav d-flex align-items-center">
+                    <li class="nav-item dropdown ms-2">
+                        <a style="cursor: pointer; text-decoration: none; color: inherit;"
+                           data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account">
+                            <i class="bi bi-person-circle me-2" style="font-size: 1.2rem; color: #0a626a"></i>
+                            <span>@Email</span>
+                        </a>
+
+                        <ul class="dropdown-menu account_dd br-stand border-1 border-gray-300 p-4 shadow" aria-labelledby="account">
+                            <li class="mb-2">
+                                <div class="d-flex flex-column">
+
+                                    <h6 class="mb-0">@FullNameAr</h6>
+                                    <small class="text-muted">@Email</small>
+                                    <small class="text-muted">@username</small>
+                                </div>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <i class="bi bi-person-circle me-2"></i>
+                                    الملف الشخصي
+                                </a>
+                            </li>
+
+                            @* <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#">
+                            <i class="bi bi-translate me-2"></i>
+                            English Language
+                            </a>
+                            </li> *@
+                            <li>
+                                <form id="logoutForm" asp-area="" asp-controller="Users" asp-action="Logout" method="post" style="display: inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="dropdown-item d-flex align-items-center">
+                                        <i class="bi bi-box-arrow-right me-2"></i>
+                                        تسجيل الخروج
+                                    </button>
+                                </form>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <!-- Logout Section -->
+
+                        </ul>
                     </li>
                 </ul>
 
-            </header>
-            <!-- End Header Navbar -->
+
+            </header><!-- End Header Navbar -->
+           
+            
             <!-- Start Page Wrap -->
             <section class="page_wrap">
                 <div class="page_content">
                     @RenderBody()
                 </div>
             </section><!-- End Page Wrap -->
-           
             <!-- Start Footer -->
             <footer class="d-flex justify-content-center align-items-center">
                 <p class="m-0 d-flex justify-content-center">
@@ -170,44 +272,33 @@
         </main><!-- End Content wrapper -->
     </main>
 
-    <!-- main JS Scripts -->
-    <script src="~/Assets/js/jquery-3.4.1.min.js"></script>
-    <script src="~/Assets/js/popper.min.js"></script>
-    <script src="~/Assets/js/bootstrap.min.js"></script>
-
-    <!--------- JS Liberaries ---------->
-    <script src="~/Assets/lib/DataTable/js/dataTables.min.js"></script>
-    <script src="~/Assets/lib/quickSearch/jquery.quicksearch.js"></script>
-
-    <!-- customization -->
-    <script src="~/Assets/js/app.js"></script>
     <script>
         $("#addSectionBtn").on('click', function () {
             let sections_item_length = $('.sub_sections_wrap').find('.sub_sections_item').length
             $('.sub_sections_wrap').append(`
-                        <div class="sub_sections_item">
-                            <i class="bi bi-trash3 delete_sub_sec"></i>
-                            <div class="form-group">
-                                <label for="ss_name_${sections_item_length}">اسم الحقل</label>
-                                <input type="text" name="ss_name_${sections_item_length}" id="ss_name_${sections_item_length}" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="ss_type_${sections_item_length}">نوع الحقل</label>
-                                <select name="ss_type_${sections_item_length}" id="ss_type_${sections_item_length}" class="form-select">
-                                    <option value="checkbox">checkbox</option>
-                                    <option value="radiobox">radioBox</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="ss_req_${sections_item_length}">
-                                    <label class="form-check-label" for="ss_req_${sections_item_length}">
-                                        مطلوب اجباري
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    `)
+                                        <div class="sub_sections_item">
+                                            <i class="bi bi-trash3 delete_sub_sec"></i>
+                                            <div class="form-group">
+                                                <label for="ss_name_${sections_item_length}">اسم الحقل</label>
+                                                <input type="text" name="ss_name_${sections_item_length}" id="ss_name_${sections_item_length}" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="ss_type_${sections_item_length}">نوع الحقل</label>
+                                                <select name="ss_type_${sections_item_length}" id="ss_type_${sections_item_length}" class="form-select">
+                                                    <option value="checkbox">checkbox</option>
+                                                    <option value="radiobox">radioBox</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="ss_req_${sections_item_length}">
+                                                    <label class="form-check-label" for="ss_req_${sections_item_length}">
+                                                        مطلوب اجباري
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `)
         })
 
 

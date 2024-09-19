@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SHARKNA.Domain;
 using SHARKNA.ViewModels;
+using System.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -26,7 +27,6 @@ namespace SHARKNA.Areas.Admin.Controllers
         }
 
         
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> UserDetails()
         {
             var userBoardRequests =  _BoardDomain.GetTblBoards();
@@ -34,21 +34,18 @@ namespace SHARKNA.Areas.Admin.Controllers
         }
 
 
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Admin()
         {
             var BoardReq = await _boardRequestsDomain.GetTblBoardRequestsAsync();
             return View(BoardReq);
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Archive()
         {
             var BoardReq = await _boardRequestsDomain.GetTblBoardRequestsAsync();
             return View(BoardReq);
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Create(Guid boardId)
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
@@ -57,11 +54,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
             var model = new BoardRequestsViewModel
             {
-                // UserName = username,
-                // Email = user.Email,
-                // MobileNumber = user.MobileNumber,
-                // FullNameAr = user.FullNameAr,
-                // FullNameEn = user.FullNameEn,
+                
                 BoardId = boardId,
                 BoardName = board.NameAr,
                 BoardDescription = board.DescriptionAr,
@@ -76,35 +69,30 @@ namespace SHARKNA.Areas.Admin.Controllers
             return View(request);
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BoardRequestsViewModel BoardReq, string UserName)
         {
             try
             {
-                var user = await _boardRequestsDomain.GetTblUsersByUserNameAsync(BoardReq.UserName); // Use the passed UserName instead of claim.
+                //var user = await _boardRequestsDomain.GetAllUsers(BoardReq.UserName); 
+                var user = await _boardRequestsDomain.GetAllUsers(); 
                 if (user == null)
                 {
                     ViewData["Falied"] = "لم يتم العثور على المستخدم";
                     return View(BoardReq);
                 }
 
-                //bool requestExists = await _boardRequestsDomain.CheckRequestExistsAsync(user.Email, BoardReq.BoardId);
-                //if (requestExists)
-                //{
-                //    ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
-                //    return View(BoardReq);
-                //}
-
                 if (ModelState.IsValid)
                 {
+                    string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
                     BoardReq.Id = Guid.NewGuid();
-
-                    int check = await _boardRequestsDomain.AddBoardReqAsync(BoardReq, UserName);
+                    await _boardRequestsDomain.AddBoardReqAdminAsync(BoardReq);
+                    ViewData["Successful"] = "تم التسجيل بنجاح ";
+                    int check = await _boardRequestsDomain.AddBoardReqAsync(BoardReq, UserName , username);
                     if (check == 1)
                     {
-                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+                        ViewData["Successful"] = "تم التسجيل بنجاح";
                     }
                     else
                     {
@@ -121,19 +109,9 @@ namespace SHARKNA.Areas.Admin.Controllers
             return View(BoardReq);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUserInfo(string id)
+        public async Task<UserViewModel> GetUserInfo(string id)
         {
-            var user = await _UserDomain.GetTblUserByUserName(id); // Fetch user by username
-            if (user != null)
-            {
-                // Return the user details as JSON
-                return Json(new { fullNameAr = user.FullNameAr, fullNameEn = user.FullNameEn, email = user.Email, mobileNumber = user.MobileNumber });
-            }
-            else
-            {
-                return Json(null); // Return null if user not found
-            }
+            return await _UserDomain.GetTblUserByUserName(id);
         }
 
 
@@ -142,7 +120,8 @@ namespace SHARKNA.Areas.Admin.Controllers
         {
             try
             {
-                await _boardRequestsDomain.AcceptAsync(id);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                await _boardRequestsDomain.AcceptAsync(id , username);
                 ViewData["Successful"] = "تم قبول الطلب بنجاح.";
             }
             catch (Exception)
@@ -159,7 +138,8 @@ namespace SHARKNA.Areas.Admin.Controllers
         {
             try
             {
-                await _boardRequestsDomain.RejectAsync(id, rejectionReason);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                await _boardRequestsDomain.RejectAsync(id, rejectionReason, username);
                 ViewData["Successful"] = "تم رفض الطلب بنجاح.";
             }
             catch (Exception)

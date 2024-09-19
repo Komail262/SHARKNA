@@ -82,25 +82,20 @@ namespace SHARKNA.Domain
                 .ToListAsync();
         }
 
-        public async Task<UserViewModel> GetTblUsersByUserNameAsync(string userName)
-        {
-            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == userName);
-            if (user == null)
-            {
-                return null;
-            }
 
-            return new UserViewModel
+        public async Task<IEnumerable<tblUsers>> GetAllUsers()
+        {
+            try
             {
-                UserName = user.UserName,
-                FullNameAr = user.FullNameAr,
-                FullNameEn = user.FullNameEn,
-                MobileNumber = user.MobileNumber,
-                Email = user.Email
-            };
+                return await _context.tblUsers.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new List<tblUsers>();
+            }
         }
 
-        public async Task<int> AddBoardReqAsync(BoardRequestsViewModel BoardReq, string UserName)
+        public async Task<int> AddBoardReqAsync(BoardRequestsViewModel BoardReq, string UserName , string username)
         {
             try
             {
@@ -119,17 +114,17 @@ namespace SHARKNA.Domain
                 await _context.AddAsync(VBoardReq);
                 await _context.SaveChangesAsync();
 
-                tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                {
-                    Id = Guid.NewGuid(),
-                    ReqId = VBoardReq.Id,
-                    OpType = "اضافة",
-                    OpDateTime = DateTime.Now,
-                    CreatedBy = UserName,
-                    AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}"
-                };
-                await _context.tblBoardRequestLogs.AddAsync(bLogs);
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = VBoardReq.Id;
+                BR.OpType = "اضافة";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = UserName;
+                BR.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr} بواسطة هذا المستخدم {username}";
+
+                await _context.tblBoardRequestLogs.AddAsync(BR);
                 await _context.SaveChangesAsync();
+
                 return 1;
             }
             catch (Exception ex)
@@ -138,7 +133,7 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task<int> AddBoardReqAdminAsync(BoardRequestsViewModel BoardReq, string UserName)
+        public async Task<int> AddBoardReqAdminAsync(BoardRequestsViewModel BoardReq)
         {
             try
             {
@@ -157,17 +152,17 @@ namespace SHARKNA.Domain
                 await _context.AddAsync(VBoardReq);
                 await _context.SaveChangesAsync();
 
-                tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                {
-                    Id = Guid.NewGuid(),
-                    ReqId = VBoardReq.Id,
-                    OpType = "اضافة",
-                    OpDateTime = DateTime.Now,
-                    CreatedBy = UserName,
-                    AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}"
-                };
-                await _context.tblBoardRequestLogs.AddAsync(bLogs);
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = VBoardReq.Id;
+                BR.OpType = "اضافة";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = VBoardReq.UserName;
+                BR.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr} بواسطة هذا المستخدم ";
+
+                await _context.tblBoardRequestLogs.AddAsync(BR);
                 await _context.SaveChangesAsync();
+
                 return 1;
             }
             catch (Exception ex)
@@ -188,7 +183,7 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task<int> CancelRequestAsync(Guid id)
+        public async Task<int> CancelRequestAsync(Guid id, string username)
         {
             try
             {
@@ -199,16 +194,15 @@ namespace SHARKNA.Domain
                     BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
                     await _context.SaveChangesAsync();
 
-                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                    {
-                        Id = Guid.NewGuid(),
-                        ReqId = BoardRequest.Id,
-                        OpType = "تم الالغاء",
-                        OpDateTime = DateTime.Now,
-                        CreatedBy = BoardRequest.UserName,
-                        AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
-                    };
-                    await _context.tblBoardRequestLogs.AddAsync(bLogs);
+                    tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                    BR.Id = Guid.NewGuid();
+                    BR.ReqId = BoardRequest.Id;
+                    BR.OpType = "تم الالغاء";
+                    BR.OpDateTime = DateTime.Now;
+                    BR.CreatedBy = BoardRequest.UserName;
+                    BR.AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username}";
+
+                    await _context.tblBoardRequestLogs.AddAsync(BR);
                     await _context.SaveChangesAsync();
                 }
                 return 1;
@@ -219,7 +213,7 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task AcceptAsync(Guid id)
+        public async Task AcceptAsync(Guid id , string username)
         {
             try
             {
@@ -245,16 +239,15 @@ namespace SHARKNA.Domain
                     await _context.AddAsync(member);
                     await _context.SaveChangesAsync();
 
-                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                    {
-                        Id = Guid.NewGuid(),
-                        ReqId = BoardRequest.Id,
-                        OpType = "Accept",
-                        OpDateTime = DateTime.Now,
-                        CreatedBy = BoardRequest.UserName,
-                        AdditionalInfo = $"تم قبول طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
-                    };
-                    await _context.tblBoardRequestLogs.AddAsync(bLogs);
+                    tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                    BR.Id = Guid.NewGuid();
+                    BR.ReqId = BoardRequest.Id;
+                    BR.OpType = "تم القبول";
+                    BR.OpDateTime = DateTime.Now;
+                    BR.CreatedBy = BoardRequest.UserName;
+                    BR.AdditionalInfo = $"تم قبول الطلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username}";
+
+                    await _context.tblBoardRequestLogs.AddAsync(BR);
                     await _context.SaveChangesAsync();
                 }
             }
@@ -264,7 +257,7 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task RejectAsync(Guid id, string rejectionReason)
+        public async Task RejectAsync(Guid id, string rejectionReason , string username)
         {
             var BoardRequest = await _context.tblBoardRequests.FirstOrDefaultAsync(r => r.Id == id);
             if (BoardRequest != null)
@@ -272,6 +265,18 @@ namespace SHARKNA.Domain
                 BoardRequest.RequestStatusId = Guid.Parse("271A02AD-8510-406C-BEB4-832BF79159D4"); // تعيين الحالة "مرفوض"
                 BoardRequest.RejectionReasons = rejectionReason;
                 await _context.SaveChangesAsync();
+
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = BoardRequest.Id;
+                BR.OpType = "تم الرفض";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = BoardRequest.UserName;
+                BR.AdditionalInfo = $"تم رفض الطلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username} بسبب: {rejectionReason}";
+
+                await _context.tblBoardRequestLogs.AddAsync(BR);
+                await _context.SaveChangesAsync();
+
             }
         }
 
@@ -315,8 +320,6 @@ namespace SHARKNA.Domain
 
             return true;
         }
-
-
 
     }
 }
