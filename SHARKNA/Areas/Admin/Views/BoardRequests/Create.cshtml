@@ -1,7 +1,6 @@
 ﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
 
 @{
-    // Retrieve the boardId from the query string (assuming it's always there)
     string boardIdString = Context.Request.Query["boardId"];
 
     Guid boardId = Guid.Empty;
@@ -45,10 +44,8 @@
                 <h5 class="m-0">@Model.BoardName</h5>
             </div>
             <div class="block-body py-5">
-                <table class="table table-hover js-dataTable">
                         <label id="lblError" d style="color:red; display:none">هذا المستخدم غير موجود في قاعدة البيانات</label>
                         <form asp-action="Create" method="post">
-                            
                                
                         <div class="row">
 
@@ -102,17 +99,12 @@
                                 </div>
                             </div>
 
-
-
-
-
                         </div>
                         <div class=" d-flex justify-content-center">
                             <a href="@Url.Action("UserDetails", "BoardRequests")" class="btn btn-secondary col-3 mx-2">العودة</a>
                             <button type="submit" value="Create" class="btn btn-primary col-3 mx-2" title="save">تسجيل</button>
                         </div>
                     </form>
-
 
 
                 </table>
@@ -127,34 +119,24 @@
 <script>
 
         $("#UserName").on("change", function () {
-            var username = $(this).val();
-            showValue(username); // Call the function with the username entered
+            showValue($(this).val());
         });
 
     function showValue(val) {
-        // Make the AJAX call to fetch user data
-        $.getJSON('@Url.Action("GetUserInfo", "BoardRequests")', { id: val }, function (result) {
+        $.getJSON('@Url.Action("GetUserInfo", "Permission")/' + val, function (result) {
+            console.log(result);
+            $("#FullNameAr").val("");
+            $("#FullNameEn").val("");
             if (result != null) {
-                // Populate the form fields with the user data
-                $("#FullNameAr").val(result.FullNameAr);
-                $("#FullNameEn").val(result.FullNameEn);
-                $("#Email").val(result.Email);
-                $("#MobileNumber").val(result.MobileNumber);
-                $("#lblError").hide(); // Hide the error label if the user is found
-            } else {
-                // Clear the fields if no user is found and show the error label
+                $("#FullNameAr").val(result.fullNameAr);
+                $("#FullNameEn").val(result.fullNameEn);
+                $("#lblError").toggle(false);
+            }
+            else {
                 $("#FullNameAr").val("");
                 $("#FullNameEn").val("");
-                $("#Email").val("");
-                $("#MobileNumber").val("");
-                $("#lblError").show(); // Show error label if user not found
+                $("#lblError").toggle(true);
             }
-        }).fail(function () {
-            // Handle any errors during the request
-            console.log("Error fetching user info.");
-            $("#lblError").show(); // Show error label in case of a request failure
         });
     }
-
-
 </script>

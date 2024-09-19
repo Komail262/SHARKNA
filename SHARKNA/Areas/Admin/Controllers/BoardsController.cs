@@ -160,45 +160,60 @@ namespace SHARKNA.Areas.Admin.Controllers
 
 
 
-        [HttpGet]
-        // [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin, SuperAdmin")]
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        //[HttpGet]
+        //// [ValidateAntiForgeryToken]
+        ////[Authorize(Roles = "Admin, SuperAdmin")]
+
+        //public async Task<IActionResult> Delete(Guid id)
+        //{
+        //    string Successful = "";
+        //    string Falied = "";
+        //    try
+        //    {
+
+        //        string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+
+        //        int check = await _boardDomain.DeleteBoardAsync(id, username);
+        //        if (check == 1)
+        //        {
+        //            Successful = "تم حذف اللجنة بنجاح";
+        //        }
+
+        //        else
+        //        {
+        //            Falied = "حدث خطأ";
 
 
-        public async Task<IActionResult> Delete(Guid id)
+        //        }
+        //        //return View(id);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Falied = "حدث خطأ";
+
+        //    }
+        //    //_boardDomain.DeleteBoard(id);
+        //    return RedirectToAction(nameof(Index), new { Successful, Falied });
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id, Guid boardId)
         {
-            string Successful = "";
-            string Falied = "";
             try
             {
+                string username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
-
-                int check = await _boardDomain.DeleteBoardAsync(id, username);
-                if (check == 1)
-                {
-                    Successful = "تم حذف اللجنة بنجاح";
-                }
-
-                else
-                {
-                    Falied = "حدث خطأ";
-
-
-                }
-                //return View(id);
-
+                await _boardDomain.DeleteBoardAsync(id, username);
+                ViewData["Successful"] = "تم حذف اللجنة بنجاح";
             }
             catch (Exception ex)
             {
-                Falied = "حدث خطأ";
-
+                ViewData["Falied"] = "حدث خطأ أثناء محاولة الحذف .";
             }
-            //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index), new { Successful, Falied });
+            return RedirectToAction(nameof(Index));
         }
-
         //end delete
 
     }

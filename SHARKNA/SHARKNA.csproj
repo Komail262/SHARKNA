@@ -65,7 +65,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\BoardRequests\MyBoards.cshtml" />
     <_ContentIncludedByDefault Remove="Views\Home\AccessDenied.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\BoardRequests\MyBoards.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
