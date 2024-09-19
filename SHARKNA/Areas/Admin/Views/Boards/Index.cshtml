@@ -91,8 +91,9 @@
                                         <a asp-action="Update" asp-route-id="@board.Id" class="btn btn-success">تعديل</a> |
 
                                         <form asp-action="Delete" asp-route-id="@board.Id" id="cancelForm-@board.Id" method="post" style="display:inline;">
-                                            <button type="button" onclick="confirmCancel('@board.Id')" class="btn btn-danger">حذف</button>
+                                            <button type="button" onclick="confirmCancel('@board.Id')" class="btn btn-danger">حذف</button> |
                                         </form>
+                                        <a asp-action="Details" asp-route-id="@board.Id" class="btn btn-primary">عرض التفاصيل</a>
 
                                     </td>
                                 </tr>
