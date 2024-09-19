@@ -27,6 +27,7 @@ namespace SHARKNA.Controllers
             _UserDomain = userDomain;
         }
 
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         public async Task<IActionResult> Index(string Successful = "", string Falied = "")
         {
             if (!string.IsNullOrEmpty(Successful))
@@ -49,6 +50,7 @@ namespace SHARKNA.Controllers
             return View(userBoardRequests);
         }
 
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         public async Task<IActionResult> Archive()
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
@@ -79,13 +81,25 @@ namespace SHARKNA.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         public async Task<IActionResult> Details(Guid id)
         {
             var request = await _boardRequestsDomain.GetBoardRequestByIdAsync(id);
             return View(request);
         }
 
-        
+        public async Task<IActionResult> MyBoards()
+        {
+            string username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+           
+            var userBoards = await _boardRequestsDomain.GetTblBoardsByUserAsync(username);
+
+
+            return View(userBoards);
+        }
+
+
 
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
@@ -113,7 +127,7 @@ namespace SHARKNA.Controllers
                     BoardReq.FullNameAr = user.FullNameAr;
                     BoardReq.FullNameEn = user.FullNameEn;
 
-                    int check = await _boardRequestsDomain.AddBoardReqAsync(BoardReq, UserName);
+                    int check = await _boardRequestsDomain.AddBoardReqAsync(BoardReq, UserName ,username);
                     if (check == 1)
                     {
                         ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
@@ -133,6 +147,8 @@ namespace SHARKNA.Controllers
             return View(BoardReq);
         }
 
+
+
         [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -140,7 +156,8 @@ namespace SHARKNA.Controllers
         {
             try
             {
-                await _boardRequestsDomain.CancelRequestAsync(id);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                await _boardRequestsDomain.CancelRequestAsync(id ,username);
                 ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
             catch (Exception ex)

@@ -10,5 +10,6 @@
         public string CreatedTo { get; set; }
 
         public string AdditionalInfo { get; set; }
+
     }
 }

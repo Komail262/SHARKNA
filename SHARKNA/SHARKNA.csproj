@@ -8,13 +8,11 @@
 
   <ItemGroup>
     <Content Remove="Areas\Admin\Views\Home\AccessDenied.cshtml" />
-    <Content Remove="Views\BoardRequests\MyBoards.cshtml" />
     <Content Remove="Views\Home\AccessDenied.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Areas\Admin\Views\Home\AccessDenied.cshtml" />
-    <None Include="Views\BoardRequests\MyBoards.cshtml" />
     <None Include="Views\Home\AccessDenied.cshtml" />
     <None Include="wwwroot\Assets\.DS_Store" />
     <None Include="wwwroot\Assets\css\.DS_Store" />
@@ -73,6 +71,13 @@
 
   <ItemGroup>
     <UpToDateCheckInput Remove="Views\BoardRequests\MyBoards.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Areas\Admin\Views\EventRequests\ActiveEvents.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
