@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SHARKNA.Domain;
@@ -10,6 +11,8 @@ using System.Security.Claims;
 namespace SHARKNA.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin,Editor")]
+
     public class BoardMembersController : Controller
     {
         private readonly BoardMembersDomain _BoardMembersDomain;
@@ -51,11 +54,11 @@ namespace SHARKNA.Areas.Admin.Controllers
 
             return View(members);
 
-            //return View(await _BoardMembersDomain.GetBoardMembersByBoardId(boardId));
         }
 
         public async Task<IActionResult> Details(Guid id)
         {
+
             var MemR = await _BoardMembersDomain.GetBoardMemberByIdAsync(id);
             ViewBag.BoardRoleOfList = new SelectList(_boardRolesDomain.GettbBoardRoles(), "Id", "NameAr", MemR.BoardRoleId);
             return View(MemR);
@@ -67,7 +70,10 @@ namespace SHARKNA.Areas.Admin.Controllers
         {
             try
             {
-                int check = await _BoardMembersDomain.UpdateBoardMembersAsync(MemR);
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+
+                int check = await _BoardMembersDomain.UpdateBoardMembersAsync(MemR, username);
+
                 if (check == 1)
                     ViewData["Successful"] = "تم التعديل بنجاح";
 
@@ -79,8 +85,6 @@ namespace SHARKNA.Areas.Admin.Controllers
             {
                 ViewData["Falied"] = "حدث خطأ أثناء معالجتك طلبك الرجاء المحاولة في وقت لاحق";
             }
-
-            //return RedirectToAction("Members", new { boardId = MemR.BoardId });
             return RedirectToAction("Members", "BoardMembers", new { boardId = MemR.BoardId });
 
         }
@@ -88,37 +92,27 @@ namespace SHARKNA.Areas.Admin.Controllers
 
 
 
-        [HttpGet]
-
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id, Guid boardId)
         {
-            string Successful = "";
-            string Falied = "";
             try
             {
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
 
 
-                int check = await _BoardMembersDomain.DeleteBoardMembersAsync(id);
-                if (check == 1)
-                {
-                    Successful = "تم حذف اللجنة بنجاح";
-                }
-
-                else
-                {
-                    Falied = "حدث خطأ";
-
-
-                }
-
+                await _BoardMembersDomain.DeleteBoardMembersAsync(id, username);
+                //await _BoardMembersDomain.DeleteBoardMembersAsync(id);
+                ViewData["Successful"] = "تم حذف العضو بنجاح";
             }
             catch (Exception ex)
             {
-                Falied = "حدث خطأ";
-
+                ViewData["Falied"] = "حدث خطأ أثناء محاولة الحذف .";
             }
-            return RedirectToAction(nameof(Members));
+                return RedirectToAction(nameof(Members), new { boardId = boardId });
         }
+
+       
 
 
     }

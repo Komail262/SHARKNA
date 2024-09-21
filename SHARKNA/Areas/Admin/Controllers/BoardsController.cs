@@ -22,7 +22,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             _UserDomain = userDomain;
         }
 
-        //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
         public IActionResult Index(string Successful = "", string Falied = "")
         {
 
@@ -36,14 +36,12 @@ namespace SHARKNA.Areas.Admin.Controllers
             var boards = _boardDomain.GetTblBoards();
             return View(boards);
         }
-
-        //[Authorize(Roles = "Admin,SuperAdmin")]
+        [Authorize(Roles = "Admin,Super Admin")]
         public IActionResult Create()
         {
             return View();
         }
-
-        //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
         public async Task<IActionResult> Update(Guid id)
         {
             var board = await _boardDomain.GetTblBoardByIdAsync(id);
@@ -53,7 +51,7 @@ namespace SHARKNA.Areas.Admin.Controllers
             }
             return View(board);
         }
-
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
         public async Task<IActionResult> Details(Guid id)
         {
             var board = await _boardDomain.GetTblBoardByIdAsync(id);
@@ -66,7 +64,6 @@ namespace SHARKNA.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Create(BoardViewModel board)
         {
             try
@@ -107,7 +104,7 @@ namespace SHARKNA.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin,SuperAdmin,Editor")]
+       
         public async Task<IActionResult> Update(BoardViewModel board)
         {
             try
@@ -119,19 +116,6 @@ namespace SHARKNA.Areas.Admin.Controllers
 
                     var Eboard = await _boardDomain.GetTblBoardByIdAsync(board.Id);//ياخذ بيانات اللجنة الحالموجودة حاليا من الداتابيس باستخدام ID قبل اي تعديل  
 
-
-                    //if (Eboard != null && Eboard.NameEn != board.NameEn && await _boardDomain.IsBoardNameDuplicateAsync(board.NameEn))//new
-
-                    // Eboard != null يتأكد اللجنة موجودة ولا 
-                    //Eboard.NameEn != board.NameEn يتأكد اذا كنت تبي تغير الاسم بالانجليزي وهل اذا غيرته بيكون مختلف اذا مختلف بيكمل 
-                    // _boardDomain.IsBoardNameDuplicate(board.NameEn) يتأكد هل الاسم الجديد موجود بالداتابيس 
-
-
-                    //if (_boardDomain.IsBoardNameDuplicate(board.NameEn))
-                    //    {
-                    //        ViewData["Falied"] = "اسم اللجنة مستخدم بالفعل";
-                    //    return View(board);
-                    //}
 
                     string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
 
@@ -151,46 +135,25 @@ namespace SHARKNA.Areas.Admin.Controllers
             return View(board);
         }
 
+        
 
-
-        [HttpGet]
-        // [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admin, SuperAdmin")]
-
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id, Guid boardId)
         {
-            string Successful = "";
-            string Falied = "";
             try
             {
+                string username = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
-
-                int check = await _boardDomain.DeleteBoardAsync(id, username);
-                if (check == 1)
-                {
-                    Successful = "تم حذف اللجنة بنجاح";
-                }
-
-                else
-                {
-                    Falied = "حدث خطأ";
-
-
-                }
-                //return View(id);
-
+                await _boardDomain.DeleteBoardAsync(id, username);
+                ViewData["Successful"] = "تم حذف اللجنة بنجاح";
             }
             catch (Exception ex)
             {
-                Falied = "حدث خطأ";
-
+                ViewData["Falied"] = "حدث خطأ أثناء محاولة الحذف .";
             }
-            //_boardDomain.DeleteBoard(id);
-            return RedirectToAction(nameof(Index), new { Successful, Falied });
+            return RedirectToAction(nameof(Index));
         }
-
-        //end delete
 
     }
 }

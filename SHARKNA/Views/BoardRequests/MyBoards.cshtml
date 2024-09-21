@@ -1,0 +1,25 @@
+﻿@model IEnumerable<BoardViewModel>
+
+<h2>My Boards</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Board Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var board in Model)
+        {
+            <tr>
+                <td>@board.NameAr</td> 
+                <td>@board.DescriptionAr</td> 
+                <td>
+                    <a href="@Url.Action("Details", "Boards", new { id = board.Id })">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

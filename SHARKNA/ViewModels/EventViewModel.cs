@@ -49,12 +49,12 @@ namespace SHARKNA.ViewModels
         public string TopicEn { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(100)]
+        [StringLength(300)]
         [DisplayName("وصف الحدث بالعربي")]
         public string DescriptionAr { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
-        [StringLength(100)]
+        [StringLength(300)]
         [DisplayName("وصف الحدث بالانجليزي")]
         public string DescriptionEn { get; set; }
 

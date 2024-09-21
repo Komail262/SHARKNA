@@ -162,7 +162,13 @@
                         </div>
                     </li>
                 </ul>
-
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <strong>
+                        <br />
+                        <span> مرحبا بك @User.FindFirst(ClaimTypes.GivenName)?.Value</span>
+                    </strong>
+                }
             </header>
             <!-- End Header Navbar -->
             <!-- Start Page Wrap -->
@@ -177,7 +183,7 @@
                     جميع الحقوق محفوظة لجامعة الملك فيصل @DateTime.Now.Year © | تصميم وتطوير
                     عمادة التعلم الإلكتروني وتقنية المعلومات
                 </p>
-            </footer><!-- End Footer -->
+            </footer><!-- End Footer -->
         </main><!-- End Content wrapper -->
     </main>
 

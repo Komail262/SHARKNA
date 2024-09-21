@@ -18,34 +18,34 @@ namespace SHARKNA.Domain
             _context = context;
         }
 
-        public async Task<IEnumerable<EventViewModel>> GettblEventsAsync()
-        {
-            return await _context.tblEvents
-                .Where(e => !e.IsDeleted)
-                .Select(e => new EventViewModel
-                {
-                    Id = e.Id,
-                    EventTitleAr = e.EventTitleAr,
-                    EventTitleEn = e.EventTitleEn,
-                    EventStartDate = e.EventStartDate,
-                    EventEndtDate = e.EventEndtDate,
-                    SpeakersAr = e.SpeakersAr,
-                    SpeakersEn = e.SpeakersEn,
-                    TopicAr = e.TopicAr,
-                    TopicEn = e.TopicEn,
-                    DescriptionAr = e.DescriptionAr,
-                    DescriptionEn = e.DescriptionEn,
-                    LocationAr = e.LocationAr,
-                    LocationEn = e.LocationEn,
-                    MaxAttendence = e.MaxAttendence,
-                    IsActive = e.IsActive,
-                    IsDeleted = e.IsDeleted,
-                    BoardId = e.BoardId,
-                    Gender = e.Gender,
-                    BoardName = e.Board.NameAr
-                })
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<EventViewModel>> GettblEventsAsync()
+        //{
+        //    return await _context.tblEvents
+        //        .Where(e => !e.IsDeleted)
+        //        .Select(e => new EventViewModel
+        //        {
+        //            Id = e.Id,
+        //            EventTitleAr = e.EventTitleAr,
+        //            EventTitleEn = e.EventTitleEn,
+        //            EventStartDate = e.EventStartDate,
+        //            EventEndtDate = e.EventEndtDate,
+        //            SpeakersAr = e.SpeakersAr,
+        //            SpeakersEn = e.SpeakersEn,
+        //            TopicAr = e.TopicAr,
+        //            TopicEn = e.TopicEn,
+        //            DescriptionAr = e.DescriptionAr,
+        //            DescriptionEn = e.DescriptionEn,
+        //            LocationAr = e.LocationAr,
+        //            LocationEn = e.LocationEn,
+        //            MaxAttendence = e.MaxAttendence,
+        //            IsActive = e.IsActive,
+        //            IsDeleted = e.IsDeleted,
+        //            BoardId = e.BoardId,
+        //            Gender = e.Gender,
+        //            BoardName = e.Board.NameAr
+        //        })
+        //        .ToListAsync();
+        //}
 
         public async Task<EventViewModel> GetTblEventsByIdAsync(Guid id)
         {
@@ -131,6 +131,9 @@ namespace SHARKNA.Domain
                 return 0;
             }
         }
+
+
+
 
         public async Task<int> UpdateEventAsync(EventViewModel eventViewModel, string username)
         {

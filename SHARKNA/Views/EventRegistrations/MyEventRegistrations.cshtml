@@ -38,7 +38,8 @@
                                         <td>@item.EventDetail.EventTitleAr</td>
                                         <td>@item.EventDetail.EventStartDate.ToString("yyyy-MM-dd")</td>
                                         <td>@item.EventDetail.EventEndtDate.ToString("yyyy-MM-dd")</td>
-                                        <td>@item.EventDetail.LocationAr</td>
+                                        <td>@item.EventDetail.EventStartDate?.ToString(@"hh\:mm")</td>
+
                                         <td>
                                             <form asp-action="MyEventDetails" method="get">
                                                 <input type="hidden" name="EventId" value="@item.EventDetail.Id" />

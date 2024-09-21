@@ -8,7 +8,7 @@
     <div class="page_content">
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">تفاصيل الطلب</h5>
+                <h5 class="m-0">تفاصيل لجنة @Model.NameAr</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
@@ -37,7 +37,9 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="DescriptionAr" class="mb-1">الوصف بالعربي</label>
-                                        <input type="text" id="DescriptionAr" class="form-control" value="@Model.DescriptionAr" disabled />
+                                        <textarea id="DescriptionAr" class="form-control" disabled>@Model.DescriptionAr</textarea>
+
+
                                     </div>
                                 </div>
                                 <!-- END ITEM -->
@@ -45,7 +47,8 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="DescriptionEn" class="mb-1">الوصف بالإنجليزي</label>
-                                        <input type="text" id="DescriptionEn" class="form-control" value="@Model.DescriptionEn" disabled />
+                                        <textarea id="DescriptionEn" class="form-control" disabled>@Model.DescriptionEn</textarea>
+
                                     </div>
                                 </div>
                                 <!-- END ITEM -->
@@ -53,7 +56,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="Gender" class="mb-1">الجنس</label>
-                                        <input type="text" id="Gender" class="form-control" value="@(Model.Gender == true ? "ذكر" : "أنثى")" disabled />
+                                        <input type="text" id="Gender" class="form-control" value="@(Model.Gender == true ? "ذكور" : "إناث")" disabled />
                                     </div>
                                 </div>
                                 <!-- END ITEM -->
@@ -61,7 +64,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-12 text-center">
+                                <div class="d-flex justify-content-end">
                                     <a asp-action="Index" class="btn btn-secondary">العودة إلى القائمة</a>
 
                                 </div>

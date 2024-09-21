@@ -1,0 +1,87 @@
+﻿@model IEnumerable<SHARKNA.ViewModels.EventRequestViewModel>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // إظهار رسائل النجاح أو الفشل باستخدام SweetAlert
+    @if (ViewData["Successful"] != null)
+    {
+        <text>
+            Swal.fire('نجاح', '@Html.Raw(ViewData["Successful"])', 'success');
+        </text>
+    }
+    else if (ViewData["Falied"] != null)
+    {
+        <text>
+            Swal.fire('خطأ', '@Html.Raw(ViewData["Falied"])', 'error');
+        </text>
+    }
+
+        // JavaScript لإظهار رسالة تأكيد عند محاولة أرشفة الفعالية
+        function confirmArchive(eventId) {
+            Swal.fire({
+                title: 'هل أنت متأكد من أرشفة الفعالية؟',
+                text: "لن يتمكن المستخدمون من التسجيل في الفعالية بعد هذا الاجراء!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'نعم، قم بالأرشفة!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // إذا تم تأكيد الأرشفة، قم بإرسال نموذج الأرشفة
+                    document.getElementById('archiveForm-' + eventId).submit();
+                }
+            });
+        }
+</script>
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h2 class="m-0">الفعاليات النشطة</h2>
+                <div class="d-flex gap-2">
+
+                    <div class="form-group">
+                        <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
+                    </div>
+                    <!-- رابط لصفحة الأرشيف -->
+                    <a href="@Url.Action("ArchivedEvents", "EventRequests")" class="btn btn-secondary float-right">عرض الأرشيف</a> <!-- زر الانتقال إلى الأرشيف -->
+
+                </div>
+
+            </div>
+            <div class="block-body">
+                <table class="table table-hover js-dataTable">
+                    <thead>
+                        <tr>
+                            <th>الفعالية</th>
+                            <th>تاريخ البداية</th>
+                            <th>تاريخ النهاية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var eventItem in Model)
+                        {
+                            <tr>
+                                <td>@eventItem.EventName</td>
+                                <td>@eventItem.EventStartDate?.ToString("dd/MM/yyyy")</td>
+                                <td>@eventItem.EventEndtDate?.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <form id="archiveForm-@eventItem.EventId" method="post" asp-action="ArchiveEvent" asp-route-eventId="@eventItem.EventId" style="display:inline;">
+                                        <button type="button" class="btn btn-warning" onclick="confirmArchive('@eventItem.EventId')">أرشفة</button>
+                                    </form>
+                                    <a asp-action="Edit" asp-route-id="@eventItem.EventId" class="btn btn-success btn-sm edit-btn">تعديل</a>
+                                    <a asp-action="Details" asp-route-id="@eventItem.Id" class="btn btn-primary btn-sm details-btn">عرض التفاصيل</a>
+                                    <!-- زر عرض التفاصيل -->
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
