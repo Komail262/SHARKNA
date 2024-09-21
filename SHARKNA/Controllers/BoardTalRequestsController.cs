@@ -7,6 +7,8 @@ using System.Diagnostics;
 using SHARKNA.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SHARKNA.Controllers
 {
@@ -15,65 +17,143 @@ namespace SHARKNA.Controllers
         private readonly BoardTalRequestsDomain _BoardTalRequestsDomain;
         private readonly RequestStatusDomain _RequestStatusDomain;
         private readonly BoardDomain _BoardDomain;
+        private readonly UserDomain _UserDomain;
 
 
-        public BoardTalRequestsController(BoardTalRequestsDomain BoardTalRequestsDomain, RequestStatusDomain RequestStatusDomain, BoardDomain BoardDomain)
+        public BoardTalRequestsController(BoardTalRequestsDomain BoardTalRequestsDomain, RequestStatusDomain RequestStatusDomain, BoardDomain BoardDomain, UserDomain userDomain)
         {
             _BoardTalRequestsDomain = BoardTalRequestsDomain;
             _RequestStatusDomain = RequestStatusDomain;
             _BoardDomain = BoardDomain;
+            _UserDomain = userDomain;
 
         }
 
-        public IActionResult Index()
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        public IActionResult Index(string Successful = "", string Falied = "")
         {
-            var users = _BoardTalRequestsDomain.GetTblBoardTalRequests();
-            return View(users);
+            if (!string.IsNullOrEmpty(Successful))
+                ViewData["Successful"] = Successful;
+            else if (!string.IsNullOrEmpty(Falied))
+                ViewData["Falied"] = Falied;
+
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var userTalBoardRequests = _BoardTalRequestsDomain.GetTblBoardTalRequestsByUser(username);
+            return View(userTalBoardRequests);
         }
 
+        //public IActionResult AllRequests()
+        //{
+        //    var Btal = _BoardTalRequestsDomain.GetTblBoardTalRequests();
+        //    return View(Btal);
+        //}
 
-        public IActionResult Create()
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        public IActionResult UserDetails(Guid id)
         {
-            ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr");
-            // ViewBag.RequestStatusOfList = new SelectList(_RequestStatusDomain.GetTblRequestStatus(), "Id", "NameAr");
-            return View();
+            var userTalBoardRequests = _BoardDomain.GetTblBoards();
+
+            return View(userTalBoardRequests);
         }
+        public IActionResult Archive()
+        {
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var userTalBoardRequests = _BoardTalRequestsDomain.GetTblBoardTalRequestsByUser(username);
+
+            return View(userTalBoardRequests);
+        }
+
+
+
+        public async Task<IActionResult> Create(Guid boardId)
+        {
+            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var user = await _UserDomain.GetUserFERAsync(username);
+            var board = _BoardDomain.GetTblBoards().FirstOrDefault(b => b.Id == boardId);
+
+
+            var model = new BoardTalRequestsViewModel
+            {
+
+                UserName = username,
+                Email = user.Email,
+                MobileNumber = user.MobileNumber,
+                FullNameAr = user.FullNameAr,
+                BoardId = boardId,
+                BoardName = board.NameAr,
+                BoardDescription = board.DescriptionAr,
+                FullNameEn = user.FullNameEn,
+
+
+
+            };
+
+            return View(model);
+        }
+
+        public IActionResult RequestDetails(Guid id)
+        {
+            var request = _BoardTalRequestsDomain.GetBoardTalRequestsById(id);
+            return View(request);
+        }
+
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BoardTalRequestsViewModel user)
+        public async Task<IActionResult> Create(BoardTalRequestsViewModel BordTalReq, string UserName)
         {
             try
             {
-                ViewBag.BoardsOfList = new SelectList(_BoardDomain.GetTblBoards(), "Id", "NameAr", user.BoardId);
+                var username = User.FindFirst(ClaimTypes.Name)?.Value;
+                var user = await _UserDomain.GetUserFERAsync(username);
+
+
+
+                bool requestExists = _BoardTalRequestsDomain.CheckRequestExists(BordTalReq.Email, BordTalReq.BoardId);
+                if (requestExists)
+                {
+
+                    ViewData["Falied"] = "لقد قمت بالفعل بتقديم طلب لهذا النادي.";
+                    return View(BordTalReq);
+                }
+
                 if (ModelState.IsValid)
                 {
-                    if (_BoardTalRequestsDomain.IsEmailDuplicate(user.Email))
-                    {
-                        ViewData["Falied"] = "البريد الإلكتروني مستخدم بالفعل";
-                        return View(user);
-                    }
+                    BordTalReq.Id = Guid.NewGuid();
+                    BordTalReq.UserName = username;
+                    BordTalReq.Email = user.Email;
+                    BordTalReq.MobileNumber = user.MobileNumber;
+                    BordTalReq.FullNameAr = user.FullNameAr;
+                    BordTalReq.FullNameEn = user.FullNameEn;
 
-                    user.Id = Guid.NewGuid();
-                    //BoardReq.RegDate = DateTime.Now;
-                    int check = _BoardTalRequestsDomain.AddUser(user);
+                    var skills = BordTalReq.Skills;
+                    var experiences = BordTalReq.Experiences;
+
+
+
+                    int check = _BoardTalRequestsDomain.AddUser(BordTalReq, UserName);
                     if (check == 1)
-                        ViewData["Successful"] = "Registeration succ";
+                    {
+                        ViewData["Successful"] = "تم تسجيل طلبك بنجاح";
+                    }
                     else
-                        ViewData["Falied"] = "Falied";
-                    return View(user);
-
+                    {
+                        ViewData["Falied"] = "حدث خطأ";
+                    }
+                    return View(BordTalReq);
                 }
             }
             catch (Exception ex)
             {
-                ViewData["Falied"] = "Falied";
+                ViewData["Falied"] = "حدث خطأ";
             }
 
-            return View(user);
+            return View(BordTalReq);
         }
 
+
+        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult CancelRequest(Guid id)
@@ -92,55 +172,6 @@ namespace SHARKNA.Controllers
         }
 
 
-        public IActionResult AllRequests()
-        {
-            var requests = _BoardTalRequestsDomain.GetTblBoardTalRequests();
-            return View(requests);
-        }
-
-        public IActionResult RequestDetails(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-            return View(request);
-        }
-
-        public IActionResult AcceptRequest(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            // Update the status of the request to "Accepted"
-            request.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
-            _BoardTalRequestsDomain.UpdateUser(request);
-
-            return RedirectToAction("RequestDetails", new { id });
-        }
-
-        public IActionResult RejectRequest(Guid id)
-        {
-            var request = _BoardTalRequestsDomain.GetTblBoardTalRequestsById(id);
-            if (request == null)
-            {
-                return NotFound();
-            }
-
-            // Update the status of the request to "Rejected"
-            request.RequestStatusId = Guid.Parse("271A02AD-8510-406C-BEB4-832BF79159D4"); 
-            _BoardTalRequestsDomain.UpdateUser(request);
-
-            return RedirectToAction("RequestDetails", new { id });
-        }
-
-
 
     }
 }
-
-
