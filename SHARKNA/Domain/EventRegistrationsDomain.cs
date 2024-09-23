@@ -41,22 +41,32 @@ namespace SHARKNA.Domain
 
         public IEnumerable<EventRegistrationsViewModel> GetUserRegisteredEvents(string username)
         {
-            return _context.tblEventRegistrations
+            var registrations = _context.tblEventRegistrations
                 .Where(reg => reg.UserName == username)
-                .Select(reg => new EventRegistrationsViewModel
+                .Select(reg => new
                 {
-                    Id = reg.Id,
-                    RegDate = reg.RegDate,
-                    RejectionReasons = reg.RejectionReasons,
-                    UserName = reg.UserName,
-                    Email = reg.Email,
-                    MobileNumber = reg.MobileNumber,
-                    FullNameAr = reg.FullNameAr,
-                    FullNameEn = reg.FullNameEn,
-                    EventId = reg.EventsId
+                    Registration = reg,
+                    Event = _context.tblEvents.FirstOrDefault(e => e.Id == reg.EventsId) 
                 })
-                .ToList(); 
+                .Where(x => x.Event != null && x.Event.IsActive && !x.Event.IsDeleted) 
+                .Select(x => new EventRegistrationsViewModel
+                {
+                    Id = x.Registration.Id,
+                    RegDate = x.Registration.RegDate,
+                    RejectionReasons = x.Registration.RejectionReasons,
+                    UserName = x.Registration.UserName,
+                    Email = x.Registration.Email,
+                    MobileNumber = x.Registration.MobileNumber,
+                    FullNameAr = x.Registration.FullNameAr,
+                    FullNameEn = x.Registration.FullNameEn,
+                    EventId = x.Registration.EventsId,
+
+                })
+                .ToList();
+
+            return registrations;
         }
+
 
 
         public async Task AddEventRegAsync(EventRegistrationsViewModel eventReg)
@@ -154,5 +164,14 @@ namespace SHARKNA.Domain
             return await _context.tblEventRegistrations
                 .CountAsync(reg => reg.EventsId == eventId);
         }
+
+       public async Task<List<tblRequestStatus>> GetTblRequestStatusAsync()
+{
+    return await _context.tblRequestStatus
+        .Where(e => !e.IsDeleted && e.IsActive)
+        .ToListAsync();
+}
+
+
     }
 }
