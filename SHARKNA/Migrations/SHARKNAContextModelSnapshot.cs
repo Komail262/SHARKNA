@@ -48,7 +48,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoardLogs");
+                    b.ToTable("tblBoardLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardMembers", b =>
@@ -90,7 +90,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("BoardRoleId");
 
-                    b.ToTable("tblBoardMembers");
+                    b.ToTable("tblBoardMembers", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardMembersLogs", b =>
@@ -122,7 +122,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoardMembersLogs");
+                    b.ToTable("tblBoardMembersLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardRequestLogs", b =>
@@ -148,7 +148,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoardRequestLogs");
+                    b.ToTable("tblBoardRequestLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardRequests", b =>
@@ -187,7 +187,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("RequestStatusId");
 
-                    b.ToTable("tblBoardRequests");
+                    b.ToTable("tblBoardRequests", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardRoles", b =>
@@ -210,7 +210,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoardRoles");
+                    b.ToTable("tblBoardRoles", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoards", b =>
@@ -242,7 +242,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoards");
+                    b.ToTable("tblBoards", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardTalRequestLogs", b =>
@@ -268,7 +268,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblBoardTalRequestLogs");
+                    b.ToTable("tblBoardTalRequestLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardTalRequests", b =>
@@ -313,7 +313,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("RequestStatusId");
 
-                    b.ToTable("tblBoardTalRequests");
+                    b.ToTable("tblBoardTalRequests", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventAttendence", b =>
@@ -328,13 +328,10 @@ namespace SHARKNA.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("EventsId")
+                    b.Property<Guid>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("EventsRegId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventstId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsAttend")
@@ -346,7 +343,36 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("EventsRegId");
 
-                    b.ToTable("tblEventAttendence");
+                    b.ToTable("tblEventAttendence", (string)null);
+                });
+
+            modelBuilder.Entity("SHARKNA.Models.tblEventAttendenceLogs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OpDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OpType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("evattend")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tblEventAttendenceLogs");
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventLogs", b =>
@@ -375,7 +401,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblEventLogs");
+                    b.ToTable("tblEventLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventRegistrations", b =>
@@ -417,7 +443,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("EventsId");
 
-                    b.ToTable("tblEventRegistrations");
+                    b.ToTable("tblEventRegistrations", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventRegLogs", b =>
@@ -446,7 +472,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblEventRegLogs");
+                    b.ToTable("tblEventRegLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventRequestLogs", b =>
@@ -472,7 +498,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblEventRequestLogs");
+                    b.ToTable("tblEventRequestLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventRequests", b =>
@@ -501,7 +527,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("RequestStatusId");
 
-                    b.ToTable("tblEventRequests");
+                    b.ToTable("tblEventRequests", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEvents", b =>
@@ -565,7 +591,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("tblEvents");
+                    b.ToTable("tblEvents", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblPermissions", b =>
@@ -593,7 +619,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("tblPermissions");
+                    b.ToTable("tblPermissions", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblPermmisionLogs", b =>
@@ -625,7 +651,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblPermmisionLogs");
+                    b.ToTable("tblPermmisionLogs", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblRequestStatus", b =>
@@ -648,7 +674,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblRequestStatus");
+                    b.ToTable("tblRequestStatus", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblRoles", b =>
@@ -665,7 +691,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblRoles");
+                    b.ToTable("tblRoles", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblUsers", b =>
@@ -700,7 +726,7 @@ namespace SHARKNA.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("tblUsers");
+                    b.ToTable("tblUsers", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.ViewModels.EventRegistrationsViewModel", b =>
@@ -754,7 +780,7 @@ namespace SHARKNA.Migrations
 
                     b.HasIndex("tblRequestStatusId");
 
-                    b.ToTable("EventRegistrationsViewModel");
+                    b.ToTable("EventRegistrationsViewModel", (string)null);
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblBoardMembers", b =>
@@ -818,7 +844,9 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SHARKNA.Models.tblEventRegistrations", "EventsReg")
                         .WithMany()

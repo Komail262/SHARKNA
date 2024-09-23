@@ -9,7 +9,7 @@
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                                            var result = '@Html.Raw(ViewData["Successful"])';
+                                                        var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(
                     function () {
@@ -21,20 +21,20 @@
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] == null)
         {
             <Text>
-                                            var result = '@Html.Raw(ViewData["Falied"])';
+                                                        var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
         else if (@ViewData["Falied"] != null && ViewData["NoRedirect"] != null)
         {
             <Text>
-                                            var result = '@Html.Raw(ViewData["Falied"])';
+                                                        var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
             </Text>
         }
     }
 </script>
-<h2>اضافة مستخدم</h2>
+<h2>إضافة طلب</h2>
 
 <section class="page_wrap">
     <div class="page_content">
@@ -51,58 +51,46 @@
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">اسم المستخدم</label>
-                                        <input asp-for="UserName" type="text" placeholder="اسم المستخدم" class="form-control">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.UserName)</label>
+                                        <input asp-for="UserName" type="text" class="form-control" readonly>
                                         <span asp-validation-for="UserName" class="text-danger"></span>
 
                                     </div>
-                                </div><!-- END ITEM -->
+                                </div>
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="BoardId" class="mb-1">اسم النادي </label>
-                                        <select asp-for="BoardId"
-                                                class="form-control"
-                                                asp-items="@ViewBag.BoardsOfList">
-                                        </select>
-                                        <span asp-validation-for="BoardId" class="text-danger"></span>
-
+                                        <input asp-for="BoardId" type="hidden" />
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.BoardId)</label>
+                                        <input asp-for="BoardName" type="text" class="form-control" readonly />
+                                        <span asp-validation-for="BoardName" class="text-danger"></span>
                                     </div>
-                                </div><!-- END ITEM -->
-            
+                                </div>
+
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">البريد الإلكتروني</label>
-                                        <input asp-for="Email" type="email" placeholder="name@email.com"
-                                               class="form-control text-start">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.Email)</label>
+                                        <input asp-for="Email" type="email" class="form-control text-start" readonly>
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
-                                </div><!-- END ITEM -->
+                                </div>
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">رقم الجوال</label>
-                                        <input asp-for="MobileNumber" type="tel" placeholder="رقم الجوال" class="form-control">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.MobileNumber)</label>
+                                        <input asp-for="MobileNumber" type="tel" placeholder=" " class="form-control" maxlength="13" readonly>
                                         <span asp-validation-for="MobileNumber" class="text-danger"></span>
                                     </div>
-                                </div><!-- END ITEM -->
-                                <!-- START ITEM -->
+                                </div>
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">الاسم كامل</label>
-                                        <input asp-for="FullNameAr" type="text" placeholder="الاسم " class="form-control">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.FullNameAr) </label>
+                                        <input asp-for="FullNameAr" type="text" class="form-control" readonly>
                                         <span asp-validation-for="FullNameAr" class="text-danger"></span>
                                     </div>
-                                </div><!-- END ITEM -->
-                                <!-- START ITEM -->
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label for="" class="mb-1">Full Name</label>
-                                        <input asp-for="FullNameEn" type="text" placeholder="Name" class="form-control">
-                                        <span asp-validation-for="FullNameEn" class="text-danger"></span>
-                                    </div>
-                                </div><!-- END ITEM -->
+                                </div>
+
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -111,7 +99,6 @@
                                         <span asp-validation-for="Skills" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
- 
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -120,10 +107,18 @@
                                         <span asp-validation-for="Experiences" class="text-danger"></span>
                                     </div>
                                 </div><!-- END ITEM -->
-                           
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.BoardDescription)</label>
+                                        <textarea asp-for="BoardDescription" type="text" class="form-control" readonly></textarea>
+                                        <span asp-validation-for="BoardDescription" class="text-danger"></span>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="d-flex justify-content-end">
-                                <button type="submit" value="Create" class="btn btn-primary px-5" title="save">حفظ</button>
+                            <div class=" d-flex justify-content-center">
+                                <a href="@Url.Action("UserDetails", "BoardTalRequests")" class="btn btn-secondary col-3 mx-2">العودة</a>
+                                <button type="submit" value="Create" class="btn btn-primary col-3 mx-2" title="save">تسجيل</button>
                             </div>
 
                         </form>
@@ -138,6 +133,3 @@
 
     </div>
 </section><!-- End Page Wrap -->
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>

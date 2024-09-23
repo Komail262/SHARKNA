@@ -32,14 +32,14 @@
         }
     }
 </script>
-<h2>تعديل اللجنة</h2>
-
+@* <h2>تعديل اللجنة</h2>
+ *@
 <section class="page_wrap">
     <div class="page_content">
 
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h5 class="m-0">تعديل اللجنة</h5>
+                <h5 class="m-0">تعديل لجنة @Model.NameAr</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
@@ -87,11 +87,11 @@
                                         <label for="" class="mb-1">الجنس</label>
                                         <div class="form-check">
                                             <input type="radio" asp-for="Gender" class="form-check-input" id="Male" name="Gender" value="true" />
-                                            <label class="form-check-label" for="Male"> ذكر </label>
+                                            <label class="form-check-label" for="Male"> ذكور </label>
                                         </div>
                                         <div class="form-check">
                                             <input type="radio" asp-for="Gender" class="form-check-input" id="Female" name="Gender" value="false" />
-                                            <label class="form-check-label" for="Female"> أنثى</label>
+                                            <label class="form-check-label" for="Female"> إناث</label>
                                         </div>
                                         <div class="form-check">
                                             @if (Model.Gender == null)
@@ -127,6 +127,3 @@
 
     </div>
 </section><!-- End Page Wrap -->
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>

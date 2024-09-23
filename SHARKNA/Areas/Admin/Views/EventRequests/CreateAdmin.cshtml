@@ -1,0 +1,223 @@
+﻿@model SHARKNA.ViewModels.EventViewModel
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<!-- عرض اسم المستخدم في الهيدر -->
+<div class="alert alert-info">
+    مرحباً, @ViewBag.Username
+</div>
+
+
+
+<script>
+    @{
+        if (@ViewData["Successful"] != null)
+        {
+            <Text>
+                            var result = '@Html.Raw(ViewData["Successful"])';
+            Swal.fire(result, '', 'success')
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("ActiveEvents", "EventRequests")';
+                    }
+                );
+            </Text>
+        }
+        else if (@ViewData["Falied"] != null)
+        {
+            <Text>
+                            var result = '@Html.Raw(ViewData["Falied"])';
+            Swal.fire(result, '', 'error');
+            </Text>
+        }
+    }
+</script>
+
+
+
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h2>اضافة حدث</h2>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form asp-action="CreateAdmin" method="post">
+                            <div class="row">
+                                <!-- Event Title in Arabic -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventTitleAr" class="mb-1">الحدث </label>
+                                        <input asp-for="EventTitleAr" class="form-control">
+                                        <span asp-validation-for="EventTitleAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Event Title in English -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventTitleEn" class="mb-1"> الحدث بالانجليزي</label>
+                                        <input asp-for="EventTitleEn" class="form-control">
+                                        <span asp-validation-for="EventTitleEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventStartDate" class="mb-1"> بداية الحدث</label>
+                                        <input asp-for="EventStartDate" type="datetime-local" class="form-control text-start">
+                                        <span asp-validation-for="EventStartDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="EventEndtDate" class="mb-1"> نهاية الحدث</label>
+                                        <input asp-for="EventEndtDate" type="datetime-local" class="form-control text-start">
+                                        <span asp-validation-for="EventEndtDate" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Speakers in Arabic -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="SpeakersAr" class="mb-1">المتحدث</label>
+                                        <input asp-for="SpeakersAr" class="form-control">
+                                        <span asp-validation-for="SpeakersAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Speakers in English -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="SpeakersEn" class="mb-1">المتحدث بالانجليزي</label>
+                                        <input asp-for="SpeakersEn" class="form-control">
+                                        <span asp-validation-for="SpeakersEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Topic in Arabic -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="TopicAr" class="mb-1">الموضوع</label>
+                                        <input asp-for="TopicAr" class="form-control">
+                                        <span asp-validation-for="TopicAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Topic in English -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="TopicEn" class="mb-1">الموضوع بالانجليزي</label>
+                                        <input asp-for="TopicEn" class="form-control">
+                                        <span asp-validation-for="TopicEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Description in Arabic -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="DescriptionAr" class="mb-1">الوصف</label>
+                                        <textarea asp-for="DescriptionAr" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
+                                        <span asp-validation-for="DescriptionAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Description in English -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="DescriptionEn" class="mb-1">الوصف بالانجليزي</label>
+                                        <textarea asp-for="DescriptionEn" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
+                                        <span asp-validation-for="DescriptionEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Location in Arabic -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="LocationAr" class="mb-1">الموقع  </label>
+                                        <input asp-for="LocationAr" class="form-control">
+                                        <span asp-validation-for="LocationAr" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Location in English -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="LocationEn" class="mb-1">الموقع بالانجليزي</label>
+                                        <input asp-for="LocationEn" class="form-control">
+                                        <span asp-validation-for="LocationEn" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <!-- Maximum Attendance -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="MaxAttendence" class="mb-1">الحد الأقصى للحضور</label>
+                                        <input asp-for="MaxAttendence" class="form-control">
+                                        <span asp-validation-for="MaxAttendence" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">الجنس</label>
+                                        <div class="form-check">
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Male" name="Gender" value="true" />
+                                            <label class="form-check-label" for="Male"> طلاب </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Female" name="Gender" value="false" />
+                                            <label class="form-check-label" for="Female"> طالبات</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="" checked="checked" />
+                                            <label class="form-check-label" for="Both"> طلاب وطالبات </label>
+                                        </div>
+                                        <span asp-validation-for="Gender" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <!-- Board Selection -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label asp-for="BoardId" class="mb-1">اللجنة</label>
+                                        <select asp-for="BoardId" class="form-control" asp-items="ViewBag.BoardsList">
+                                            <option value="">اختر اللجنة</option>
+                                        </select>
+                                        <span asp-validation-for="BoardId" class="text-danger"></span>
+                                    </div>
+                                </div>
+                               
+
+
+
+
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- زر العودة إلى القائمة -->
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-secondary">العودة إلى القائمة</a>
+</div>
+</div>

@@ -12,7 +12,7 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("اسم اللجنة بالعربي")]
+        [DisplayName("اسم اللجنة ")]
         public string NameAr { get; set; }
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
@@ -32,7 +32,6 @@ namespace SHARKNA.ViewModels
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
 
-       
         [DisplayName("الجنس")]
         public bool? Gender { get; set; }
 

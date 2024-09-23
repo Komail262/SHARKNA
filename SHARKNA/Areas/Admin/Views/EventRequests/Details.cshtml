@@ -1,0 +1,95 @@
+﻿@model SHARKNA.ViewModels.EventRequestViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+}
+
+<div class="container mt-4">
+    <h2>تفاصيل الطلب</h2>
+
+    <!-- قسم الفعالية ومعلوماتها -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>تفاصيل الفعالية</h4>
+        </div>
+        <div class="card-body">
+            <p><strong> الفعالية:</strong> @Model.EventName</p>
+            <p><strong>الوصف :</strong> @Model.EventDescriptionAr</p>
+            <p><strong>الموضوع:</strong> @Model.TopicAr</p>
+            <p><strong>تاريخ البدء:</strong> @Model.EventStartDate?.ToString("MM/dd/yyyy")</p>
+            <p><strong>تاريخ الانتهاء:</strong> @Model.EventEndtDate?.ToString("MM/dd/yyyy")</p>
+            <p><strong>من الساعة:</strong> @Model.EventStartDate?.ToString(@"hh\:mm")</p>
+            <p><strong>إلى الساعة:</strong> @Model.EventEndtDate?.ToString(@"hh\:mm")</p>
+            <p><strong>الموقع:</strong> @Model.LocationAr</p>
+            <p><strong>الحد الأقصى للحضور:</strong> @Model.MaxAttendence</p>
+            <p>
+                <strong>الجنس:</strong> @if (Model.Gender.HasValue)
+                {
+                    @if (Model.Gender == true)
+                    {
+                        @:طلاب
+                    }
+                    else if (Model.Gender == false)
+                    {
+                        @:طالبات
+                    }
+                }
+                else
+                {
+                    @: طلاب وطالبات
+                }
+            </p>
+
+            <p><strong>المتحدثون:</strong> @Model.SpeakersAr</p>
+        </div>
+    </div>
+
+    <!-- قسم معلومات اللجنة -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>معلومات اللجنة</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>اللجنة:</strong> @Model.BoardName</p>
+            <p><strong>الوصف:</strong> @Model.BoardDescriptionAr</p>
+            <p>
+                <strong>الجنس:</strong> @if (Model.Genderr.HasValue)
+                {
+                    @if (Model.Genderr == true)
+                    {
+                        @:طلاب
+                    }
+                    else if (Model.Genderr == false)
+                    {
+                        @:طالبات
+                    }
+                }
+                else
+                {
+                    @: طلاب وطالبات
+                }
+            </p>
+
+        </div>
+    </div>
+
+    <!-- قسم حالة الطلب -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>حالة الطلب</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>حالة الطلب:</strong> @Model.RequestStatusName</p>
+
+            @if (Model.RequestStatusName == "مرفوض")
+            {
+                <p><strong>أسباب الرفض:</strong> @Model.RejectionReasons</p>
+            }
+        </div>
+    </div>
+
+    <!-- زر العودة إلى القائمة -->
+    <div class="mt-3">
+        <a asp-action="ActiveEvents" class="btn btn-secondary">العودة إلى القائمة</a>
+    </div>
+</div>

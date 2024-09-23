@@ -1,4 +1,4 @@
-﻿@model SHARKNA.ViewModels.BoardRequestsViewModel
+﻿@model SHARKNA.ViewModels.BoardTalRequestsViewModel
 
 
 <section class="page_wrap">
@@ -26,48 +26,57 @@
                                         <input type="text" id="BoardName" class="form-control" value="@Model.BoardName" disabled />
                                     </div>
                                 </div>
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">@Html.DisplayNameFor(m => m.Email)</label>
                                         <input type="email" id="Email" class="form-control" value="@Model.Email" disabled />
                                     </div>
-                                </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">@Html.DisplayNameFor(m => m.MobileNumber)</label>
                                         <input type="tel" id="MobileNumber" class="form-control" value="@Model.MobileNumber" disabled />
                                     </div>
-                                </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">@Html.DisplayNameFor(m => m.FullNameAr)</label>
                                         <input type="text" id="FullNameAr" class="form-control" value="@Model.FullNameAr" disabled />
                                     </div>
-                                </div>
+                                </div><!-- END ITEM -->
+                           
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.FullNameEn)</label>
-                                        <input type="text" id="FullNameEn" class="form-control" value="@Model.FullNameEn" disabled />
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.Skills)</label>
+                                        <input type="text" id="Skills" class="form-control" value="@Model.Skills" disabled />
+                                    </div>
+                                </div><!-- END ITEM -->
+                                <!-- START ITEM -->
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.Experiences)</label>
+                                        <input type="text" id="Experiences" class="form-control" value="@Model.Experiences" disabled />
                                     </div>
                                 </div>
+                                <!-- END ITEM -->
+                                <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">@Html.DisplayNameFor(m => m.RequestStatusId)</label>
                                         <input type="text" id="RequestStatusName" class="form-control" value="@Model.RequestStatusName" disabled />
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="mb-4">
-                                        <label for="" class="mb-1">@Html.DisplayNameFor(m => m.RejectionReasons)</label>
-                                        <input type="text" id="RejectionReasons" class="form-control" value="@Model.RejectionReasons" disabled />
-                                    </div>
-                                </div>
-                            </div>
+                                <!-- END ITEM -->
+                              
 
                             @if (Model.RequestStatusId == Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"))
                             {
                                 <div class="text-center mt-4">
-                                    <a asp-action="Accept" asp-route-id="@Model.Id" class="btn btn-success px-5">قبول</a>
+                                    <a asp-action="Accepted" asp-route-id="@Model.Id" class="btn btn-success px-5">قبول</a>
                                     <a href="javascript:void(0);" class="btn btn-danger px-5" data-bs-toggle="modal" data-bs-target="#rejectModal">رفض</a>
                                 </div>
                             }
@@ -86,7 +95,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
 
-                <form asp-action="Reject" method="post">
+                <form asp-action="Rejected" method="post">
                     <input type="hidden" name="id" value="@Model.Id" />
                     <div class="form-group">
                         <textarea name="rejectionReason" id="rejectionReason" class="form-control" required></textarea>

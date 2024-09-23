@@ -36,6 +36,7 @@ namespace SHARKNA.Models
         public DbSet<tblRequestStatus> tblRequestStatus { get; set; }
         public DbSet<tblRoles> tblRoles { get; set; }
         public DbSet<tblUsers> tblUsers { get; set; }
+        public DbSet<tblEventAttendenceLogs> tblEventAttendenceLogs { get; set; }
        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

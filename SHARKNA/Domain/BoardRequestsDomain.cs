@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SHARKNA.Models;
 using SHARKNA.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SHARKNA.Domain
 {
@@ -15,32 +15,30 @@ namespace SHARKNA.Domain
             _context = context;
         }
 
-        public IEnumerable<BoardRequestsViewModel> GetTblBoardRequests()
+        public async Task<IEnumerable<BoardRequestsViewModel>> GetTblBoardRequestsAsync()
         {
-            return _context.tblBoardRequests
+            return await _context.tblBoardRequests
                 .Where(x => x.Board.IsDeleted == false)
                 .Select(x => new BoardRequestsViewModel
-            {
-                Id = x.Id,
-                UserName = x.UserName,
-                BoardId = x.BoardId,
-                BoardName = x.Board.NameAr,
-                BoardDescription = x.Board.DescriptionAr,
-                RejectionReasons = x.RejectionReasons,
-                RequestStatusName = x.RequestStatus.RequestStatusAr,
-                RequestStatusId = x.RequestStatusId,
-                Email = x.Email,
-                FullNameAr = x.FullNameAr,
-                FullNameEn = x.FullNameEn,
-                MobileNumber = x.MobileNumber
-            }).ToList();
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    BoardId = x.BoardId,
+                    BoardName = x.Board.NameAr,
+                    BoardDescription = x.Board.DescriptionAr,
+                    RejectionReasons = x.RejectionReasons,
+                    RequestStatusName = x.RequestStatus.RequestStatusAr,
+                    RequestStatusId = x.RequestStatusId,
+                    Email = x.Email,
+                    FullNameAr = x.FullNameAr,
+                    FullNameEn = x.FullNameEn,
+                    MobileNumber = x.MobileNumber
+                }).ToListAsync();
         }
 
-
-
-        public BoardRequestsViewModel GetBoardRequestById(Guid id)
+        public async Task<BoardRequestsViewModel> GetBoardRequestByIdAsync(Guid id)
         {
-            return _context.tblBoardRequests
+            return await _context.tblBoardRequests
                 .Where(x => x.Id == id && x.Board.IsDeleted == false)
                 .Include(x => x.Board)
                 .Include(x => x.RequestStatus)
@@ -58,12 +56,12 @@ namespace SHARKNA.Domain
                     RequestStatusName = x.RequestStatus.RequestStatusAr,
                     RejectionReasons = x.RejectionReasons
                 })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<BoardRequestsViewModel> GetTblBoardRequestsByUser(string username)
+        public async Task<IEnumerable<BoardRequestsViewModel>> GetTblBoardRequestsByUserAsync(string username)
         {
-            return _context.tblBoardRequests
+            return await _context.tblBoardRequests
                 .Where(x => x.UserName == username)
                 .Where(x => x.Board.IsDeleted == false)
                 .Select(x => new BoardRequestsViewModel
@@ -81,146 +79,141 @@ namespace SHARKNA.Domain
                     FullNameEn = x.FullNameEn,
                     MobileNumber = x.MobileNumber
                 })
-                .ToList();
+                .ToListAsync();
         }
 
-        public async Task<UserViewModel> GetTblUsersByUserName(string userName)
-        {
-            var user = await _context.tblUsers.FirstOrDefaultAsync(u => u.UserName == userName);
-            if (user == null)
-            {
-                return null;
-            }
 
-            return new UserViewModel
-            {
-                UserName = user.UserName,
-                FullNameAr = user.FullNameAr,
-                FullNameEn = user.FullNameEn,
-                MobileNumber = user.MobileNumber,
-                Email = user.Email
-            };
-        }
-
-        public int AddBoardReq(BoardRequestsViewModel BoardReq, string UserName)
+        public async Task<IEnumerable<tblUsers>> GetAllUsers()
         {
-           
             try
             {
-                tblBoardRequests VBoardReq = new tblBoardRequests();
-                VBoardReq.Id = BoardReq.Id;
-                VBoardReq.UserName = BoardReq.UserName;
-                VBoardReq.BoardId = BoardReq.BoardId;
-                VBoardReq.RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
-                VBoardReq.Email = BoardReq.Email;
-                VBoardReq.FullNameAr = BoardReq.FullNameAr;
-                VBoardReq.FullNameEn = BoardReq.FullNameEn;
-                VBoardReq.MobileNumber = BoardReq.MobileNumber;
+                return await _context.tblUsers.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return new List<tblUsers>();
+            }
+        }
 
-                _context.Add(VBoardReq);
+        public async Task<int> AddBoardReqAsync(BoardRequestsViewModel BoardReq, string UserName , string username)
+        {
+            try
+            {
+                tblBoardRequests VBoardReq = new tblBoardRequests
+                {
+                    Id = BoardReq.Id,
+                    UserName = BoardReq.UserName,
+                    BoardId = BoardReq.BoardId,
+                    RequestStatusId = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2"),
+                    Email = BoardReq.Email,
+                    FullNameAr = BoardReq.FullNameAr,
+                    FullNameEn = BoardReq.FullNameEn,
+                    MobileNumber = BoardReq.MobileNumber
+                };
 
-                _context.SaveChanges();
+                await _context.AddAsync(VBoardReq);
+                await _context.SaveChangesAsync();
 
-                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
-                bLogs.Id = Guid.NewGuid();
-                bLogs.ReqId = VBoardReq.Id;
-                bLogs.OpType = "اضافة";
-                bLogs.OpDateTime = DateTime.Now;
-                bLogs.CreatedBy = UserName;
-                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
-                _context.tblBoardRequestLogs.Add(bLogs);
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = VBoardReq.Id;
+                BR.OpType = "اضافة";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = UserName;
+                BR.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr} بواسطة هذا المستخدم {username}";
 
-                _context.SaveChanges();
+                await _context.tblBoardRequestLogs.AddAsync(BR);
+                await _context.SaveChangesAsync();
+
                 return 1;
             }
             catch (Exception ex)
             {
                 return 0;
             }
-
         }
 
-        public int AddBoardReqAdmin(BoardRequestsViewModel BoardReq, string UserName)
+        public async Task<int> AddBoardReqAdminAsync(BoardRequestsViewModel BoardReq)
         {
-
             try
             {
-                tblBoardRequests VBoardReq = new tblBoardRequests();
-                VBoardReq.Id = BoardReq.Id;
-                VBoardReq.UserName = BoardReq.UserName;
-                VBoardReq.BoardId = BoardReq.BoardId;
-                VBoardReq.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
-                VBoardReq.Email = BoardReq.Email;
-                VBoardReq.FullNameAr = BoardReq.FullNameAr;
-                VBoardReq.FullNameEn = BoardReq.FullNameEn;
-                VBoardReq.MobileNumber = BoardReq.MobileNumber;
+                tblBoardRequests VBoardReq = new tblBoardRequests
+                {
+                    Id = BoardReq.Id,
+                    UserName = BoardReq.UserName,
+                    BoardId = BoardReq.BoardId,
+                    RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"),
+                    Email = BoardReq.Email,
+                    FullNameAr = BoardReq.FullNameAr,
+                    FullNameEn = BoardReq.FullNameEn,
+                    MobileNumber = BoardReq.MobileNumber
+                };
 
-                _context.Add(VBoardReq);
+                await _context.AddAsync(VBoardReq);
+                await _context.SaveChangesAsync();
 
-                _context.SaveChanges();
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = VBoardReq.Id;
+                BR.OpType = "اضافة";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = VBoardReq.UserName;
+                BR.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr} بواسطة هذا المستخدم ";
 
-                tblBoardRequestLogs bLogs = new tblBoardRequestLogs();
-                bLogs.Id = Guid.NewGuid();
-                bLogs.ReqId = VBoardReq.Id;
-                bLogs.OpType = "اضافة";
-                bLogs.OpDateTime = DateTime.Now;
-                bLogs.CreatedBy = UserName;
-                bLogs.AdditionalInfo = $"تم إضافة  {VBoardReq.FullNameAr}  الى  {VBoardReq.BoardId}";
-                _context.tblBoardRequestLogs.Add(bLogs);
+                await _context.tblBoardRequestLogs.AddAsync(BR);
+                await _context.SaveChangesAsync();
 
-                _context.SaveChanges();
                 return 1;
             }
             catch (Exception ex)
             {
                 return 0;
             }
-
         }
 
+        //public async Task<bool> IsEmailDuplicateAsync(string email, Guid? BoardReqId = null)
+        //{
+        //    if (BoardReqId == null)
+        //    {
+        //        return await _context.tblBoardRequests.AnyAsync(u => u.Email == email);
+        //    }
+        //    else
+        //    {
+        //        return await _context.tblBoardRequests.AnyAsync(u => u.Email == email && u.Id != BoardReqId);
+        //    }
+        //}
 
-
-
-        public bool IsEmailDuplicate(string email, Guid? BoardReqId = null)
+        public async Task<IEnumerable<tblBoards>> GetTblBoardsByUserAsync(string username)
         {
-            if (BoardReqId == null)
-            {
-                return _context.tblBoardRequests.Any(u => u.Email == email);
-
-            }
-            else
-            {
-                return _context.tblBoardRequests.Any(u => u.Email == email && u.Id != BoardReqId);
-            }
+            return await _context.tblBoards
+                .Include(b => b.BoardMembers)
+                .Where(b => !b.IsDeleted && b.IsActive &&
+                            b.BoardMembers.Any(bm => !bm.IsDeleted && bm.IsActive && bm.UserName == username))
+                .ToListAsync(); 
         }
 
 
-
-        public int CancelRequest(Guid id)
+        public async Task<int> CancelRequestAsync(Guid id, string username)
         {
             try
             {
-
-                var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+                var BoardRequest = await _context.tblBoardRequests.FirstOrDefaultAsync(r => r.Id == id);
 
                 if (BoardRequest != null)
                 {
                     BoardRequest.RequestStatusId = Guid.Parse("11E42297-D061-42A0-B190-7D7B26936BAB"); // تعيين الحالة "تم الإلغاء"
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
-                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                    {
-                        Id = Guid.NewGuid(), 
-                        ReqId = BoardRequest.Id,
-                        OpType = "تم الالغاء",
-                        OpDateTime = DateTime.Now,
-                        CreatedBy = BoardRequest.UserName,
-                        AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
-                    };
-                    _context.tblBoardRequestLogs.Add(bLogs);
-                    _context.SaveChanges();
+                    tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                    BR.Id = Guid.NewGuid();
+                    BR.ReqId = BoardRequest.Id;
+                    BR.OpType = "تم الالغاء";
+                    BR.OpDateTime = DateTime.Now;
+                    BR.CreatedBy = BoardRequest.UserName;
+                    BR.AdditionalInfo = $"تم الغاء طلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username}";
 
-                    
+                    await _context.tblBoardRequestLogs.AddAsync(BR);
+                    await _context.SaveChangesAsync();
                 }
                 return 1;
             }
@@ -230,17 +223,18 @@ namespace SHARKNA.Domain
             }
         }
 
-        public async Task Accept(Guid id)
+        public async Task AcceptAsync(Guid id , string username)
         {
             try
             {
-                var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+                var BoardRequest = await _context.tblBoardRequests.FirstOrDefaultAsync(r => r.Id == id);
                 if (BoardRequest != null)
                 {
                     BoardRequest.RequestStatusId = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152"); // تعيين الحالة "مقبول"
 
                     await _context.SaveChangesAsync();
-                    tblBoardMembers member = new tblBoardMembers()
+
+                    tblBoardMembers member = new tblBoardMembers
                     {
                         BoardId = BoardRequest.BoardId,
                         BoardRoleId = Guid.Parse("7d67185d-81bd-4738-a6c5-2106e441eea1"),
@@ -255,47 +249,87 @@ namespace SHARKNA.Domain
                     await _context.AddAsync(member);
                     await _context.SaveChangesAsync();
 
-                    tblBoardRequestLogs bLogs = new tblBoardRequestLogs
-                    {
-                        Id = Guid.NewGuid(),
-                        ReqId = BoardRequest.Id,
-                        OpType = "Accept",
-                        OpDateTime = DateTime.Now,
-                        CreatedBy = BoardRequest.UserName,
-                        AdditionalInfo = $"تم قبول طلب {BoardRequest.FullNameAr} في {BoardRequest.Board.NameAr}"
-                    };
-                    _context.tblBoardRequestLogs.Add(bLogs);
-                    _context.SaveChanges();
+                    tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                    BR.Id = Guid.NewGuid();
+                    BR.ReqId = BoardRequest.Id;
+                    BR.OpType = "تم القبول";
+                    BR.OpDateTime = DateTime.Now;
+                    BR.CreatedBy = BoardRequest.UserName;
+                    BR.AdditionalInfo = $"تم قبول الطلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username}";
+
+                    await _context.tblBoardRequestLogs.AddAsync(BR);
+                    await _context.SaveChangesAsync();
                 }
-               
             }
             catch (Exception ex)
             {
-                 
+                // Handle exception
             }
         }
 
-        public void Reject(Guid id, string rejectionReason)
+        public async Task RejectAsync(Guid id, string rejectionReason , string username)
         {
-            var BoardRequest = _context.tblBoardRequests.FirstOrDefault(r => r.Id == id);
+            var BoardRequest = await _context.tblBoardRequests.FirstOrDefaultAsync(r => r.Id == id);
             if (BoardRequest != null)
             {
                 BoardRequest.RequestStatusId = Guid.Parse("271A02AD-8510-406C-BEB4-832BF79159D4"); // تعيين الحالة "مرفوض"
                 BoardRequest.RejectionReasons = rejectionReason;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+
+                tblBoardRequestLogs BR = new tblBoardRequestLogs();
+                BR.Id = Guid.NewGuid();
+                BR.ReqId = BoardRequest.Id;
+                BR.OpType = "تم الرفض";
+                BR.OpDateTime = DateTime.Now;
+                BR.CreatedBy = BoardRequest.UserName;
+                BR.AdditionalInfo = $"تم رفض الطلب {BoardRequest.FullNameAr} بواسطة هذا المستخدم {username} بسبب: {rejectionReason}";
+
+                await _context.tblBoardRequestLogs.AddAsync(BR);
+                await _context.SaveChangesAsync();
+
             }
         }
 
-        public bool CheckRequestExists(string email, Guid boardId)
+        public async Task<bool> CanUserMakeNewRequestAsync(string email, Guid boardId)
         {
-            Guid Cancel = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
+           
+            Guid UnderStudy = Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2");
             Guid Accept = Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152");
 
-            return _context.tblBoardRequests
-                .Any(r => r.Email == email && r.BoardId == boardId &&
-                          (r.RequestStatusId == Cancel || r.RequestStatusId == Accept));
-        }
+            bool hasUnderStudyRequest = await _context.tblBoardRequests
+                .AnyAsync(r => r.Email == email && r.BoardId == boardId && r.RequestStatusId == UnderStudy);
 
+            if (hasUnderStudyRequest)
+            {
+                return false;
+            }
+
+            bool isCurrentMember = await _context.tblBoardMembers
+                .AnyAsync(m => m.Email == email && m.BoardId == boardId && m.IsDeleted == false);
+
+            if (isCurrentMember)
+            {
+                return false;
+            }
+
+            bool wasAcceptedAndDeleted = await _context.tblBoardMembers
+                .AnyAsync(m => m.Email == email && m.BoardId == boardId && m.IsDeleted == true);
+
+            if (wasAcceptedAndDeleted)
+            {
+                return true;
+            }
+
+            bool hasAcceptedRequest = await _context.tblBoardRequests
+                .AnyAsync(r => r.Email == email && r.BoardId == boardId && r.RequestStatusId == Accept);
+
+            if (hasAcceptedRequest)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
     }
 }

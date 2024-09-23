@@ -61,13 +61,26 @@ namespace SHARKNA.Domain
                     IsDeleted = r.IsDeleted,
                 }).ToListAsync();
         }
-        public async Task<int> UpdateBoardMembersAsync(tblBoardMembers MemR)
+        public async Task<int> UpdateBoardMembersAsync(tblBoardMembers MemR , string username)
         {
             try
             {
                 var MemberRole = await GettblBoardMemberByIdAsync(MemR.Id);
                 MemberRole.BoardRoleId = MemR.BoardRoleId;
                 _context.Update(MemberRole);
+                await _context.SaveChangesAsync();
+
+                tblBoardMembersLogs bm = new tblBoardMembersLogs();
+                bm.Id = Guid.NewGuid();
+                bm.BoMeId = MemberRole.Id;
+                bm.OpType = "تحديث";
+                bm.OpDateTime = DateTime.Now;
+                bm.CreatedBy = username;
+                bm.ModifiedBy = username;
+                bm.CreatedTo = MemberRole.BoardRoleId.ToString();
+                bm.AdditionalInfo = $"تم التعديل عضو اللجنة {MemberRole.UserName} بواسطة هذا المستخدم {username}";
+                _context.tblBoardMembersLogs.Add(bm);
+
                 await _context.SaveChangesAsync();
                 return 1;
             }
@@ -100,49 +113,62 @@ namespace SHARKNA.Domain
         //}
 
         public IEnumerable<BoardViewModel> GetTblBoards()
+        {
+            return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
             {
-                return _context.tblBoards.Where(i => i.IsDeleted == false).Select(x => new BoardViewModel
-                {
-                    Id = x.Id,
-                    NameAr = x.NameAr,
-                    NameEn = x.NameEn,
-                    DescriptionAr = x.DescriptionAr,
-                    DescriptionEn = x.DescriptionEn,
-                    IsDeleted = x.IsDeleted,
-                    IsActive = x.IsActive
-                }).ToList();
-
-            }
-
-
-            public async Task<int> DeleteBoardMembersAsync(Guid id)
-            {
-                try
-                {
-                    var board = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
-                    if (board != null)
-                    {
-                        board.IsDeleted = true;
-                        board.IsActive = false;
-                        _context.Update(board);
-                        await _context.SaveChangesAsync();
-
-                        return 1;
-                    }
-                    else
-                        return 0;
-                }
-                catch (Exception ex)
-                {
-                    return 0;
-                }
-
-            }
-
-
-
+                Id = x.Id,
+                NameAr = x.NameAr,
+                NameEn = x.NameEn,
+                DescriptionAr = x.DescriptionAr,
+                DescriptionEn = x.DescriptionEn,
+                IsDeleted = x.IsDeleted,
+                IsActive = x.IsActive
+            }).ToList();
 
         }
 
+
+        public async Task<int> DeleteBoardMembersAsync(Guid id , string username)
+        {
+            try
+            {
+                var board = await _context.tblBoardMembers.FirstOrDefaultAsync(b => b.Id == id);
+                if (board != null)
+                {
+                    board.IsDeleted = true;
+                    board.IsActive = false;
+                    _context.Update(board);
+                    await _context.SaveChangesAsync();
+
+                    tblBoardMembersLogs bm = new tblBoardMembersLogs();
+                    bm.Id = Guid.NewGuid();
+                    bm.BoMeId = board.Id;
+                    bm.OpType = "حذف";
+                    bm.OpDateTime = DateTime.Now;
+                    bm.CreatedBy = username;
+                    bm.ModifiedBy = username;
+                    bm.CreatedTo = board.BoardRoleId.ToString();
+                    bm.AdditionalInfo = $"تم حذف عضو اللجنة {board.UserName} بواسطة هذا المستخدم {username}";
+                    _context.tblBoardMembersLogs.Add(bm);
+
+                    await _context.SaveChangesAsync();
+
+                    return 1;
+                }
+                else
+                    return 0;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+
+        }
+
+
+
+
     }
+
+}
 

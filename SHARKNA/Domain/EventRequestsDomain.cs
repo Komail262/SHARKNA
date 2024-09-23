@@ -287,6 +287,11 @@ namespace SHARKNA.Domain
                 .ToListAsync();
         }
 
+        public async Task<List<tblBoards>> GetTblBoardsAdminAsync()
+        {
+            return await _context.tblBoards.Where(e => !e.IsDeleted && e.IsActive).ToListAsync();
+        }
+
 
 
         //public async Task<List<tblBoards>> GetTblBoardsAsync()

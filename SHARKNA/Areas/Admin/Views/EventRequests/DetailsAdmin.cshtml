@@ -14,7 +14,7 @@
                             var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
                 .then(function () {
-                    window.location.href = '@Url.Action("details", "EventRequests")';
+                    window.location.href = '@Url.Action("Admin", "EventRequests")';
                 });
             </text>
         }

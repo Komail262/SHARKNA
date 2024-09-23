@@ -1,20 +1,19 @@
-﻿ @model IEnumerable<BoardRequestsViewModel>
+﻿@model IEnumerable<BoardTalRequestsViewModel>
 
 <!DOCTYPE html>
 <html lang="en" dir="rtl" data-theme="light">
 <body>
+    <!-- Start Page Wrap -->
     <section class="page_wrap">
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5 class="m-0">إدارة طلبات الاندية</h5>
+                    <h5 class="m-0">أرشيف طلبات الأندية</h5>
                     <div class="d-flex gap-2">
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        <div>
-                           @*  <a asp-action="UserDetails" class="btn btn-primary">التسجيل في نادي </a> *@
-                        </div>
+
                     </div>
                 </div>
                 <div class="block-body">
@@ -24,29 +23,25 @@
                                 <th>@Html.DisplayNameFor(m => m.FullNameAr)</th>
                                 <th>@Html.DisplayNameFor(m => m.BoardId)</th>
                                 <th>@Html.DisplayNameFor(m => m.RequestStatusId)</th>
-                              
-                                <th>الإجراءات</th>
+                                <th>@Html.DisplayNameFor(m => m.RejectionReasons) </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var request in Model.Where(r => r.RequestStatusId != Guid.Parse("93d729fa-e7fa-4ea6-bb16-038454f8c5c2")))
                             {
+
+
                                 <tr>
                                     <td>@request.FullNameAr</td>
                                     <td>@request.BoardName</td>
                                     <td>
-                                        <span style="@(request.RequestStatusName == "مقبول" ? "background-color: lightgreen; padding: 2px 6px; border: 1px solid green; display: inline-block; border-radius: 5px;" :
-                                                      request.RequestStatusName == "مرفوض" ? "background-color: lightcoral; padding: 2px 6px; border: 1px solid red; display: inline-block; border-radius: 5px;" :
-                                                      request.RequestStatusName == "تم الالغاء" ? "background-color: gray; padding: 2px 6px; border: 1px solid black; display: inline-block; border-radius: 5px;" : "")">
-                                            @request.RequestStatusName 
+                                        <span style="@(request.RequestStatusName == "مقبول" ? "background-color: lightgreen; padding: 2px 6px; border: 1px solid green; display: inline-block; border-radius: 5px; color: white;" :
+                                                      request.RequestStatusName == "مرفوض" ? "background-color: lightcoral; padding: 2px 6px; border: 1px solid red; display: inline-block; border-radius: 5px; color: white;" :
+                                                      request.RequestStatusName == "تم الالغاء" ? "background-color: gray; padding: 2px 6px; border: 1px solid black; display: inline-block; border-radius: 5px; color: white;" : "")">
+                                            @request.RequestStatusName
                                         </span>
                                     </td>
-                                    <td>
-                                        <form asp-action="Details">
-                                            <input type="hidden" name="id" value="@request.Id" />
-                                            <button type="submit" class="btn" style="background-color: rgb(15, 113, 121); color: white;">تفاصيل الطلب</button>
-                                        </form>
-                                    </td>
+                                    <td>@request.RejectionReasons</td>
                                 </tr>
                             }
                         </tbody>
@@ -54,6 +49,6 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section><!-- End Page Wrap -->
 </body>
 </html>

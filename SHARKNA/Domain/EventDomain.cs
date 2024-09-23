@@ -132,6 +132,9 @@ namespace SHARKNA.Domain
             }
         }
 
+
+
+
         public async Task<int> UpdateEventAsync(EventViewModel eventViewModel, string username)
         {
             try
