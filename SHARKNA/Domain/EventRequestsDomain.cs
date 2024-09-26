@@ -147,7 +147,7 @@ namespace SHARKNA.Domain
                 if (canceledStatus != null)
                 {
                     request.RequestStatusId = canceledStatus.Id;
-                    await _context.SaveChangesAsync();
+
 
                     tblEventRequestLogs logs = new tblEventRequestLogs();
                     logs.Id = Guid.NewGuid();

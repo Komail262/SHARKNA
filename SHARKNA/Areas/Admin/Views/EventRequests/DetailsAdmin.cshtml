@@ -4,33 +4,28 @@
     ViewData["Title"] = "تفاصيل الطلب";
 }
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
     @{
-        if (ViewData["Successful"] != null)
+        if (@ViewData["Successful"] != null)
         {
-            <text>
+            <Text>
                             var result = '@Html.Raw(ViewData["Successful"])';
             Swal.fire(result, '', 'success')
-                .then(function () {
-                    window.location.href = '@Url.Action("Admin", "EventRequests")';
-                });
-            </text>
+                .then(
+                    function () {
+                        window.location.href = '@Url.Action("Admin", "EventRequests")';
+                    }
+                );
+            </Text>
         }
-        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] == null)
+        else if (@ViewData["Falied"] != null)
         {
-            <text>
-                            var result = '@Html.Raw(ViewData["Failed"])';
+            <Text>
+                            var result = '@Html.Raw(ViewData["Falied"])';
             Swal.fire(result, '', 'error');
-            </text>
-        }
-        else if (ViewData["Failed"] != null && ViewData["NoRedirect"] != null)
-        {
-            <text>
-                            var result = '@Html.Raw(ViewData["Failed"])';
-            Swal.fire(result, '', 'error');
-            </text>
+            </Text>
         }
     }
 </script>
