@@ -13,56 +13,27 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        .info-box {
-            border: 1px solid #ccc; 
-            padding: 15px; 
-            border-radius: 8px; 
-            background-color: #f9f9f9; 
-            margin-bottom: 20px; 
-            text-align: right; 
-        }
-
-        .info-item {
-            margin-bottom: 15px; 
-            padding-right: 10px; 
-        }
-
-            .info-item strong, .info-item span {
-                display: inline; 
-            }
-
-        .block-header h5 {
-            margin-top: 30px; 
-            margin-bottom: 20px; 
-        }
-
-        .block-body {
-            margin-top: 20px;
-        }
-
-        .card-body p {
-            margin-bottom: 10px; 
-        }
-
-        .card-footer {
-            margin-top: 20px;
-        }
-
-        .btn {
-            margin-top: 15px; 
-        }
-
         .info-box-container {
             text-align: right;
+            margin-right: 20px; /* Adjust this value as needed */
         }
+
+        .info-box {
+            padding: 15px;
+            background-color: #ffffff; /* White background */
+            margin-bottom: 20px;
+            text-align: right;
+            border: none; /* Remove the borders */
+        }
+
     </style>
 </head>
 <body>
-    <section class="page_wrap">
+    <section class="">
         <div class="page_content">
             <div class="block mb-4">
                 <div class="block-header border-bottom px-4 py-3">
-                    <h5>تفاصيل صاحب الطلب</h5>
+                    <h5> صاحب الطلب</h5>
                 </div>
                 <div class="info-box-container">
                     <div class="info-box">
@@ -133,7 +104,11 @@
                             <h5 class="card-title">@Model.EventTitleAr</h5>
                             <p class="card-text"><strong>تاريخ البداية:</strong> @Model.EventStartDate?.ToString("dd-MM-yyyy")</p>
                             <p class="card-text"><strong>تاريخ النهاية:</strong> @Model.EventEndtDate?.ToString("dd-MM-yyyy")</p>
-                            <p class="card-text"><strong>الوقت:</strong> @Model.EventStartDate?.ToString(@"hh\:mm")</p>
+                            <p class="card-text">
+                                <strong>الوقت:</strong>
+                                @Model.EventStartDate?.ToString("hh:mm")
+                                @(Model.EventStartDate?.ToString("tt") == "AM" ? "صباح" : "مساء")
+                            </p>
                             <p class="card-text"><strong>الموقع:</strong> @Model.LocationAr</p>
                             <p class="card-text"><strong>المتحدث:</strong> @Model.SpeakersAr</p>
                             <p class="card-text"><strong>الموضوع:</strong> @Model.TopicAr</p>

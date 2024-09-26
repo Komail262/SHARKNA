@@ -17,15 +17,16 @@ namespace SHARKNA.Controllers
         private readonly EventDomain _eventDomain;
         private readonly UserDomain _userDomain;
         private readonly SHARKNAContext _context;
+        private readonly EventRequestsDomain _eventRequestsDomain;
 
 
-        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain, UserDomain userDomain, SHARKNAContext context)
+        public EventRegistrationsController(EventRegistrationsDomain eventRegDomain, EventDomain eventDomain, UserDomain userDomain, EventRequestsDomain eventRequestsDomain, SHARKNAContext context)
         {
             _eventRegistrations = eventRegDomain;
             _eventDomain = eventDomain;
             _userDomain = userDomain;
+            _eventRequestsDomain = eventRequestsDomain;
             _context = context;
-
         }
 
         public IActionResult MyEventRegistrations()
@@ -82,7 +83,6 @@ namespace SHARKNA.Controllers
 
         public async Task<IActionResult> Register()
         {
-           
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
             var nameAr = User.FindFirst(ClaimTypes.GivenName)?.Value;
             var userGender = User.FindFirst(ClaimTypes.Gender)?.Value ?? "NotSpecified";
@@ -90,9 +90,18 @@ namespace SHARKNA.Controllers
         
             var events = await _eventDomain.GettblEventsAsync2(userGender, username, nameAr);
 
-         
-            return View(events);
+        
+            var acceptedStatusId = Guid.Parse("11e42297-d061-42a0-b190-7d7b26936bab");
+
+
+            var filteredEvents = events
+                .Where(e => !e.IsDeleted && e.IsActive) 
+                .Where(e => _context.tblEventRequests.Any(r => r.EventId == e.Id && r.RequestStatusId == acceptedStatusId)) 
+                .ToList(); 
+            return View(filteredEvents);
         }
+
+
 
         public async Task<IActionResult> EventDetails(Guid eventId)
         {

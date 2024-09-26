@@ -1,4 +1,6 @@
-﻿@model IEnumerable<EventViewModel>
+﻿
+
+@model IEnumerable<EventViewModel>
 
 @{
     ViewData["Title"] = "Event List";
@@ -16,7 +18,7 @@
                         <div class="form-group">
                             <input type="text" class="form-control table__quick_search" placeholder="البحث السريع ...">
                         </div>
-                        <a asp-action="Archive" class="btn btn-secondary">الفعاليات المنتهية</a>
+                        <a asp-action="Index" class="btn btn-success"> الفعاليات النشطة </a>
 
                     </div>
                 </div>
@@ -53,3 +55,4 @@
 
 </body>
 </html>
+

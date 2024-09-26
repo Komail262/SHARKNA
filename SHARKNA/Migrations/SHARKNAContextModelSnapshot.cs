@@ -328,13 +328,10 @@ namespace SHARKNA.Migrations
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("EventsId")
+                    b.Property<Guid>("EventsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("EventsRegId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EventstId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsAttend")
@@ -347,6 +344,35 @@ namespace SHARKNA.Migrations
                     b.HasIndex("EventsRegId");
 
                     b.ToTable("tblEventAttendence", (string)null);
+                });
+
+            modelBuilder.Entity("SHARKNA.Models.tblEventAttendenceLogs", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AdditionalInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreatedTo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OpDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OpType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("evattend")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tblEventAttendenceLogs");
                 });
 
             modelBuilder.Entity("SHARKNA.Models.tblEventLogs", b =>
@@ -818,7 +844,9 @@ namespace SHARKNA.Migrations
                 {
                     b.HasOne("SHARKNA.Models.tblEvents", "Events")
                         .WithMany()
-                        .HasForeignKey("EventsId");
+                        .HasForeignKey("EventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SHARKNA.Models.tblEventRegistrations", "EventsReg")
                         .WithMany()

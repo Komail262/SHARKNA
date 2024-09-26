@@ -303,6 +303,33 @@ namespace SHARKNA.Domain
         //        .ToListAsync();
         //}
 
+        public async Task<string> CheckEventRequestStatusAsync(Guid requestId)
+        {
+            // Fetch the event request by ID
+            var request = await _context.tblEventRequests
+                .Include(r => r.RequestStatus)
+                .FirstOrDefaultAsync(r => r.Id == requestId);
+
+            // Check if the request exists
+            if (request == null)
+            {
+                return "Request not found.";
+            }
+
+            // Check the status of the request
+            switch (request.RequestStatusId.ToString().ToUpper())
+            {
+                case "11E42297-D061-42A0-B190-7D7B26936BAB": // Example ID for 'Rejected'
+                    return "Your request has been rejected.";
+                case "ANOTHER-GUID-HERE": // Replace with the actual GUID for 'Accepted'
+                    return "Your request has been accepted.";
+                case "YET-ANOTHER-GUID-HERE": // Replace with the actual GUID for 'Pending'
+                    return "Your request is pending.";
+                default:
+                    return "Unknown status.";
+            }
+        }
+
 
 
     }

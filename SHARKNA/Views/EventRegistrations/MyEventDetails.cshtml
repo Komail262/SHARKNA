@@ -8,38 +8,36 @@
 <html lang="ar" dir="rtl" data-theme="light">
 <head>
     <style>
+        .info-box-container {
+            text-align: right;
+            margin-right: 50px; /* Moved slightly to the left */
+            margin-top: 20px; /* Moved down a bit */
+        }
+
         .info-box {
-            border: 1px solid #ccc; 
-            padding: 15px; 
-            border-radius: 8px; 
-            background-color: #f9f9f9; 
-            margin-bottom: 20px; 
-        }
-
-        .info-item {
-            margin-bottom: 15px; 
-            padding-right: 10px; 
-        }
-
-            .info-item strong, .info-item span {
-                display: inline; 
-            }
-
-        .block-body {
-            margin-top: 20px; 
-        }
-
-        h5 {
+            padding: 15px;
+            background-color: #ffffff; /* White background */
             margin-bottom: 20px;
-            margin-top: 30px; 
+            text-align: right;
+            border: none; /* Remove the borders */
+        }
+
+        .requester-info {
+            margin-right: 40px; /* Move to the left */
+            margin-top: 30px; /* Move down */
+        }
+
+        .page_content {
+            background-color: #ffffff; /* Ensures the content area has a white background */
+            padding: 20px; /* Adds padding to the content for better spacing */
         }
     </style>
 </head>
 <body>
-    <section class="page_wrap">
+    <section class="">
         <div class="page_content">
             <div class="block mb-4">
-                <h5>تفاصيل صاحب الطلب</h5>
+                <h5>    صاحب الطلب</h5>
 
                 <!-- Student Owner Details Box -->
                 <div class="info-box">
@@ -75,7 +73,8 @@
                             </p>
                             <p class="card-text">
                                 <strong>الوقت:</strong>
-                                @Model.EventStartDate?.ToString(@"hh\:mm")
+                                @Model.EventStartDate?.ToString("hh:mm")
+                                @(Model.EventStartDate?.ToString("tt") == "AM" ? "صباح" : "مساء")
                             </p>
                             <p class="card-text">
                                 <strong>الموقع:</strong>
