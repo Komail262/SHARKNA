@@ -60,6 +60,13 @@ namespace SHARKNA.Controllers
         }
 
         [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var request = await _boardRequestsDomain.GetBoardRequestByIdAsync(id);
+            return View(request);
+        }
+
+        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Create(Guid boardId)
         {
             var username = User.FindFirst(ClaimTypes.Name)?.Value;
@@ -81,12 +88,6 @@ namespace SHARKNA.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "NoRole,User,Admin,SuperAdmin,Editor")]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var request = await _boardRequestsDomain.GetBoardRequestByIdAsync(id);
-            return View(request);
-        }
 
         public async Task<IActionResult> MyBoards()
         {
@@ -95,8 +96,17 @@ namespace SHARKNA.Controllers
            
             var userBoards = await _boardRequestsDomain.GetTblBoardsByUserAsync(username);
 
+            var boardViewModels = userBoards.Select(board => new BoardViewModel
+            {
+                Id = board.Id,
+                NameAr = board.NameAr, 
+                DescriptionAr = board.DescriptionAr
+                                                
+            }).ToList();
 
-            return View(userBoards);
+            return View(boardViewModels);
+
+            //return View(userBoards);
         }
 
 

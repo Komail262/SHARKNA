@@ -1,0 +1,47 @@
+﻿@model SHARKNA.ViewModels.BoardViewModel
+
+
+<section class="page_wrap">
+    <div class="page_content">
+        <div class="block mb-4">
+            <div class="block-header border-bottom px-4 py-4">
+                <h5 class="m-0">تفاصيل النادي</h5>
+            </div>
+            <div class="block-body py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form>
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Model.NameAr)</label>
+                                        <input type="text" id="BoardName" class="form-control" value="@Model.NameAr" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Model.NameEn</label>
+                                        <input type="text" id="NameEn" class="form-control" value="@Model.NameEn" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Model.DescriptionAr</label>
+                                        <input type="text" id="DescriptionAr" class="form-control" value="@Model.DescriptionAr" disabled />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-4">
+                                        <label for="" class="mb-1">@Model.DescriptionEn</label>
+                                        <input type="text" id="DescriptionEn" class="form-control" value="@Model.DescriptionEn" disabled />
+                                    </div>
+                                </div>
+                                
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

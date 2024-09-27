@@ -131,10 +131,11 @@
 
                         </a>
                         <ul>
-
+                            
+                            <li><a href="@Url.Action("UserDetails", "BoardRequests" ,  new { area = "Admin" })"><span> إضافة عضو</span></a></li>
                             <li><a href="@Url.Action("Admin", "BoardRequests" ,  new { area = "Admin" })"><span>إدارة الطلبات </span></a></li>
                             <li><a href="@Url.Action("Archive", "BoardRequests" ,  new { area = "Admin" })"><span> أرشيف الطلبات </span></a></li>
-                            <li><a href="@Url.Action("Members", "BoardMembers" ,  new { area = "Admin" })"><span>إدارة الأعضاء</span></a></li>
+                            <li><a href="@Url.Action("","BoardMembers" ,  new { area = "Admin" })"><span>إدارة الأعضاء</span></a></li>
 
 
                         </ul>
