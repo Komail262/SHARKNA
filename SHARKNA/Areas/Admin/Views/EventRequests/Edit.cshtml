@@ -2,30 +2,28 @@
 @using System.Globalization
 
 @{
-    ViewData["Title"] = "Create Event";
+    ViewData["Title"] = "Edit Event";
 }
-
-
 
 <script>
     @{
         if (@ViewData["Successful"] != null)
         {
             <Text>
-                            var result = '@Html.Raw(ViewData["Successful"])';
-            Swal.fire(result, '', 'success')
-                .then(
-                    function () {
-                        window.location.href = '@Url.Action("ActiveEvents", "EventRequests")';
-                    }
-                );
+                var result = '@Html.Raw(ViewData["Successful"])';
+                Swal.fire(result, '', 'success')
+                    .then(
+                        function () {
+                            window.location.href = '@Url.Action("ActiveEvents", "EventRequests")';
+                        }
+                    );
             </Text>
         }
         else if (@ViewData["Falied"] != null)
         {
             <Text>
-                            var result = '@Html.Raw(ViewData["Falied"])';
-            Swal.fire(result, '', 'error');
+                var result = '@Html.Raw(ViewData["Falied"])';
+                Swal.fire(result, '', 'error');
             </Text>
         }
     }
@@ -34,21 +32,26 @@
 
 
 
+
+<h2>تعديل بيانات الحدث</h2>
+
 <section class="page_wrap">
     <div class="page_content">
         <div class="block mb-4">
             <div class="block-header border-bottom px-4 py-4">
-                <h2>اضافة حدث</h2>
+                <h5 class="m-0">تعديل بيانات الحدث</h5>
             </div>
             <div class="block-body py-5">
                 <div class="row justify-content-center">
                     <div class="col-md-8">
-                        <form asp-action="CreateAdmin" method="post">
+                        <form asp-action="Edit" method="post">
+                            <input hidden asp-for="Id">
+
                             <div class="row">
                                 <!-- Event Title in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="EventTitleAr" class="mb-1">الحدث </label>
+                                        <label asp-for="EventTitleAr" class="mb-1">اسم الحدث </label>
                                         <input asp-for="EventTitleAr" class="form-control">
                                         <span asp-validation-for="EventTitleAr" class="text-danger"></span>
                                     </div>
@@ -57,33 +60,38 @@
                                 <!-- Event Title in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="EventTitleEn" class="mb-1"> الحدث بالانجليزي</label>
+                                        <label asp-for="EventTitleEn" class="mb-1">اسم الحدث بالانجليزي</label>
                                         <input asp-for="EventTitleEn" class="form-control">
                                         <span asp-validation-for="EventTitleEn" class="text-danger"></span>
                                     </div>
                                 </div>
 
+                                <!-- Event Start Date -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label asp-for="EventStartDate" class="mb-1"> بداية الحدث</label>
-                                        <input asp-for="EventStartDate" type="datetime-local" class="form-control text-start">
+                                        <input asp-for="EventStartDate" type="datetime-local" class="form-control text-start"
+                                               value="@(Model.EventStartDate.HasValue ? Model.EventStartDate.Value.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture) : "")" />
                                         <span asp-validation-for="EventStartDate" class="text-danger"></span>
                                     </div>
                                 </div>
 
+                                <!-- Event End Date -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label asp-for="EventEndtDate" class="mb-1"> نهاية الحدث</label>
-                                        <input asp-for="EventEndtDate" type="datetime-local" class="form-control text-start">
+                                        <input asp-for="EventEndtDate" type="datetime-local" class="form-control text-start"
+                                               value="@(Model.EventEndtDate.HasValue ? Model.EventEndtDate.Value.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture) : "")" />
                                         <span asp-validation-for="EventEndtDate" class="text-danger"></span>
                                     </div>
                                 </div>
 
 
+
                                 <!-- Speakers in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="SpeakersAr" class="mb-1">المتحدث</label>
+                                        <label asp-for="SpeakersAr" class="mb-1">المتحدث  </label>
                                         <input asp-for="SpeakersAr" class="form-control">
                                         <span asp-validation-for="SpeakersAr" class="text-danger"></span>
                                     </div>
@@ -101,7 +109,7 @@
                                 <!-- Topic in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="TopicAr" class="mb-1">الموضوع</label>
+                                        <label asp-for="TopicAr" class="mb-1">موضوع الحدث </label>
                                         <input asp-for="TopicAr" class="form-control">
                                         <span asp-validation-for="TopicAr" class="text-danger"></span>
                                     </div>
@@ -110,7 +118,7 @@
                                 <!-- Topic in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="TopicEn" class="mb-1">الموضوع بالانجليزي</label>
+                                        <label asp-for="TopicEn" class="mb-1">موضوع الحدث بالانجليزي</label>
                                         <input asp-for="TopicEn" class="form-control">
                                         <span asp-validation-for="TopicEn" class="text-danger"></span>
                                     </div>
@@ -119,8 +127,8 @@
                                 <!-- Description in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="DescriptionAr" class="mb-1">الوصف</label>
-                                        <textarea asp-for="DescriptionAr" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
+                                        <label asp-for="DescriptionAr" class="mb-1">وصف الحدث </label>
+                                        <input asp-for="DescriptionAr" class="form-control">
                                         <span asp-validation-for="DescriptionAr" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -128,17 +136,16 @@
                                 <!-- Description in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="DescriptionEn" class="mb-1">الوصف بالانجليزي</label>
-                                        <textarea asp-for="DescriptionEn" class="form-control" rows="5"></textarea> <!-- تم تغييره إلى textarea -->
+                                        <label asp-for="DescriptionEn" class="mb-1">وصف الحدث بالانجليزي</label>
+                                        <input asp-for="DescriptionEn" class="form-control">
                                         <span asp-validation-for="DescriptionEn" class="text-danger"></span>
                                     </div>
                                 </div>
 
-
                                 <!-- Location in Arabic -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="LocationAr" class="mb-1">الموقع  </label>
+                                        <label asp-for="LocationAr" class="mb-1">موقع الحدث </label>
                                         <input asp-for="LocationAr" class="form-control">
                                         <span asp-validation-for="LocationAr" class="text-danger"></span>
                                     </div>
@@ -147,7 +154,7 @@
                                 <!-- Location in English -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
-                                        <label asp-for="LocationEn" class="mb-1">الموقع بالانجليزي</label>
+                                        <label asp-for="LocationEn" class="mb-1">موقع الحدث بالانجليزي</label>
                                         <input asp-for="LocationEn" class="form-control">
                                         <span asp-validation-for="LocationEn" class="text-danger"></span>
                                     </div>
@@ -162,7 +169,6 @@
                                     </div>
                                 </div>
 
-
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
@@ -176,13 +182,13 @@
                                             <label class="form-check-label" for="Female"> طالبات</label>
                                         </div>
                                         <div class="form-check">
-                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="" checked="checked" />
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="" />
                                             <label class="form-check-label" for="Both"> طلاب وطالبات </label>
                                         </div>
                                         <span asp-validation-for="Gender" class="text-danger"></span>
                                     </div>
                                 </div>
-
+                                <!-- END ITEM -->
 
                                 <!-- Board Selection -->
                                 <div class="col-md-6">
@@ -194,14 +200,10 @@
                                         <span asp-validation-for="BoardId" class="text-danger"></span>
                                     </div>
                                 </div>
-                               
+                            </div>
 
-
-
-
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
-                                </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary px-5" title="save">حفظ</button>
                             </div>
                         </form>
                     </div>
@@ -216,3 +218,4 @@
     <a asp-action="Index" class="btn btn-secondary">العودة إلى القائمة</a>
 </div>
 </div>
+

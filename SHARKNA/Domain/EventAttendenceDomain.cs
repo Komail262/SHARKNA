@@ -102,9 +102,9 @@ namespace SHARKNA.Domain
                 }).ToListAsync();
         }
 
-        public async Task<int> UpdateAttendance(Guid guid, bool isAttend)
+        public async Task<int> UpdateAttendance(Guid guid, bool isAttend, string username)
         {
-            var attendance = await _context.tblEventAttendence.FirstOrDefaultAsync(x => x.Id == guid);
+            var attendance = await _context.tblEventAttendence.Include(x=>x.Events).FirstOrDefaultAsync(x => x.Id == guid);
             if (attendance == null)
             {
                 return 0;
@@ -112,7 +112,51 @@ namespace SHARKNA.Domain
 
             attendance.IsAttend = isAttend;
             _context.tblEventAttendence.Update(attendance);
+
+            tblEventAttendenceLogs at = new tblEventAttendenceLogs();
+
+
+                at.Id = Guid.NewGuid();
+            at.evattend = attendance.Id;
+                at.OpType = isAttend ? "حاضر" : "غائب ";
+                at.OpDateTime = DateTime.Now;
+                at.CreatedBy = username;
+                at.CreatedTo = attendance.EventsId.ToString();
+                at.AdditionalInfo = $"تم تغيير حالة الحضور لحدث {attendance.Events.EventTitleAr} إلى {(isAttend ? "حاضر" : "غائب")} بواسطة {username}.";
+            
+
+            _context.tblEventAttendenceLogs.Add(at);
+
             return await _context.SaveChangesAsync();
+
+
+        }
+
+
+
+        //===================================================================================================
+        public async Task<IEnumerable<EventViewModel>> GetArchivedEventsAsync()
+        {
+            return await _context.tblEvents
+                .Where(e => e.EventEndtDate < DateTime.Now ) // Only events that have ended
+                .Select(x => new EventViewModel
+                {
+                    Id = x.Id,
+                    EventTitleAr = x.EventTitleAr,
+                    EventTitleEn = x.EventTitleEn,
+                    EventStartDate = x.EventStartDate,
+                    EventEndtDate = x.EventEndtDate,
+                    SpeakersAr = x.SpeakersAr,
+                    SpeakersEn = x.SpeakersEn,
+                    TopicAr = x.TopicAr,
+                    TopicEn = x.TopicEn,
+                    DescriptionAr = x.DescriptionAr,
+                    DescriptionEn = x.DescriptionEn,
+                    LocationAr = x.LocationAr,
+                    LocationEn = x.LocationEn,
+                    IsActive = x.IsActive,
+                    IsDeleted = x.IsDeleted
+                }).ToListAsync();
         }
 
 

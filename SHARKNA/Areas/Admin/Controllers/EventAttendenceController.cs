@@ -13,6 +13,8 @@ namespace SHARKNA.Controllers
 {
     [Area("Admin")]
 
+    [Authorize(Roles = "Admin,Super Admin,Editor")]
+
     public class EventAttendenceController : Controller
     {
         private readonly EventAttendenceDomain _eventattendenceDomain;
@@ -30,17 +32,16 @@ namespace SHARKNA.Controllers
             _UserDomain = userDomain;
             _context = context;
         }
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
 
-        public async Task<IActionResult> Index()
-        {
-            var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
+        //public async Task<IActionResult> Index()
+        //{
+        //    var username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username of the logged-in user
 
-            var events = await _eventattendenceDomain.GetTblEventsAsync();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-            return View(events);
-        }
+        //    var events = await _eventattendenceDomain.GetTblEventsAsync();//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
+        //    return View(events);
+        //}
 
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
 
         public async Task<IActionResult> Details(Guid id)
         {
@@ -52,7 +53,7 @@ namespace SHARKNA.Controllers
 
             return View(eventDays);
         }
-        [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
 
         public async Task<IActionResult> Members(Guid id, int day)
         {
@@ -64,68 +65,35 @@ namespace SHARKNA.Controllers
             return View(eventAttendance);
         }
 
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
 
+        public async Task<IActionResult> Index()
+        {
+            var events = await _eventattendenceDomain.GetTblEventsAsync();
+            var ongoingEvents = events.Where(e => e.EventEndtDate >= DateTime.Now).ToList();
+            return View(ongoingEvents);
+        }
+        [Authorize(Roles = "Admin,Super Admin,Editor")]
 
+        // Show events that have ended
+        public async Task<IActionResult> Archive()
+        {
+            var events = await _eventattendenceDomain.GetTblEventsAsync();
+            var archivedEvents = events.Where(e => e.EventEndtDate < DateTime.Now).ToList();
+            return View(archivedEvents);
+        }
 
-
-
-
-        //[HttpPost]
-        ////[ValidateAntiForgeryToken]
-
-        //public async Task<IActionResult> Members(IFormCollection forms, Guid id, int day)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-
-        //            //var eventId = new Guid(forms["eventId"]);
-        //            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-
-        //            var count = Request.Form["attendanceStatus"].Count;
-        //            var count1 = 0;
-
-        //            var Ereg = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);//ناخذ قائمة الفعاليات من الدومين ايفنت اتيندينس دومين
-        //                                                                                        //return View(Ereg);
-
-        //            if (count != 0)
-        //            {
-        //                for (int i = 0; i < count; i++){
-        //                    var test = Guid.Parse(Request.Form["attendanceStatus"][i].ToString());
-        //                    _eventattendenceDomain.IsAtten(Guid.Parse(Request.Form["attendanceStatus"][i].ToString()));
-        //                }
-        //                ViewData["Successful"] = "تم التحضير بنجاح";
-        //            }
-
-        //            else
-        //                ViewData["Falied"] = "حدث خطأ";
-
-        //            return View(Ereg);
-
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-        //        ViewData["Falied"] = "حدث خطأ";
-        //    }
-        //    var attendees = await _eventattendenceDomain.GetTblEventattendenceAsync(id, day);
-        //    return View(attendees); // Return the correct model
-
-        //    //return View(forms);
-
-        //}
 
 
         [HttpPost]
         public async Task<IActionResult> Members(IEnumerable<EEventAttendenceViewModel> attendances, Guid id, int day)
         {
+            string username = User.FindFirst(ClaimTypes.Name)?.Value;
             int check = 0;
             foreach (var attendance in attendances)
             {
-                int iscount = await _eventattendenceDomain.UpdateAttendance(attendance.Id, attendance.IsAttend);
+
+                int iscount = await _eventattendenceDomain.UpdateAttendance(attendance.Id, attendance.IsAttend, username);
                 check = check + iscount;
             }
 

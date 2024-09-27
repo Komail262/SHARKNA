@@ -32,8 +32,8 @@
         }
     }
 </script>
-<h2>اضافة لجنة</h2>
-
+@* <h2>اضافة لجنة</h2>
+ *@
 <section class="page_wrap">
     <div class="page_content">
 
@@ -82,39 +82,26 @@
 
                                     </div>
                                 </div><!-- END ITEM -->
-                                @* <!-- START ITEM -->
-                                <div class="col-md-6">
-                                <div class="mb-4">
-                                <label for="" class="mb-1">الجنس</label>
-                                <select asp-for="Gender" class="form-control">
-                                <option value="">اختر الجنس</option>
-                                <option value="true">ذكر</option>
-                                <option value="false">أنثى</option>
-                                <option value="null">ذكور وإناث</option>
-                                </select>
-                                <span asp-validation-for="Gender" class="text-danger"></span>
-                                </div>
-                                </div><!-- END ITEM --> *@
-
                                 <!-- START ITEM -->
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <label for="" class="mb-1">الجنس</label>
                                         <div class="form-check">
                                             <input type="radio" asp-for="Gender" class="form-check-input" id="Male" name="Gender" value="true" />
-                                            <label class="form-check-label" for="Male"> ذكور </label>
+                                            <label class="form-check-label" for="Male"> طلاب </label>
                                         </div>
                                         <div class="form-check">
                                             <input type="radio" asp-for="Gender" class="form-check-input" id="Female" name="Gender" value="false" />
-                                            <label class="form-check-label" for="Female"> إناث</label>
+                                            <label class="form-check-label" for="Female"> طالبات</label>
                                         </div>
                                         <div class="form-check">
-                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="NULL" />
-                                            <label class="form-check-label" for="Both"> ذكور وإناث </label>
+                                            <input type="radio" asp-for="Gender" class="form-check-input" id="Both" name="Gender" value="" checked="checked" />
+                                            <label class="form-check-label" for="Both"> طلاب وطالبات </label>
                                         </div>
                                         <span asp-validation-for="Gender" class="text-danger"></span>
                                     </div>
-                                </div><!-- END ITEM -->
+                                </div>
+                                <!-- END ITEM -->
 
 
 
@@ -135,6 +122,3 @@
 
     </div>
 </section><!-- End Page Wrap -->
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>

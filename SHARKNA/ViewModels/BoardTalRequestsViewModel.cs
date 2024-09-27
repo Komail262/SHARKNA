@@ -22,6 +22,8 @@ namespace SHARKNA.ViewModels
         [DisplayName("حالة الطلب")]
         public Guid RequestStatusId { get; set; }
 
+        [DisplayName("الوصف")]
+        public string BoardDescription { get; set; }
         public string RequestStatusName { get; set; }
 
         public ICollection<tblBoards> BoardsOfList { get; set; }
@@ -40,10 +42,10 @@ namespace SHARKNA.ViewModels
 
         [Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
-        [DisplayName("الاسم بالعربي")]
+        [DisplayName("الاسم ")]
         public string FullNameAr { get; set; }
 
-        [Required(ErrorMessage = "هذا الحقل اجباري")]
+        //[Required(ErrorMessage = "هذا الحقل اجباري")]
         [StringLength(100)]
         [DisplayName("الاسم بالانجليزي")]
         public string FullNameEn { get; set; }

@@ -58,7 +58,7 @@ namespace SHARKNA.Controllers
                 return RedirectToAction("Login", "Users");
             }
 
-            // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
+     
             ViewBag.Username = username;
 
             // جلب الـ Boards المتعلقة بالمستخدم الحالي
@@ -80,7 +80,7 @@ namespace SHARKNA.Controllers
         {
             try
             {
-                // احصل على اسم المستخدم الحالي
+                
                 string username = User.FindFirst(ClaimTypes.Name)?.Value;
 
                 if (string.IsNullOrEmpty(username))
@@ -286,14 +286,13 @@ namespace SHARKNA.Controllers
         }
 
 
-        //post for users
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancel(Guid id)
         {
             try
             {
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; 
                 await _eventRequestDomain.CancelEventRequestAsync(id, username);
                 ViewData["Successful"] = "تم إلغاء الطلب بنجاح.";
             }
@@ -302,28 +301,23 @@ namespace SHARKNA.Controllers
                 ViewData["Falied"] = "حدث خطأ أثناء إلغاء الطلب.";
             }
 
-            // احصل على اسم المستخدم الحالي
+           
             string currentUser = User.FindFirst(ClaimTypes.Name)?.Value;
 
             if (string.IsNullOrEmpty(currentUser))
             {
-                // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
                 return RedirectToAction("Login", "Users");
 
             }
 
-            // جلب طلبات الفعاليات المتعلقة بالمستخدم الحالي، بما في ذلك الطلبات الملغاة
             var userEventRequests = await _eventRequestDomain.GetEventRequestsByUserAsync(currentUser);
 
-            // قم بإعادة عرض صفحة الطلبات الخاصة بالمستخدم فقط
             return View("Index", userEventRequests);
         }
 
 
 
 
-
-        //Get for users
         [Authorize(Roles = "NoRole,User,Admin,Super Admin,Editor")]
         public async Task<IActionResult> Details(Guid id)
         {

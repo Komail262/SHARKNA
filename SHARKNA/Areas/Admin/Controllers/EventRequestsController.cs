@@ -51,56 +51,41 @@ namespace SHARKNA.Areas.Admin.Controllers
         }
 
 
-        //post for user
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EventViewModel eventViewModel)
+        public async Task<IActionResult> CreateAdmin(EventViewModel eventViewModel)
         {
             try
             {
-                // احصل على اسم المستخدم الحالي
-                string username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-                if (string.IsNullOrEmpty(username))
-                {
-                    // في حال عدم وجود المستخدم، أعِد توجيهه إلى صفحة تسجيل الدخول
-                    return RedirectToAction("Login", "Users");
-                }
-
-                // احفظ اسم المستخدم في ViewBag لعرضه في الـ View
-                ViewBag.Username = username;
-
-
-                // التحقق من صحة النموذج
                 if (!ModelState.IsValid)
                 {
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
                     return View(eventViewModel);
                 }
 
-                // تحقق من قيمة MaxAttendence
                 if (eventViewModel.MaxAttendence <= 0)
                 {
                     ViewData["Falied"] = "الحد الأقصى للحضور يجب أن يكون قيمة موجبة.";
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
                     return View(eventViewModel);
                 }
 
-                // تحقق من تواريخ البداية والنهاية
                 if (eventViewModel.EventStartDate >= eventViewModel.EventEndtDate)
                 {
-                    ViewData["Falied"] = "تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية.";
+                    ViewData["Falied"] = "تاريخ البداية يجب أن يكون أصغر من أو يساوي تاريخ النهاية.";
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
                     return View(eventViewModel);
                 }
 
-                if (eventViewModel.EventStartDate < DateTime.Now)
+                if (eventViewModel.EventEndtDate < DateTime.Now)
                 {
-                    ViewData["Falied"] = "تاريخ البداية يجب أن يكون في المستقبل.";
+                    ViewData["Falied"] = "تاريخ النهاية يجب أن يكون في المستقبل.";
+                    ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr", eventViewModel.BoardId);
                     return View(eventViewModel);
                 }
 
-                // إنشاء معرف جديد للحدث
                 eventViewModel.Id = Guid.NewGuid();
-
-                // أضف الحدث
+                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
                 int check = await _eventDomain.AddEventAsync(eventViewModel, username);
 
                 if (check == 1)
@@ -115,7 +100,7 @@ namespace SHARKNA.Areas.Admin.Controllers
                     };
 
                     await _eventRequestDomain.AddEventViewRequestAsync(eventRequestViewModel, username);
-                    ViewData["Successful"] = "تم تقديم الطلب بنجاح وهو الآن قيد المراجعة من قبل المشرف";
+                    ViewData["Successful"] = "تم إضافة الحدث والطلب بنجاح";
                 }
                 else
                 {
@@ -127,15 +112,210 @@ namespace SHARKNA.Areas.Admin.Controllers
                 ViewData["Falied"] = $"حدث خطأ: {ex.Message}";
             }
 
-            // في حال وجود خطأ، يتم إعادة عرض النموذج مع البيانات المحملة
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
             return View(eventViewModel);
         }
 
 
-     
+                
 
 
-      
+        // عرض الفعاليات النشطة
+        public async Task<IActionResult> ActiveEvents()
+        {
+            var activeEvents = await (from eventRequest in _context.tblEventRequests
+                                      join eventItem in _context.tblEvents on eventRequest.EventId equals eventItem.Id
+                                      where eventItem.IsActive && !eventItem.IsDeleted &&
+                                            eventRequest.RequestStatusId == Guid.Parse("59A1AE40-BF57-48AA-BF63-7672B679C152")
+                                      select new EventRequestViewModel
+                                      {
+                                          Id = eventRequest.Id,
+                                          EventId = eventItem.Id,
+                                          EventName = eventItem.EventTitleAr,
+                                          EventStartDate = eventItem.EventStartDate,
+                                          EventEndtDate = eventItem.EventEndtDate,
+                                          RequestStatusName = eventRequest.RequestStatus.RequestStatusAr,
+                                          BoardName = eventRequest.Board.NameAr
+                                      })
+                                      .ToListAsync();
+
+            return View(activeEvents);
+        }
+
+        // أرشفة الفعالية
+        [HttpPost]
+        public async Task<IActionResult> ArchiveEvent(Guid eventId)
+        {
+            try
+            {
+                var eventToArchive = await _context.tblEvents.FindAsync(eventId);
+                if (eventToArchive != null)
+                {
+                    eventToArchive.IsActive = false; // تحويل الفعالية إلى الأرشيف
+                    await _context.SaveChangesAsync();
+                    ViewData["Successful"] = "تم أرشفة الفعالية بنجاح.";
+                }
+            }
+            catch (Exception)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء أرشفة الفعالية.";
+            }
+
+            return RedirectToAction("ActiveEvents");
+        }
+
+        // عرض الفعاليات المؤرشفة
+        public async Task<IActionResult> ArchivedEvents()
+        {
+            var archivedEvents = await (from eventRequest in _context.tblEventRequests
+                                        join eventItem in _context.tblEvents on eventRequest.EventId equals eventItem.Id
+                                        where !eventItem.IsActive && !eventItem.IsDeleted
+                                        select new EventRequestViewModel
+                                        {
+                                            Id = eventRequest.Id,
+                                            EventId = eventItem.Id,
+                                            EventName = eventItem.EventTitleAr,
+                                            EventStartDate = eventItem.EventStartDate,
+                                            EventEndtDate = eventItem.EventEndtDate,
+                                            RequestStatusName = eventRequest.RequestStatus.RequestStatusAr,
+                                            BoardName = eventRequest.Board.NameAr
+                                        })
+                                        .ToListAsync();
+
+            return View(archivedEvents);
+        }
+
+        // إلغاء أرشفة الفعالية
+        [HttpPost]
+        public async Task<IActionResult> UnarchiveEvent(Guid eventId)
+        {
+            try
+            {
+                var eventToUnarchive = await _context.tblEvents.FindAsync(eventId);
+                if (eventToUnarchive != null)
+                {
+                    eventToUnarchive.IsActive = true; // إلغاء الأرشفة
+                    await _context.SaveChangesAsync();
+                    ViewData["Successful"] = "تم إلغاء الأرشفة بنجاح.";
+                }
+            }
+            catch (Exception)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء إلغاء الأرشفة.";
+            }
+
+            return RedirectToAction("ArchivedEvents");
+        }
+
+        // حذف الفعالية
+        [HttpPost]
+        public async Task<IActionResult> DeleteEvent(Guid eventId)
+        {
+            try
+            {
+                var eventToDelete = await _context.tblEvents.FindAsync(eventId);
+                if (eventToDelete != null)
+                {
+                    eventToDelete.IsDeleted = true; // تعيين الحالة كـ IsDeleted
+                    await _context.SaveChangesAsync();
+                    ViewData["Successful"] = "تم حذف الفعالية بنجاح.";
+                }
+            }
+            catch (Exception)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء حذف الفعالية.";
+            }
+
+            return RedirectToAction("ArchivedEvents");
+        }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+            var eventViewModel = await _eventDomain.GetTblEventsByIdAsync(id);
+            if (eventViewModel == null)
+            {
+                return NotFound();
+            }
+            return View(eventViewModel);
+        }
+
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var eventRequest = await _eventRequestDomain.GetEventRequestByIdAsync(id);
+            if (eventRequest == null)
+            {
+                return NotFound();
+            }
+            ViewBag.RequestStatusList = new SelectList(await _eventRequestDomain.GetTblRequestStatusAsync(), "Id", "RequestStatusAr", eventRequest.RequestStatusId);
+            return View(eventRequest);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(EventViewModel eventViewModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (eventViewModel.MaxAttendence <= 0)
+                    {
+                        ViewData["Falied"] = "الحد الأقصى للحضور يجب أن يكون قيمة موجبة.";
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(eventViewModel);
+                    }
+
+                    if (eventViewModel.EventStartDate >= eventViewModel.EventEndtDate)
+                    {
+                        ViewData["Falied"] = "تاريخ البداية يجب أن يكون أصغر من أو يساوي تاريخ النهاية.";
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(eventViewModel);
+                    }
+
+                    if (eventViewModel.EventEndtDate < DateTime.Now)
+                    {
+                        ViewData["Falied"] = "تاريخ النهاية يجب أن يكون في المستقبل.";
+                        ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+                        return View(eventViewModel);
+                    }
+
+                    string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
+                    int check = await _eventDomain.UpdateEventAsync(eventViewModel, username);
+
+                    if (check == 1)
+                    {
+                        var eventRequest = await _context.tblEventRequests
+                            .FirstOrDefaultAsync(er => er.EventId == eventViewModel.Id);
+
+                        if (eventRequest != null)
+                        {
+                            // Update BoardId in the event request
+                            eventRequest.BoardId = eventViewModel.BoardId;
+                            _context.Update(eventRequest);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        ViewData["Successful"] = "تم تعديل الحدث بنجاح.";
+                    }
+                    else
+                    {
+                        ViewData["Falied"] = "حدث خطأ أثناء التعديل.";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewData["Falied"] = "حدث خطأ أثناء التعديل.";
+            }
+
+            ViewBag.BoardsList = new SelectList(await _eventRequestDomain.GetTblBoardsAsync(), "Id", "NameAr");
+            return View(eventViewModel);
+        }
+
+
+
 
 
         //post For Admin
@@ -146,11 +326,11 @@ namespace SHARKNA.Areas.Admin.Controllers
             {
                 string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
                 await _eventRequestDomain.AcceptRequestAsync(id, username);
-                return RedirectToAction(nameof(Index), new { Successful = "تم قبول الطلب بنجاح." });
+                return RedirectToAction(nameof(Admin), new { Successful = "تم قبول الطلب بنجاح." });
             }
             catch (Exception)
             {
-                return RedirectToAction(nameof(Index), new { Falied = "حدث خطأ أثناء قبول الطلب." });
+                return RedirectToAction(nameof(Admin), new { Falied = "حدث خطأ أثناء قبول الطلب." });
             }
         }
 
@@ -176,18 +356,18 @@ namespace SHARKNA.Areas.Admin.Controllers
         {
             try
             {
-                string username = User.FindFirst(ClaimTypes.Name)?.Value; // Get the username from claims
-
-
+                string username = User.FindFirst(ClaimTypes.Name)?.Value;
                 await _eventRequestDomain.RejectRequestAsync(id, rejectionReason, username);
-                return RedirectToAction(nameof(Index), new { Successful = "تم رفض الطلب بنجاح." });
-
+                ViewData["Successful"] = "تم رفض الطلب بنجاح.";
             }
             catch (Exception)
             {
-                return RedirectToAction(nameof(Index), new { Failed = "حدث خطأ أثناء رفض الطلب." });
+                ViewData["Falied"] = "حدث خطأ أثناء رفض الطلب.";
             }
+
+            return RedirectToAction("Admin");
         }
+
 
 
 

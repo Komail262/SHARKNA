@@ -32,7 +32,6 @@ namespace SHARKNA.ViewModels
         [DisplayName("الوصف بالإنجليزي")]
         public string DescriptionEn { get; set; }
 
-       
         [DisplayName("الجنس")]
         public bool? Gender { get; set; }
 
