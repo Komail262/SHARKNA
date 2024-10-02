@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SHARKNA.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,SuperAdmin,Editor")]
+    [Authorize(Roles = "Admin,Super Admin,Editor")]
 
     public class BoardRequestsController : Controller
     {

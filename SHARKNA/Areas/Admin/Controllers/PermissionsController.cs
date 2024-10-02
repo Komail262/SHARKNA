@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace SHARKNA.Controllers
 {
+    [Area("Admin")]
 
     [Authorize(Roles = "Super Admin")]
     public class PermissionsController : Controller
